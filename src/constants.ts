@@ -1,0 +1,416 @@
+import { Product, Event, Review } from './types';
+
+export const PRODUCTS: Product[] = [
+  {
+    id: '1',
+    name: 'Assava Noir',
+    price: 42.00,
+    oldPrice: 55.00,
+    description: 'A deep, mysterious roast with notes of dark chocolate and midnight jasmine.',
+    image: 'https://images.unsplash.com/photo-1559056199-641a0ac8b55e?auto=format&fit=crop&q=80&w=800',
+    category: 'Espresso',
+    details: ['Pure Arabica', 'Sun-Kissed Robusta', 'Honey Processed Blend', 'Shade-Grown Specialty'],
+    label: 'ETHIOPIA / DARK / SINGLE ORIGIN',
+    location: 'home',
+    prepTime: 'medium',
+    rating: 4.9,
+    reviews: 128,
+    tag: 'Espresso',
+    profile: {
+      origin: 'Ethiopia',
+      roast: 'Dark',
+      type: 'Single Origin',
+      body: 'Full',
+      acidity: 'Bright'
+    },
+    flavorNotes: ['Dark Chocolate', 'Midnight Jasmine', 'Black Cherry', 'Sweet'],
+    brewingMethods: ['Espresso', 'V60', 'Moka Pot']
+  },
+  {
+    id: '2',
+    name: 'Velvet Ethereal',
+    price: 38.00,
+    oldPrice: 45.00,
+    description: 'Silky smooth texture with a lingering sweetness of toasted hazelnuts.',
+    image: 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&q=80&w=800',
+    category: 'Brew',
+    details: ['Pure Arabica', 'Sun-Kissed Robusta', 'Honey Processed Blend', 'Shade-Grown Specialty'],
+    label: 'BRAZIL / MEDIUM / BLEND',
+    location: 'office',
+    prepTime: 'quick',
+    rating: 4.8,
+    reviews: 256,
+    tag: 'Brew',
+    profile: {
+      origin: 'Brazil',
+      roast: 'Medium',
+      type: 'Blend',
+      body: 'Medium',
+      acidity: 'Balanced'
+    },
+    flavorNotes: ['Hazelnut', 'Caramel', 'Milk Chocolate', 'Smooth', 'Balanced'],
+    brewingMethods: ['V60', 'Chemex', 'Aeropress']
+  },
+  {
+    id: '3',
+    name: 'Golden Geisha',
+    price: 120.00,
+    oldPrice: 150.00,
+    description: 'The crown jewel of ASSAVA. Sparkling acidity with peach blossom notes.',
+    image: 'https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&q=80&w=800',
+    category: 'Special Reserve',
+    details: ['Pure Arabica', 'Sun-Kissed Robusta', 'Honey Processed Blend', 'Shade-Grown Specialty'],
+    label: 'PANAMA / LIGHT / SPECIAL RESERVE',
+    location: 'cafe',
+    prepTime: 'slow',
+    rating: 5.0,
+    reviews: 64,
+    tag: 'Brew',
+    profile: {
+      origin: 'Panama',
+      roast: 'Light',
+      type: 'Special Reserve',
+      body: 'Light',
+      acidity: 'High'
+    },
+    flavorNotes: ['Peach Blossom', 'Bergamot', 'Honey', 'Floral', 'Bright'],
+    brewingMethods: ['V60', 'Chemex', 'Siphon']
+  },
+  {
+    id: '4',
+    name: 'Obsidian Mist',
+    price: 45.00,
+    oldPrice: 52.00,
+    description: 'Clean, precise, and uncompromising. A masterclass in minimalist roasting.',
+    image: 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&q=80&w=800',
+    category: 'Artisan',
+    details: ['Pure Arabica', 'Sun-Kissed Robusta', 'Honey Processed Blend', 'Shade-Grown Specialty'],
+    label: 'COLOMBIA / MEDIUM / ARTISAN',
+    location: 'home',
+    prepTime: 'medium',
+    rating: 4.7,
+    reviews: 89,
+    tag: 'Instant',
+    profile: {
+      origin: 'Guatemala',
+      roast: 'Medium',
+      type: 'Artisan',
+      body: 'Medium',
+      acidity: 'Balanced'
+    },
+    flavorNotes: ['Green Apple', 'Almond', 'Cane Sugar', 'Clean', 'Refined'],
+    brewingMethods: ['Aeropress', 'V60', 'French Press']
+  },
+  {
+    id: '5',
+    name: 'Volcanic Ember',
+    price: 48.00,
+    oldPrice: 58.00,
+    description: 'A robust blend with a smoky finish, reminiscent of a volcanic sunrise.',
+    image: 'https://images.unsplash.com/photo-1511920170033-f8396924c348?auto=format&fit=crop&q=80&w=800',
+    category: 'Dark Roast',
+    details: ['Volcanic Soil Grown', 'Slow Roasted', 'Rich Body', 'Smoky Undertones'],
+    label: 'INDONESIA / EXTRA DARK / SINGLE ORIGIN',
+    location: 'cafe',
+    prepTime: 'slow',
+    rating: 4.6,
+    reviews: 112,
+    tag: 'Brew',
+    profile: {
+      origin: 'Colombia',
+      roast: 'Medium-Dark',
+      type: 'Cold Brew',
+      body: 'Heavy',
+      acidity: 'Low'
+    },
+    flavorNotes: ['Cocoa', 'Molasses', 'Walnut', 'Rich', 'Smoky'],
+    brewingMethods: ['Cold Brew', 'French Press', 'Aeropress']
+  },
+  {
+    id: '6',
+    name: 'Celestial Bloom',
+    price: 52.00,
+    oldPrice: 65.00,
+    description: 'Light and airy with floral notes that dance on the palate.',
+    image: 'https://images.unsplash.com/photo-1442512595331-e89e73853f31?auto=format&fit=crop&q=80&w=800',
+    category: 'Light Roast',
+    details: ['High Altitude', 'Washed Process', 'Floral Aroma', 'Crisp Finish'],
+    label: 'KENYA / LIGHT / SINGLE ORIGIN',
+    location: 'home',
+    prepTime: 'quick',
+    rating: 4.9,
+    reviews: 76,
+    tag: 'Espresso',
+    profile: {
+      origin: 'Costa Rica',
+      roast: 'Light-Medium',
+      type: 'Experimental'
+    },
+    flavorNotes: ['Strawberry', 'Floral', 'Honey', 'Berry', 'Juicy'],
+    brewingMethods: ['Espresso', 'V60']
+  }
+];
+
+export const EVENTS: Event[] = [
+  {
+    id: '1',
+    name: 'Midnight Cupping Session',
+    date: 'April 12, 2026',
+    description: 'An immersive sensory journey through our rarest single-origin beans.',
+    image: 'https://images.unsplash.com/photo-1442512595331-e89e73853f31?auto=format&fit=crop&q=80&w=800'
+  },
+  {
+    id: '2',
+    name: 'The Art of the Pour',
+    date: 'May 05, 2026',
+    description: 'Master the precision of V60 and Chemex brewing with our head roaster.',
+    image: 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&q=80&w=800'
+  }
+];
+
+export const REVIEWS: Review[] = [
+  {
+    id: '1',
+    userName: 'Elena Vance',
+    userImage: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=200',
+    text: 'The Golden Geisha is unlike anything I have ever tasted. Truly a cinematic experience in a cup.',
+    rating: 5
+  },
+  {
+    id: '2',
+    userName: 'Marcus Thorne',
+    userImage: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=200',
+    text: 'The Obsidian Mist is my daily ritual. The precision of the roast is unmatched.',
+    rating: 5
+  }
+];
+
+export const INSTAGRAM_IMAGES = [
+  'https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&q=80&w=400',
+  'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&q=80&w=400',
+  'https://images.unsplash.com/photo-1559056199-641a0ac8b55e?auto=format&fit=crop&q=80&w=400',
+  'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&q=80&w=400',
+  'https://images.unsplash.com/photo-1442512595331-e89e73853f31?auto=format&fit=crop&q=80&w=400',
+  'https://images.unsplash.com/photo-1511920170033-f8396924c348?auto=format&fit=crop&q=80&w=400'
+];
+export const StoryStepDetails = [
+  {
+    title: "The Origin",
+    tag: "Step 01",
+    desc: "Sourced from high-altitude volcanic soils where the air is thin and the flavor is dense.",
+    detail: "Our green beans are handpicked from farms sitting above 1,400 meters. At this altitude, coffee cherries ripen slowly — building sugars, complexity, and a depth of flavor that lower-altitude beans simply cannot replicate. We visit every farm personally before signing any sourcing agreement.",
+    icon: "🌱",
+    img: "https://images.unsplash.com/photo-1611162458324-aae1eb4129a4?q=80&w=2600&auto=format&fit=crop",
+    stat: "1,400m+",
+    statLabel: "Min. Altitude",
+    region: "Ethiopia · Colombia · Yemen",
+    badge: "Direct Trade",
+  },
+  {
+    title: "The Fermentation",
+    tag: "Step 02",
+    desc: "A controlled rest that unlocks fruity complexity hidden deep within the cherry.",
+    detail: "Natural and honey processed coffees spend days fermenting inside their own fruit skin. This controlled microbial process converts sugars and acids, layering the bean with wine-like complexity, tropical fruit notes, and a syrupy body you can't get any other way. We monitor temperature and humidity hourly during this stage.",
+    icon: "🍯",
+    img: "https://images.unsplash.com/photo-1587734195342-9dd1a9b5a4b4?q=80&w=2600&auto=format&fit=crop",
+    stat: "72hrs",
+    statLabel: "Avg. Fermentation",
+    region: "Farm Level Processing",
+    badge: "Natural Process",
+  },
+  {
+    title: "The Drying",
+    tag: "Step 03",
+    desc: "Sun-dried on raised beds, slow and even — patience that pays off in the cup.",
+    detail: "After processing, beans are spread on raised African drying beds in thin, even layers. Workers turn them every 2 hours to ensure uniform drying and prevent mold. This phase takes 2–6 weeks depending on weather. Rushing it destroys the complexity built during fermentation. We never rush it.",
+    icon: "☀️",
+    img: "https://images.unsplash.com/photo-1504630083234-14187a9df0f5?q=80&w=2600&auto=format&fit=crop",
+    stat: "21 days",
+    statLabel: "Avg. Drying Time",
+    region: "Raised African Beds",
+    badge: "Sun Dried",
+  },
+  {
+    title: "The Selection",
+    tag: "Step 04",
+    desc: "Not every cherry makes the cut. Only the ripest, densest beans survive our sorting process.",
+    detail: "Before roasting even begins, every batch goes through triple sorting — first by hand at the farm level, then by density float tanks that reject hollow or underdeveloped beans, and finally by our in-house quality team who cup and score every lot above 85 on the SCA scale. If it doesn't score, it doesn't ship.",
+    icon: "🫘",
+    img: "https://images.unsplash.com/photo-1442550528054-b88e6cd20c99?q=80&w=2600&auto=format&fit=crop",
+    stat: "85+",
+    statLabel: "SCA Score Minimum",
+    region: "Quality Control Lab",
+    badge: "Cupped & Scored",
+  },
+  {
+    title: "The Roast",
+    tag: "Step 05",
+    desc: "Precision heat reveals hidden aromatic profiles, turning green beans into liquid gold.",
+    detail: "We roast in small 12kg drum batches — never automated, always hand-monitored. Our light-to-medium roast philosophy is intentional: it preserves origin character instead of masking it. Every roast is logged, tasted, and approved before it ships.",
+    icon: "🔥",
+    img: "https://images.unsplash.com/photo-1524350876685-274059332603?q=80&w=2600&auto=format&fit=crop",
+    stat: "12kg",
+    statLabel: "Batch Size",
+    region: "In-House Roastery",
+    badge: "Small Batch",
+  },
+  {
+    title: "The Cupping",
+    tag: "Step 06",
+    desc: "Every lot is tasted blind before approval. Our palates are the final filter.",
+    detail: "Cupping is the coffee industry's version of wine tasting — standardized, disciplined, and brutally honest. We cup every single lot blind, scoring it across fragrance, aroma, flavor, aftertaste, acidity, body, balance, and overall impression. A lot that scores below 85 is rejected regardless of how good the farm relationship is. Quality is non-negotiable.",
+    icon: "👅",
+    img: "https://images.unsplash.com/photo-1580933073521-dc49ac0d4e6a?q=80&w=2600&auto=format&fit=crop",
+    stat: "8",
+    statLabel: "Cupping Criteria",
+    region: "ASSAVA Tasting Lab",
+    badge: "Blind Tasted",
+  },
+  {
+    title: "The Packaging",
+    tag: "Step 07",
+    desc: "Sealed within hours of roasting. Every detail designed to preserve peak freshness.",
+    detail: "Oxygen is coffee's enemy. Within 4 hours of roasting, every batch is sealed in nitrogen-flushed, one-way valve bags that let CO₂ escape without letting oxygen in. Our packaging is resealable, biodegradable, and designed to keep beans at peak flavor for up to 90 days — though in our experience, they're gone long before that.",
+    icon: "📦",
+    img: "https://images.unsplash.com/photo-1559056199-641a0ac8b55e?q=80&w=2600&auto=format&fit=crop",
+    stat: "4hrs",
+    statLabel: "Roast to Seal",
+    region: "ASSAVA Fulfillment",
+    badge: "Nitrogen Sealed",
+  },
+  {
+    title: "The Rest",
+    tag: "Step 08",
+    desc: "Freshly roasted isn't always best. The bean needs time to exhale before it sings.",
+    detail: "Counter-intuitively, coffee roasted today is not at its best today. CO₂ trapped during roasting needs 48–96 hours to off-gas before water can properly extract the full flavor profile. Brewing too early produces hollow, gassy cups. We rest every batch a minimum of 48 hours before dispatch. The wait is always worth it.",
+    icon: "⏳",
+    img: "https://images.unsplash.com/photo-1511537190424-bbbab87ac5eb?q=80&w=2600&auto=format&fit=crop",
+    stat: "48–96hrs",
+    statLabel: "Rest Before Dispatch",
+    region: "Degassing Chamber",
+    badge: "Degassed",
+  },
+  {
+    title: "The Water",
+    tag: "Step 09",
+    desc: "Coffee is 98% water. What's dissolved in it changes everything.",
+    detail: "Filtered water with a TDS between 75–150ppm is ideal for coffee extraction. Too pure (distilled) and it over-extracts, turning bitter. Too hard (mineral-heavy) and it under-extracts, tasting flat. We recommend a simple Brita or Zerowater filter for most home brewers — it's the cheapest upgrade with the biggest impact.",
+    icon: "💧",
+    img: "https://images.unsplash.com/photo-1548839140-29a749e1cf4d?q=80&w=2600&auto=format&fit=crop",
+    stat: "98%",
+    statLabel: "Water in Your Cup",
+    region: "Chemistry Matters",
+    badge: "TDS Optimised",
+  },
+  {
+    title: "The Ritual Setup",
+    tag: "Step 10",
+    desc: "Your tools matter as much as your beans. A great cup starts before the water boils.",
+    detail: "The right equipment transforms the same bean into a completely different experience. A gooseneck kettle gives you pour control. A burr grinder gives you uniformity. A scale gives you consistency. We don't sell equipment — but we believe in it deeply enough to guide every member on building their ideal home setup through our Ritual Guide.",
+    icon: "🫖",
+    img: "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?q=80&w=2600&auto=format&fit=crop",
+    stat: "3",
+    statLabel: "Essential Tools",
+    region: "Your Kitchen",
+    badge: "Ritual Ready",
+  },
+  {
+    title: "The Grind",
+    tag: "Step 11",
+    desc: "Uniform particles for perfect extraction, ensuring every note is captured.",
+    detail: "Grind size is the most underestimated variable in coffee. Too coarse and the water rushes through, leaving flavor behind. Too fine and it chokes. We calibrate our grinders daily and match grind profiles to each specific bean's density and moisture content.",
+    icon: "⚙️",
+    img: "https://images.unsplash.com/photo-1497935586351-b67a49e012bf?q=80&w=2600&auto=format&fit=crop",
+    stat: "±50μm",
+    statLabel: "Grind Precision",
+    region: "Calibrated Daily",
+    badge: "Precision Milled",
+  },
+  {
+    title: "The Brew",
+    tag: "Step 12",
+    desc: "92°C water meets the soul of the bean in a delicate dance of chemistry.",
+    detail: "Water temperature, pour rate, bloom time — each variable changes the cup. At 92°C, water is hot enough to extract oils and sugars but gentle enough not to scorch. A 30-second bloom releases trapped CO₂ from freshly roasted beans, opening up the full aromatic profile before the main pour.",
+    icon: "☕",
+    img: "https://images.unsplash.com/photo-1541167760496-1628856ab772?q=80&w=2600&auto=format&fit=crop",
+    stat: "92°C",
+    statLabel: "Brew Temperature",
+    region: "Pour Over · Espresso · French Press",
+    badge: "Ritual Brew",
+  },
+  {
+    title: "The Moment",
+    tag: "Step 13",
+    desc: "A sensory journey in every single sip. Experience the pure essence of taste.",
+    detail: "This is what everything before was building toward. The aroma that hits before the cup reaches your lips. The first sip that silences everything else. Tasting notes aren't just marketing — they are the geography, the altitude, the farmer's care, and the roaster's intention, all dissolved into liquid form.",
+    icon: "✨",
+    img: "https://images.unsplash.com/photo-1447933601403-0c6688de566e?q=80&w=2600&auto=format&fit=crop",
+    stat: "5",
+    statLabel: "Sensory Stages",
+    region: "Wherever You Are",
+    badge: "Pure Experience",
+  },
+  {
+    title: "The Community",
+    tag: "Step 14",
+    desc: "Coffee tastes better when shared. The Ritual Club is where obsessives find each other.",
+    detail: "Over 3,200 members receive monthly drops, exclusive single-origin releases, and early access to limited harvests. Members share brewing notes, grind settings, and cup scores in our private community. Some of our best sourcing leads have come from members who spotted something special on their travels. This is a two-way relationship.",
+    icon: "🤝",
+    img: "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?q=80&w=2600&auto=format&fit=crop",
+    stat: "3,200+",
+    statLabel: "Ritual Members",
+    region: "Global Community",
+    badge: "Members Only",
+  },
+  {
+    title: "The Legacy",
+    tag: "Step 15",
+    desc: "Every cup funds the next generation of farmers. Sustainability is not a feature — it's the foundation.",
+    detail: "5% of every order goes directly into our Farm Future Fund — a program that finances equipment upgrades, school fees for farmers' children, and reforestation projects on and around our partner farms. Since 2021, we've planted over 14,000 shade trees and funded education for 38 children across our sourcing communities. The cup you drink today plants the forest of tomorrow.",
+    icon: "🌍",
+    img: "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?q=80&w=2600&auto=format&fit=crop",
+    stat: "14,000+",
+    statLabel: "Trees Planted",
+    region: "Ethiopia · Colombia · Sumatra",
+    badge: "1% for the Planet",
+  },
+];
+
+export const COFFEE_COLLECTIONS = [
+  {
+    name: "Single Origin",
+    icon: "🌍",
+    count: 24,
+    flavours: ["Fruity", "Floral", "Citrus", "Berry", "Winey", "Sweet", "Balanced", "Juicy", "Bright", "Complex"]
+  },
+  {
+    name: "House Blends",
+    icon: "🏠",
+    count: 12,
+    flavours: ["Chocolate", "Nutty", "caramel", "Sweet", "Smooth", "Balanced", "Toffee", "Cocoa", "Creamy", "Rich"]
+  },
+  {
+    name: "Rare Finds",
+    icon: "💎",
+    count: 5,
+    flavours: ["Exotic", "Spicy", "Floral", "Winey", "Herbal", "Funky", "Tropical", "Fermented", "Wild", "Unique"]
+  },
+  {
+    name: "Brewing Gear",
+    icon: "⚖️",
+    count: 18,
+    flavours: ["Neutral", "Precision", "Clean", "Consistent", "Balanced", "Smooth", "Pure", "Refined", "Controlled", "Technical"]
+  },
+  {
+    name: "Coffee Spaces",
+    icon: "🏢",
+    count: 8,
+    flavours: ["Ambience", "Relaxing", "Social", "Cozy", "Modern", "Aesthetic", "Quiet", "Lively", "Premium", "Casual"]
+  },
+  {
+    name: "Workshops",
+    icon: "🎓",
+    count: 4,
+    flavours: ["Learning", "Hands-on", "Interactive", "Skill-based", "Guided", "Beginner", "Advanced", "Expert", "Fun", "Educational"]
+  }
+];
