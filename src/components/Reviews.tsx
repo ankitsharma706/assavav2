@@ -1,58 +1,101 @@
 import React from 'react';
-import { motion } from 'framer-motion';
 import { REVIEWS } from '../constants';
-import { Star, Quote } from 'lucide-react';
-import { TiltWrapper } from './CoffeeComponents';
+import { Star } from 'lucide-react';
 
 const Reviews = () => {
   return (
-    <section id="reviews" className="section-padding bg-coffee-dark relative overflow-hidden">
-      <div className="max-w-7xl mx-auto">
-        <div className="mb-16 text-center">
-          <span className="text-caramel font-mono text-[10px] uppercase tracking-[0.5em] mb-4 block font-bold">Feedback</span>
-          <h2 className="text-5xl md:text-7xl font-bold tracking-tighter text-glow uppercase">Customer Reviews</h2>
+    <section id="reviews" style={{ background: '#d4d0c8', padding: '12px 16px' }}>
+      <div className="win-window" style={{ maxWidth: 960, margin: '0 auto' }}>
+        {/* Title bar */}
+        <div className="win-titlebar">
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+            <span style={{ fontSize: 10 }}>&#11088;</span>
+            <span>Customer Reviews — Notepad</span>
+          </div>
+          <div style={{ display: 'flex', gap: 2 }}>
+            <button className="win-titlebar-btn">_</button>
+            <button className="win-titlebar-btn">&#9633;</button>
+            <button className="win-titlebar-btn" style={{ fontWeight: 'bold' }}>&#10005;</button>
+          </div>
         </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-          {REVIEWS.map((review, i) => (
-            <TiltWrapper key={review.id} className="group relative glass rounded-[60px] p-12 hover:glow-border transition-all duration-500 flex flex-col items-center text-center overflow-hidden">
-              <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.2, duration: 1 }}
-                viewport={{ once: true }}
-                className="w-full"
-              >
-                <div className="absolute -top-10 -left-10 w-48 h-48 bg-caramel/10 rounded-full blur-[80px] pointer-events-none group-hover:bg-caramel/20 transition-colors" />
-                
-                <div className="relative z-10 space-y-8">
-                  <div className="flex justify-center gap-1">
-                    {[...Array(review.rating)].map((_, i) => (
-                      <Star key={i} className="w-5 h-5 fill-cream text-cream" />
-                    ))}
-                  </div>
-                  
-                  <div className="relative">
-                    <Quote className="absolute -top-6 -left-6 w-12 h-12 text-cream/10 rotate-180" />
-                    <p className="text-2xl font-light italic leading-relaxed text-cream/80">"{review.text}"</p>
-                  </div>
-                  
-                  <div className="flex flex-col items-center gap-4 pt-8 border-t border-white/5">
-                    <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-caramel/20 group-hover:border-caramel transition-colors">
-                      <img 
-                        src={review.userImage} 
-                        alt={review.userName} 
-                        loading="lazy"
-                        className="w-full h-full object-cover"
-                        referrerPolicy="no-referrer"
-                      />
+
+        <div className="win-menubar">
+          <button>File</button>
+          <button>Edit</button>
+          <button>Format</button>
+          <button>View</button>
+          <button>Help</button>
+        </div>
+
+        {/* Table view */}
+        <div style={{ background: '#ffffff', padding: 12 }}>
+          <table className="win-table" style={{ width: '100%' }}>
+            <thead>
+              <tr>
+                <th style={{ width: 40 }}>#</th>
+                <th style={{ width: 120 }}>Customer</th>
+                <th>Review</th>
+                <th style={{ width: 80 }}>Rating</th>
+              </tr>
+            </thead>
+            <tbody>
+              {REVIEWS.map((review, i) => (
+                <tr key={review.id}>
+                  <td style={{ textAlign: 'center', fontSize: 11, color: '#666' }}>{i + 1}</td>
+                  <td>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                      <div style={{
+                        width: 28, height: 28, borderRadius: '50%', overflow: 'hidden', flexShrink: 0,
+                        border: '1px solid #808080',
+                      }}>
+                        <img
+                          src={review.userImage}
+                          alt={review.userName}
+                          referrerPolicy="no-referrer"
+                          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                        />
+                      </div>
+                      <span style={{ fontSize: 11, fontFamily: 'Tahoma, sans-serif', color: '#000080', fontWeight: 'bold', whiteSpace: 'nowrap' }}>
+                        {review.userName}
+                      </span>
                     </div>
-                    <span className="text-[10px] text-caramel uppercase tracking-[0.5em] font-bold">{review.userName}</span>
-                  </div>
-                </div>
-              </motion.div>
-            </TiltWrapper>
-          ))}
+                  </td>
+                  <td>
+                    <div style={{ fontSize: 11, fontFamily: 'Tahoma, sans-serif', color: '#333', fontStyle: 'italic', lineHeight: 1.5 }}>
+                      &ldquo;{review.text}&rdquo;
+                    </div>
+                  </td>
+                  <td style={{ textAlign: 'center' }}>
+                    <div style={{ display: 'flex', justifyContent: 'center', gap: 1 }}>
+                      {[...Array(review.rating)].map((_, i) => (
+                        <Star key={i} size={10} fill="#c68e5d" color="#c68e5d" />
+                      ))}
+                    </div>
+                    <div style={{ fontSize: 9, color: '#666', marginTop: 2, fontFamily: 'Tahoma, sans-serif' }}>
+                      {review.rating}/5
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+
+          {/* Add review prompt */}
+          <div style={{ marginTop: 10, display: 'flex', gap: 8, alignItems: 'center' }}>
+            <input
+              className="win-input"
+              style={{ flex: 1, fontSize: 11 }}
+              placeholder="Write your review here..."
+              readOnly
+            />
+            <button className="win-btn win-btn-primary" style={{ fontSize: 11 }}>Submit</button>
+          </div>
+        </div>
+
+        <div className="win-statusbar">
+          <span>{REVIEWS.length} review(s)</span>
+          <div style={{ flex: 1 }} />
+          <span>Average: 5.0 / 5.0</span>
         </div>
       </div>
     </section>
