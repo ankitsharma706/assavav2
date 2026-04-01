@@ -11,176 +11,140 @@ import { PRODUCTS, COFFEE_COLLECTIONS, StoryStepDetails } from '../constants';
 import { Product } from '../types';
 import Footer from './Footer';
 
-// --- Navbar ---
+// --- Navbar (Windows 2000 Taskbar) ---
 export function Navbar({ onOpenCart, onOpenCategories, cartCount }: { onOpenCart: () => void, onOpenCategories: () => void, cartCount: number }) {
-  const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [time, setTime] = useState('');
   const location = useLocation();
 
   useEffect(() => {
-    const handleScroll = () => setIsScrolled(window.scrollY > 50);
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    const update = () => {
+      const now = new Date();
+      setTime(now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
+    };
+    update();
+    const t = setInterval(update, 1000);
+    return () => clearInterval(t);
   }, []);
 
-  const handleScrollTo = (id: string) => {
-    if (location.pathname !== '/') {
-      window.location.href = `/${id}`;
-    } else {
-      setTimeout(() => {
-        document.querySelector(id)?.scrollIntoView({ behavior: 'smooth' });
-      }, 100);
-    }
-  };
-
-  const navLinks: Array<{ name: string; path?: string; href?: string; onClick?: () => void }> = [
-    // { name: 'Experience', path: '/' },
-    // { name: 'Collections', href: '#collection' },
+  const navLinks = [
     { name: 'Shop', path: '/shopping' },
     { name: 'Category', path: '/category' },
     { name: 'Events', path: '/events' },
     { name: 'Story', path: '/story' },
     { name: 'About', path: '/about' },
-    // { name: 'Reviews', path: '/reviews' },
-    // { name: 'Social', path: '/social' },
-    { name: 'Account', path: '/account' },
   ];
 
   return (
     <>
-      <nav className={cn(
-        "fixed top-0 left-0 w-full z-50 transition-all duration-500 px-6 py-4",
-        isScrolled ? "glass py-3" : "bg-transparent"
-      )}>
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-3 group">
-            <div className="w-12 h-12 bg-caramel rounded-full flex items-center justify-center shadow-[0_0_30px_rgba(198,142,93,0.4)] group-hover:scale-110 transition-transform overflow-hidden">
-              <img src="/logo.png" alt="Assava Logo" className="w-8 h-8 object-contain" />
-            </div>
-            <span className="text-2xl font-bold tracking-tighter text-white group-hover:text-cream transition-colors uppercase">ASSAVA</span>
-          </Link>
-
-          <div className="hidden lg:flex items-center gap-6 xl:gap-8 text-[9px] font-bold uppercase tracking-[0.3em] text-cream/80">
-            {navLinks.filter(l => l.name !== 'Account').map((link) => {
-              if (link.path) {
-                return (
-                  <Link 
-                    key={link.name}
-                    to={link.path} 
-                    className={cn("hover:text-cream transition-colors", location.pathname === link.path && "text-cream")}
-                  >
-                    {link.name}
-                  </Link>
-                );
-              }
-              if (link.href) {
-                return (
-                  <button 
-                    key={link.name}
-                    onClick={() => handleScrollTo(link.href as string)}
-                    className="hover:text-cream transition-colors flex items-center gap-1"
-                  >
-                    {link.name}
-                  </button>
-                );
-              }
-              return (
-                <button 
-                  key={link.name}
-                  onClick={link.onClick} 
-                  className="hover:text-cream transition-colors flex items-center gap-1"
-                >
-                  {link.name} <Filter className="w-3 h-3" />
-                </button>
-              );
-            })}
+      {/* Windows 2000 Taskbar — fixed bottom */}
+      <nav
+        className="fixed bottom-0 left-0 w-full z-50 win-taskbar"
+        style={{ height: 'auto', minHeight: 28 }}
+      >
+        {/* Start Button */}
+        <Link to="/" className="win-start-btn" style={{ textDecoration: 'none', color: '#000' }}>
+          <div className="w-4 h-4 rounded-full overflow-hidden flex-shrink-0">
+            <img src="/logo.png" alt="Logo" className="w-full h-full object-contain" />
           </div>
+          <span style={{ fontWeight: 'bold', fontSize: 11 }}>Start</span>
+        </Link>
 
-          <div className="flex items-center gap-4">
-            <Link to="/cart" className="relative p-2 hover:bg-cream/10 rounded-full transition-colors group">
-              <ShoppingCart className="w-5 h-5" />
-              <span className="absolute -top-1 -right-1 w-4 h-4 bg-caramel text-coffee-dark text-[10px] font-bold rounded-full flex items-center justify-center">
-                {cartCount}
-              </span>
-            </Link>
-            <Link to="/account" className="hidden sm:flex items-center gap-2 glass px-4 py-2 rounded-full text-sm font-semibold hover:glow-border transition-all">
-              <User className="w-4 h-4" />
-              <span>Account</span>
-            </Link>
-            <button 
-              onClick={() => setIsMobileMenuOpen(true)}
-              className="md:hidden p-2 hover:bg-cream/10 rounded-full transition-colors"
+        {/* Divider */}
+        <div style={{ width: 1, height: 20, background: '#808080', borderRight: '1px solid #fff', marginRight: 4 }} />
+
+        {/* Quick launch buttons */}
+        <div className="hidden md:flex items-center gap-0">
+          {navLinks.map(link => (
+            <Link
+              key={link.name}
+              to={link.path}
+              style={{
+                textDecoration: 'none',
+                color: '#000',
+                background: location.pathname === link.path ? '#bbb' : 'transparent',
+                border: location.pathname === link.path ? '2px inset #808080' : '2px solid transparent',
+                padding: '3px 10px',
+                fontSize: 11,
+                fontFamily: 'Tahoma, sans-serif',
+                display: 'flex',
+                alignItems: 'center',
+                gap: 3,
+                whiteSpace: 'nowrap',
+              }}
             >
-              <Menu className="w-6 h-6" />
-            </button>
-          </div>
+              {link.name}
+            </Link>
+          ))}
         </div>
+
+        {/* Spacer */}
+        <div style={{ flex: 1 }} />
+
+        {/* System tray */}
+        <div className="win-tray" style={{ marginLeft: 'auto' }}>
+          <Link to="/cart" style={{ color: '#000', textDecoration: 'none', fontSize: 11, display: 'flex', alignItems: 'center', gap: 3 }}>
+            <ShoppingCart size={12} />
+            <span className="hidden sm:inline">{cartCount}</span>
+          </Link>
+          <div style={{ width: 1, height: 14, background: '#808080' }} />
+          <Link to="/account" style={{ color: '#000', textDecoration: 'none', fontSize: 11, display: 'flex', alignItems: 'center', gap: 3 }}>
+            <User size={12} />
+            <span className="hidden sm:inline">Account</span>
+          </Link>
+          <div style={{ width: 1, height: 14, background: '#808080' }} />
+          <span style={{ fontSize: 11, fontFamily: 'Tahoma, sans-serif', minWidth: 45, textAlign: 'center' }}>{time}</span>
+        </div>
+
+        {/* Mobile hamburger */}
+        <button
+          className="md:hidden"
+          onClick={() => setIsMobileMenuOpen(v => !v)}
+          style={{ marginLeft: 4, background: '#d4d0c8', border: '2px solid', borderTopColor: '#fff', borderLeftColor: '#fff', borderRightColor: '#808080', borderBottomColor: '#808080', padding: '3px 7px', fontSize: 11 }}
+        >
+          <Menu size={14} />
+        </button>
       </nav>
 
-      {/* Mobile Menu Overlay */}
+      {/* Mobile popup menu */}
       <AnimatePresence>
         {isMobileMenuOpen && (
           <motion.div
-            initial={{ opacity: 0, y: -20 }}
+            initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            className="fixed inset-0 z-[100] mobile-nav flex flex-col p-10"
+            exit={{ opacity: 0, y: 10 }}
+            style={{
+              position: 'fixed',
+              bottom: 30,
+              left: 0,
+              zIndex: 200,
+              background: '#d4d0c8',
+              borderTop: '2px solid #fff',
+              borderLeft: '2px solid #fff',
+              borderRight: '2px solid #808080',
+              borderBottom: '2px solid #808080',
+              minWidth: 160,
+              fontFamily: 'Tahoma, sans-serif',
+              fontSize: 11,
+              boxShadow: '2px 2px 0 #404040',
+            }}
           >
-            <div className="flex justify-between items-center mb-20">
-              <Link to="/" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-3">
-                <div className="w-12 h-12 bg-caramel rounded-full flex items-center justify-center overflow-hidden">
-                  <img src="/logo.png" alt="Assava Logo" className="w-8 h-8 object-contain" />
-                </div>
-                <span className="text-2xl font-bold tracking-tighter text-white uppercase">ASSAVA</span>
-              </Link>
-              <button 
+            <div style={{ background: 'linear-gradient(to bottom, #000080, #1084d0)', color: '#fff', padding: '4px 8px', fontSize: 11, fontWeight: 'bold', letterSpacing: 0.5 }}>
+              ASSAVA
+            </div>
+            {[...navLinks, { name: 'Account', path: '/account' }, { name: 'Cart', path: '/cart' }].map(link => (
+              <Link
+                key={link.name}
+                to={link.path}
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="p-3 hover:bg-cream/10 rounded-full transition-colors"
+                style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '6px 12px', color: '#000', textDecoration: 'none', fontSize: 12 }}
+                onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.background = '#000080'; (e.currentTarget as HTMLAnchorElement).style.color = '#fff'; }}
+                onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.background = 'transparent'; (e.currentTarget as HTMLAnchorElement).style.color = '#000'; }}
               >
-                <X className="w-8 h-8" />
-              </button>
-            </div>
-
-            <div className="flex flex-col gap-8">
-              {navLinks.map((link, i) => (
-                <motion.div
-                  key={link.name}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: i * 0.1 }}
-                >
-                  {link.path ? (
-                    <Link 
-                      to={link.path}
-                      onClick={() => setIsMobileMenuOpen(false)}
-                      className="text-3xl md:text-4xl font-bold tracking-tighter uppercase hover:text-caramel transition-colors block"
-                    >
-                      {link.name}
-                    </Link>
-                  ) : link.href ? (
-                    <button 
-                      onClick={() => {
-                        handleScrollTo(link.href as string);
-                        setIsMobileMenuOpen(false);
-                      }}
-                      className="text-3xl md:text-4xl font-bold tracking-tighter uppercase hover:text-caramel transition-colors text-left block"
-                    >
-                      {link.name}
-                    </button>
-                  ) : (
-                    <button 
-                      onClick={() => {
-                        link.onClick?.();
-                        setIsMobileMenuOpen(false);
-                      }}
-                      className="text-3xl md:text-4xl font-bold tracking-tighter uppercase hover:text-caramel transition-colors text-left block"
-                    >
-                      {link.name}
-                    </button>
-                  )}
-                </motion.div>
-              ))}
-            </div>
+                <ChevronRight size={10} />
+                {link.name}
+              </Link>
+            ))}
           </motion.div>
         )}
       </AnimatePresence>
@@ -188,123 +152,242 @@ export function Navbar({ onOpenCart, onOpenCategories, cartCount }: { onOpenCart
   );
 }
 
-// --- Hero Section ---
-function FloatingBeans() {
-  const beanTexture = useTexture('https://images.unsplash.com/photo-1559056199-641a0ac8b55e?auto=format&fit=crop&q=80&w=500');
-  
-  return (
-    <>
-      <CoffeeBean position={[-4, 2, -2]} rotation={[0.4, 0.2, 0.5]} scale={0.2} texture={beanTexture} />
-      <CoffeeBean position={[5, -3, -1]} rotation={[1.2, 0.5, 0.1]} scale={0.25} texture={beanTexture} />
-      <CoffeeBean position={[-6, -4, -3]} rotation={[0.1, 0.8, 0.9]} scale={0.18} texture={beanTexture} />
-      <CoffeeBean position={[7, 4, -5]} rotation={[0.5, 0.5, 0.5]} scale={0.22} texture={beanTexture} />
-      <CoffeeBean position={[-8, 1, -4]} rotation={[0.2, 0.9, 0.1]} scale={0.15} texture={beanTexture} />
-      <CoffeeBean position={[2, 5, -6]} rotation={[0.8, 0.1, 0.4]} scale={0.2} texture={beanTexture} />
-    </>
-  );
-}
-
+// --- Hero Section (Windows 2000 Desktop) ---
 export function Hero() {
+  const [loadingProgress, setLoadingProgress] = useState(0);
+  const [loadingDone, setLoadingDone] = useState(false);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [welcomeVisible, setWelcomeVisible] = useState(true);
+
+  useEffect(() => {
+    if (loadingDone) return;
+    const interval = setInterval(() => {
+      setLoadingProgress(p => {
+        if (p >= 100) {
+          clearInterval(interval);
+          setLoadingDone(true);
+          setTimeout(() => setDialogOpen(true), 400);
+          return 100;
+        }
+        return p + Math.floor(Math.random() * 8) + 3;
+      });
+    }, 80);
+    return () => clearInterval(interval);
+  }, [loadingDone]);
+
+  const desktopIcons = [
+    { label: 'Shop', icon: '🛍️', path: '/shopping' },
+    { label: 'My Account', icon: '👤', path: '/account' },
+    { label: 'Events', icon: '📅', path: '/events' },
+    { label: 'Our Story', icon: '📖', path: '/story' },
+    { label: 'Recycle Bin', icon: '🗑️', path: '/' },
+    { label: 'About Us', icon: 'ℹ️', path: '/about' },
+  ];
+
   return (
-    <section className="relative h-screen w-full flex items-center justify-center overflow-hidden bg-coffee-dark">
-      {/* 3D Background */}
-      <div className="absolute inset-0 z-0">
-        <Suspense fallback={<div className="absolute inset-0 flex items-center justify-center bg-coffee-dark/20 text-caramel/50 font-mono text-xs tracking-widest uppercase">Loading Cinematic Scene...</div>}>
-          <Canvas 
-            gl={{ 
-              antialias: true, 
-              alpha: true,
-              powerPreference: "high-performance",
-              preserveDrawingBuffer: true
-            }}
-            camera={{ position: [0, 0, 8], fov: 45 }}
-            dpr={[1, 2]}
+    <section
+      style={{
+        minHeight: '100vh',
+        background: '#008080',
+        backgroundImage: `url("data:image/svg+xml,%3Csvg width='4' height='4' viewBox='0 0 4 4' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='2' height='2' fill='%23007070' /%3E%3Crect x='2' y='2' width='2' height='2' fill='%23007070' /%3E%3C/svg%3E")`,
+        paddingBottom: 32,
+        position: 'relative',
+        overflow: 'hidden',
+      }}
+    >
+      {/* Desktop icons */}
+      <div style={{ display: 'flex', flexDirection: 'column', flexWrap: 'wrap', maxHeight: 'calc(100vh - 80px)', gap: 8, padding: '12px 8px', position: 'absolute', top: 0, left: 0 }}>
+        {desktopIcons.map((icon) => (
+          <Link
+            key={icon.label}
+            to={icon.path}
+            style={{ textDecoration: 'none' }}
           >
-            <Suspense fallback={null}>
-              <ambientLight intensity={0.4} />
-              <pointLight position={[10, 10, 10]} intensity={3} color="#C68E5D" />
-              <pointLight position={[-10, -10, -10]} intensity={2} color="#4E342E" />
-              <pointLight position={[0, 0, 5]} intensity={2} color="#FFFFFF" />
-              <CoffeeDust count={300} />
-              <FieryParticles count={200} />
-              <BeanCluster />
-              <Preload all />
-            </Suspense>
-            
-            <EffectComposer multisampling={0}>
-              <Bloom 
-                intensity={2.0} 
-                luminanceThreshold={0.15} 
-                luminanceSmoothing={0.9} 
-                mipmapBlur
-              />
-              <DepthOfField 
-                focusDistance={0} 
-                focalLength={0.02} 
-                bokehScale={2} 
-                height={480} 
-              />
-              <Vignette eskil={false} offset={0.1} darkness={1.2} />
-            </EffectComposer>
-          </Canvas>
-        </Suspense>
+            <div className="win-icon">
+              <span style={{ fontSize: 28 }}>{icon.icon}</span>
+              <span className="win-icon-label">{icon.label}</span>
+            </div>
+          </Link>
+        ))}
       </div>
 
-      {/* Content */}
-      <div className="relative z-10 text-center px-6 max-w-5xl pointer-events-none">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1] }}
-          className="bg-coffee-dark/20 backdrop-blur-none rounded-2xl px-8 py-10"
-        >
-          <motion.span 
-            initial={{ opacity: 0, letterSpacing: "0.5em" }}
-            animate={{ opacity: 1, letterSpacing: "1em" }}
-            transition={{ duration: 2, delay: 0.5 }}
-            className="text-cream/60 font-mono text-[9px] uppercase block mb-6 font-bold"
-          >
-            THE ULTIMATE AWAKENING
-          </motion.span>
-          <h1 className="text-5xl md:text-8xl font-bold tracking-tighter mb-8 leading-[0.8] uppercase text-white drop-shadow-[0_0_30px_rgba(255,255,255,0.2)]">
-            Ignite <br />
-            <span className="text-caramel italic serif lowercase drop-shadow-[0_0_30px_rgba(198,142,93,0.4)]">The Soul</span>
-          </h1>
-          <p className="text-cream/75 text-base md:text-xl mb-12 max-w-2xl mx-auto font-light tracking-wide leading-relaxed">
-            Experience the explosive intensity of our volcanic-grown beans, roasted to perfection for the modern ritual.
-          </p>
-          
+      {/* Boot loading window */}
+      <AnimatePresence>
+        {!loadingDone && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 1.2, duration: 1 }}
-            className="pointer-events-auto"
+            exit={{ opacity: 0 }}
+            style={{
+              position: 'fixed', inset: 0, zIndex: 100,
+              background: '#000080',
+              display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+              gap: 24,
+            }}
           >
-            <Link to="/shopping">
-              <button className="group relative px-12 py-5 rounded-full overflow-hidden glass border-white/10 hover:glow-border transition-all duration-500">
-                <div className="absolute inset-0 bg-caramel/10 translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
-                <span className="relative z-10 text-[10px] font-bold uppercase tracking-[0.4em] text-cream group-hover:text-cream transition-colors">
-                  Explore Collection
-                </span>
-              </button>
-            </Link>
+            <div style={{ textAlign: 'center' }}>
+              <div style={{ fontSize: 13, color: '#ffffff', fontFamily: 'Tahoma, sans-serif', marginBottom: 4 }}>Microsoft</div>
+              <div style={{ fontSize: 28, fontWeight: 'bold', color: '#ffffff', fontFamily: 'Tahoma, sans-serif' }}>Windows 2000</div>
+              <div style={{ fontSize: 11, color: '#aaaaff', fontFamily: 'Tahoma, sans-serif', marginTop: 2 }}>Professional</div>
+            </div>
+            <div style={{ width: 280 }}>
+              <div style={{ fontSize: 11, color: '#ccccff', fontFamily: 'Tahoma, sans-serif', marginBottom: 6, textAlign: 'center' }}>
+                Starting up ASSAVA Coffee...
+              </div>
+              <div className="win-progress-track" style={{ width: '100%' }}>
+                <div className="win-progress-bar" style={{ width: `${loadingProgress}%`, transition: 'width 0.1s linear' }} />
+              </div>
+              <div style={{ fontSize: 10, color: '#aaaaff', marginTop: 4, textAlign: 'center', fontFamily: 'Tahoma, sans-serif' }}>
+                {loadingProgress}%
+              </div>
+            </div>
+            <div style={{ fontSize: 10, color: '#6666aa', fontFamily: 'Tahoma, sans-serif' }}>
+              Copyright &copy; 2026 Assava Corp. All rights reserved.
+            </div>
           </motion.div>
-        </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Welcome / Hero dialog */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', padding: '16px 16px 48px' }}>
+        <AnimatePresence>
+          {dialogOpen && welcomeVisible && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              transition={{ duration: 0.2 }}
+              className="win-window"
+              style={{ width: '100%', maxWidth: 640, zIndex: 10, position: 'relative' }}
+            >
+              {/* Title bar */}
+              <div className="win-titlebar">
+                <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                  <div style={{ width: 14, height: 14, borderRadius: '50%', overflow: 'hidden', flexShrink: 0 }}>
+                    <img src="/logo.png" alt="ASSAVA" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                  </div>
+                  <span>ASSAVA Coffee — Welcome!</span>
+                </div>
+                <div style={{ display: 'flex', gap: 2 }}>
+                  <button className="win-titlebar-btn" title="Minimize">_</button>
+                  <button className="win-titlebar-btn" title="Maximize">&#9633;</button>
+                  <button className="win-titlebar-btn" onClick={() => setWelcomeVisible(false)} title="Close" style={{ fontWeight: 'bold' }}>&#10005;</button>
+                </div>
+              </div>
+
+              {/* Menu bar */}
+              <div className="win-menubar">
+                <Link to="/" style={{ textDecoration: 'none' }}><button>File</button></Link>
+                <Link to="/shopping" style={{ textDecoration: 'none' }}><button>Shop</button></Link>
+                <Link to="/events" style={{ textDecoration: 'none' }}><button>Events</button></Link>
+                <Link to="/about" style={{ textDecoration: 'none' }}><button>About</button></Link>
+                <button>Help</button>
+              </div>
+
+              {/* Toolbar */}
+              <div style={{ background: '#d4d0c8', borderBottom: '1px solid #808080', padding: '4px 6px', display: 'flex', gap: 4, alignItems: 'center' }}>
+                <button className="win-btn" style={{ padding: '2px 10px', fontSize: 11 }}>&#8592; Back</button>
+                <button className="win-btn" style={{ padding: '2px 10px', fontSize: 11 }}>Forward &#8594;</button>
+                <button className="win-btn" style={{ padding: '2px 10px', fontSize: 11 }}>&#128269; Search</button>
+                <div className="win-addressbar" style={{ flex: 1, margin: '0 4px', fontSize: 11 }}>
+                  http://assava.coffee/
+                </div>
+                <button className="win-btn win-btn-primary" style={{ padding: '2px 12px', fontSize: 11 }}>Go</button>
+              </div>
+
+              {/* Content area */}
+              <div style={{ background: '#ffffff', padding: 0, display: 'flex' }}>
+                {/* Sidebar */}
+                <div style={{ width: 140, background: 'linear-gradient(to bottom, #000080 0%, #1084d0 40%, #d4d0c8 40%)', flexShrink: 0, padding: '12px 8px', display: 'flex', flexDirection: 'column', gap: 6 }}>
+                  <div style={{ marginBottom: 8 }}>
+                    <img src="/logo.png" alt="ASSAVA Logo" style={{ width: 40, height: 40, objectFit: 'contain', display: 'block', margin: '0 auto 4px' }} />
+                    <div style={{ color: '#fff', fontSize: 13, fontWeight: 'bold', textAlign: 'center', textShadow: '1px 1px 0 #000080' }}>ASSAVA</div>
+                    <div style={{ color: '#aacfff', fontSize: 9, textAlign: 'center', fontFamily: 'Tahoma, sans-serif' }}>Coffee Platform</div>
+                  </div>
+                  <div style={{ borderTop: '1px solid #808080', borderBottom: '1px solid #fff', margin: '2px 0' }} />
+                  <div style={{ color: '#000', fontSize: 10, fontFamily: 'Tahoma, sans-serif' }}>
+                    <div style={{ fontWeight: 'bold', color: '#000080', marginBottom: 4 }}>Quick Links</div>
+                    {[
+                      { label: 'Shop Now', path: '/shopping' },
+                      { label: 'Our Story', path: '/story' },
+                      { label: 'Events', path: '/events' },
+                      { label: 'Account', path: '/account' },
+                    ].map(l => (
+                      <Link key={l.label} to={l.path} style={{ display: 'block', color: '#000080', textDecoration: 'underline', marginBottom: 4, fontSize: 10 }}>
+                        {l.label}
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Main content */}
+                <div style={{ flex: 1, padding: 16 }}>
+                  <marquee style={{ display: 'block', fontSize: 11, color: '#000080', marginBottom: 10, fontFamily: 'Tahoma, sans-serif', borderBottom: '1px solid #d4d0c8', paddingBottom: 6 }}>
+                    *** Welcome to ASSAVA Coffee Platform v2.0 *** NEW: Golden Geisha now in stock! *** FREE SHIPPING on orders over $80 *** Join our Ritual Club today! ***
+                  </marquee>
+
+                  <h1 style={{ fontSize: 22, fontWeight: 'bold', color: '#000080', fontFamily: 'Tahoma, sans-serif', marginBottom: 6, lineHeight: 1.2 }}>
+                    Ignite The Soul
+                  </h1>
+                  <p style={{ fontSize: 11, color: '#444', fontFamily: 'Tahoma, sans-serif', marginBottom: 12, lineHeight: 1.6 }}>
+                    Experience the explosive intensity of our volcanic-grown beans, roasted to perfection for the modern ritual. Crafted with precision since the year 2000.
+                  </p>
+
+                  {/* Info box */}
+                  <div style={{ border: '1px solid #808080', background: '#ffffcc', padding: '8px 10px', marginBottom: 12, display: 'flex', gap: 8, alignItems: 'flex-start' }}>
+                    <span style={{ fontSize: 14 }}>&#9432;</span>
+                    <span style={{ fontSize: 11, fontFamily: 'Tahoma, sans-serif', color: '#000' }}>
+                      <b>New Arrivals!</b> The <span style={{ color: '#000080' }}>Golden Geisha</span> and <span style={{ color: '#000080' }}>Obsidian Mist</span> collections are now available.
+                    </span>
+                  </div>
+
+                  <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+                    <Link to="/shopping" style={{ textDecoration: 'none' }}>
+                      <button className="win-btn win-btn-primary" style={{ fontSize: 12, padding: '5px 18px' }}>
+                        &#9658; Explore Collection
+                      </button>
+                    </Link>
+                    <Link to="/about" style={{ textDecoration: 'none' }}>
+                      <button className="win-btn" style={{ fontSize: 12, padding: '5px 18px' }}>
+                        Learn More
+                      </button>
+                    </Link>
+                    <button className="win-btn" onClick={() => setDialogOpen(false)} style={{ fontSize: 12, padding: '5px 18px' }}>
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Status bar */}
+              <div className="win-statusbar">
+                <span>Ready</span>
+                <div style={{ flex: 1 }} />
+                <span>3 products featured</span>
+                <div style={{ width: 1, height: 12, background: '#808080', margin: '0 4px' }} />
+                <span>assava.coffee</span>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Re-open button if closed */}
+        {dialogOpen && !welcomeVisible && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            style={{ textAlign: 'center' }}
+          >
+            <div className="win-icon" onClick={() => setWelcomeVisible(true)} style={{ cursor: 'pointer', margin: '0 auto' }}>
+              <span style={{ fontSize: 32 }}>☕</span>
+              <span className="win-icon-label" style={{ color: '#fff' }}>ASSAVA.exe</span>
+            </div>
+            <div style={{ marginTop: 8, fontSize: 11, color: '#ffffff', fontFamily: 'Tahoma, sans-serif', textShadow: '1px 1px #000' }}>
+              Double-click to reopen
+            </div>
+          </motion.div>
+        )}
       </div>
-
-      {/* Scroll Indicator */}
-      <motion.div 
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 2, duration: 1 }}
-        className="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-4"
-      >
-        <span className="text-[8px] uppercase tracking-[0.5em] text-cream/50 font-bold">Scroll to Discover</span>
-        <div className="w-[1px] h-12 bg-gradient-to-b from-cream/40 to-transparent" />
-      </motion.div>
-
-      {/* Ambient Glow */}
-      <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-coffee-dark/0 via-coffee-dark/20 to-coffee-dark pointer-events-none" />
     </section>
   );
 }
@@ -847,100 +930,127 @@ export function TiltWrapper({ children, className = "" }: { children: React.Reac
 
 // --- Showcase Card ---
 export function ShowcaseCard({ item, onAddToCart }: { item: any, onAddToCart: (item: any) => void }) {
-  const [rotate, setRotate] = useState({ x: 0, y: 0 });
-  const cardRef = useRef<HTMLDivElement>(null);
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!cardRef.current) return;
-    const rect = cardRef.current.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    const centerX = rect.width / 2;
-    const centerY = rect.height / 2;
-    const rotateX = (y - centerY) / 20;
-    const rotateY = (centerX - x) / 20;
-    setRotate({ x: rotateX, y: rotateY });
-  };
-
-  const handleMouseLeave = () => {
-    setRotate({ x: 0, y: 0 });
-  };
+  const [isMaximized, setIsMaximized] = useState(false);
 
   return (
     <motion.div
-      ref={cardRef}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-      initial={{ opacity: 0, y: 30 }}
+      initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      style={{
-        perspective: 1500,
-        rotateX: rotate.x,
-        rotateY: rotate.y,
-      }}
-      className="relative group cursor-pointer"
+      className="win-window"
+      style={{ width: '100%' }}
     >
-      <Link to={`/coffeeDetail/${item.id}`}>
-        <div className="relative aspect-[3/4] overflow-hidden rounded-[50px] bg-coffee-dark border border-white/5 transition-all duration-700 group-hover:glow-border group-hover:-translate-y-6 shadow-[0_30px_60px_rgba(0,0,0,0.5)] group-hover:shadow-[0_50px_100px_rgba(0,0,0,0.8)]">
-          {/* Image */}
-          <motion.img
-            src={item.image}
-            alt={item.name}
-            className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110 group-hover:opacity-40"
-            referrerPolicy="no-referrer"
-          />
-          
-          {/* Gradient Overlay */}
-          <div className="absolute inset-0 card-gradient opacity-70 group-hover:opacity-95 transition-opacity duration-700" />
-          
-          {/* Content */}
-          <div className="absolute inset-0 p-12 flex flex-col justify-end">
-            <motion.div
-              className="space-y-6"
-            >
-              <div className="flex justify-between items-end gap-4 w-full">
-                <div className="flex-1 min-w-0">
-                  <span className="text-cream font-mono text-[9px] uppercase tracking-[0.5em] mb-4 block font-bold opacity-60 group-hover:opacity-100 transition-opacity">
-                    {item.profile?.origin} / {item.profile?.roast}
-                  </span>
-                  <h3 className="text-3xl md:text-4xl lg:text-[40px] font-bold tracking-tighter text-white group-hover:text-cream transition-colors duration-500 uppercase leading-[0.9] break-words">
-                    {item.name}
-                  </h3>
-                  <Link to={`/coffeeDetail/${item.id}`} className="text-[10px] text-caramel uppercase tracking-widest font-bold mt-4 inline-block hover:text-white transition-colors">
-                    View Details
-                  </Link>
-                </div>
-                <div className="text-right shrink-0">
-                  <span className="text-2xl md:text-3xl font-bold text-caramel font-mono tracking-tighter block drop-shadow-md pb-1">Rs{item.price.toFixed(2)}</span>
-                </div>
-              </div>
-              
-              <div className="opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 transition-all duration-700 pt-2 space-y-8">
-                <p className="text-cream/50 text-sm leading-relaxed font-light italic">
-                  "{item.description}"
-                </p>
-                <div className="flex flex-wrap gap-2">
-                  {item.flavorNotes?.slice(0, 3).map((note: string, i: number) => (
-                    <span key={i} className="text-[8px] uppercase tracking-widest px-3 py-1 rounded-full glass border-white/5 text-cream/60">{note}</span>
-                  ))}
-                </div>
-                <button 
-                  onClick={(e) => {
-                    e.preventDefault();
-                    onAddToCart(item);
-                  }}
-                  className="w-full py-6 bg-caramel text-coffee-dark rounded-3xl text-[10px] font-bold uppercase tracking-[0.5em] hover:bg-caramel/90 transition-all duration-500 shadow-[0_0_40px_rgba(198,142,93,0.2)]"
-                >
-                  Add to Collection
-                </button>
-              </div>
-            </motion.div>
-          </div>
-          {/* Shine Effect */}
-          <div className="absolute inset-0 bg-gradient-to-tr from-white/0 via-white/5 to-white/0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 pointer-events-none" />
+      {/* Title bar */}
+      <div className="win-titlebar">
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6, overflow: 'hidden' }}>
+          <span style={{ fontSize: 10 }}>☕</span>
+          <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{item.name} — Properties</span>
         </div>
-      </Link>
+        <div style={{ display: 'flex', gap: 2, flexShrink: 0 }}>
+          <button className="win-titlebar-btn">_</button>
+          <button className="win-titlebar-btn" onClick={() => setIsMaximized(v => !v)}>&#9633;</button>
+          <button className="win-titlebar-btn" style={{ fontWeight: 'bold' }}>&#10005;</button>
+        </div>
+      </div>
+
+      {/* Image */}
+      <div style={{ position: 'relative', height: isMaximized ? 220 : 160, overflow: 'hidden', borderBottom: '2px solid #808080' }}>
+        <img
+          src={item.image}
+          alt={item.name}
+          referrerPolicy="no-referrer"
+          style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+        />
+        {/* Tag badge */}
+        <div style={{
+          position: 'absolute', top: 6, left: 6,
+          background: '#000080', color: '#fff',
+          fontSize: 9, fontFamily: 'Tahoma, sans-serif',
+          padding: '2px 6px', border: '1px solid #ffffff33',
+        }}>
+          {item.tag || 'Premium'}
+        </div>
+        {/* Rating badge */}
+        <div style={{
+          position: 'absolute', top: 6, right: 6,
+          background: '#d4d0c8',
+          borderTop: '1px solid #fff', borderLeft: '1px solid #fff',
+          borderRight: '1px solid #808080', borderBottom: '1px solid #808080',
+          fontSize: 10, fontFamily: 'Tahoma, sans-serif',
+          padding: '2px 6px', display: 'flex', alignItems: 'center', gap: 3,
+        }}>
+          &#9733; {item.rating}
+        </div>
+      </div>
+
+      {/* Content */}
+      <div style={{ background: '#d4d0c8', padding: '10px 12px' }}>
+        {/* Property row: name + price */}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 6 }}>
+          <div>
+            <Link to={`/coffeeDetail/${item.id}`} style={{ textDecoration: 'none' }}>
+              <div style={{ fontWeight: 'bold', fontSize: 13, color: '#000080', fontFamily: 'Tahoma, sans-serif', cursor: 'pointer' }}>
+                {item.name}
+              </div>
+            </Link>
+            <div style={{ fontSize: 9, color: '#666', fontFamily: 'Tahoma, sans-serif', marginTop: 1 }}>
+              {item.profile?.origin} / {item.profile?.roast} / {item.profile?.type}
+            </div>
+          </div>
+          <div style={{ textAlign: 'right' }}>
+            <div style={{ fontWeight: 'bold', fontSize: 13, color: '#000080', fontFamily: 'Tahoma, mono' }}>
+              Rs{item.price.toFixed(2)}
+            </div>
+            {item.oldPrice && (
+              <div style={{ fontSize: 9, color: '#888', textDecoration: 'line-through', fontFamily: 'Tahoma, sans-serif' }}>
+                Rs{item.oldPrice.toFixed(2)}
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Sunken description box */}
+        {isMaximized && (
+          <div className="win-sunken" style={{ padding: '6px 8px', marginBottom: 8, fontSize: 10, color: '#333', fontFamily: 'Tahoma, sans-serif', lineHeight: 1.5 }}>
+            {item.description}
+          </div>
+        )}
+
+        {/* Flavor notes */}
+        {isMaximized && item.flavorNotes && (
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 3, marginBottom: 8 }}>
+            {item.flavorNotes.slice(0, 4).map((note: string, i: number) => (
+              <span key={i} style={{
+                background: '#ffffff', border: '1px solid #808080',
+                fontSize: 9, padding: '1px 5px',
+                fontFamily: 'Tahoma, sans-serif', color: '#000080',
+              }}>
+                {note}
+              </span>
+            ))}
+          </div>
+        )}
+
+        {/* Separator */}
+        <hr className="win-separator" />
+
+        {/* Buttons */}
+        <div style={{ display: 'flex', gap: 4, justifyContent: 'flex-end', marginTop: 6 }}>
+          <Link to={`/coffeeDetail/${item.id}`} style={{ textDecoration: 'none' }}>
+            <button className="win-btn" style={{ fontSize: 11 }}>Properties</button>
+          </Link>
+          <button
+            className="win-btn win-btn-primary"
+            style={{ fontSize: 11 }}
+            onClick={(e) => {
+              e.preventDefault();
+              onAddToCart(item);
+            }}
+          >
+            Add to Cart
+          </button>
+        </div>
+      </div>
     </motion.div>
   );
 }

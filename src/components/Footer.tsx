@@ -1,6 +1,5 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Coffee, Instagram, Twitter, Facebook, ArrowUp } from 'lucide-react';
 
 const Footer = () => {
   const scrollToTop = () => {
@@ -8,64 +7,124 @@ const Footer = () => {
   };
 
   return (
-    <footer className="bg-coffee-dark border-t border-white/5 relative overflow-hidden">
-      <div className="max-w-7xl mx-auto section-padding">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16 mb-24">
-          <div className="space-y-8">
-            <Link to="/" className="flex items-center gap-3 group">
-              <div className="w-12 h-12 bg-caramel rounded-full flex items-center justify-center shadow-[0_0_30px_rgba(198,142,93,0.4)] group-hover:scale-110 transition-transform overflow-hidden">
-                <img src="/logo.png" alt="Assava Logo" className="w-8 h-8 object-contain" />
-              </div>
-              <span className="text-3xl font-bold tracking-tighter text-white group-hover:text-cream transition-colors uppercase">ASSAVA</span>
-            </Link>
-            <p className="text-cream/40 text-sm font-light leading-relaxed max-w-xs">
-              Igniting the soul through cinematic coffee experiences. Crafted with precision, roasted for the modern ritual.
-            </p>
-            <div className="flex items-center gap-6">
-              <Instagram className="w-5 h-5 text-cream/20 hover:text-cream transition-colors cursor-pointer" />
-              <Twitter className="w-5 h-5 text-cream/20 hover:text-cream transition-colors cursor-pointer" />
-              <Facebook className="w-5 h-5 text-cream/20 hover:text-cream transition-colors cursor-pointer" />
-            </div>
+    <footer style={{ background: '#d4d0c8', padding: '12px 16px 48px' }}>
+      <div className="win-window" style={{ maxWidth: 960, margin: '0 auto' }}>
+        {/* Title bar */}
+        <div className="win-titlebar">
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+            <span style={{ fontSize: 10 }}>☕</span>
+            <span>ASSAVA Coffee Platform — About</span>
           </div>
-          
-          <div className="space-y-8">
-            <h4 className="text-[10px] font-bold uppercase tracking-[0.5em] text-caramel">Experience</h4>
-            <ul className="space-y-4 text-sm font-light text-cream/40">
-              <li><Link to="/about" className="hover:text-cream transition-colors">Our Story</Link></li>
-              <li><Link to="/about" className="hover:text-cream transition-colors">Roasting Process</Link></li>
-              <li><Link to="/about" className="hover:text-cream transition-colors">Brewing Guides</Link></li>
-              <li><Link to="/category" className="hover:text-cream transition-colors">Locations</Link></li>
-            </ul>
-          </div>
-          
-          <div className="space-y-8">
-            <h4 className="text-[10px] font-bold uppercase tracking-[0.5em] text-caramel">Collection</h4>
-            <ul className="space-y-4 text-sm font-light text-cream/40">
-              <li><Link to="/shopping" className="hover:text-cream transition-colors">The Roastery</Link></li>
-              <li><Link to="/category" className="hover:text-cream transition-colors">Global Spaces</Link></li>
-              <li><Link to="/shopping" className="hover:text-cream transition-colors">Special Reserve</Link></li>
-              <li><Link to="/account" className="hover:text-cream transition-colors">Membership</Link></li>
-            </ul>
-          </div>
-          
-          <div className="space-y-8">
-            <h4 className="text-[10px] font-bold uppercase tracking-[0.5em] text-caramel">Contact</h4>
-            <ul className="space-y-4 text-sm font-light text-cream/40">
-              <li>ritual@assava.coffee</li>
-              <li><Link to="/about" className="hover:text-cream transition-colors">Contact Us</Link></li>
-              <li>Brooklyn, NY 11201</li>
-            </ul>
+          <div style={{ display: 'flex', gap: 2 }}>
+            <button className="win-titlebar-btn">_</button>
+            <button className="win-titlebar-btn">&#9633;</button>
+            <button className="win-titlebar-btn" style={{ fontWeight: 'bold' }}>&#10005;</button>
           </div>
         </div>
-        
-        <div className="flex flex-col md:flex-row items-center justify-between pt-12 border-t border-white/5 gap-8">
-          <span className="text-[10px] text-cream/20 uppercase tracking-[0.5em] font-bold">© 2026 ASSAVA COFFEE PLATFORM</span>
-          <button 
-            onClick={scrollToTop}
-            className="w-12 h-12 rounded-full glass border-white/5 flex items-center justify-center hover:bg-caramel/90 hover:text-coffee-dark transition-all duration-300 group"
-          >
-            <ArrowUp className="w-6 h-6 group-hover:-translate-y-1 transition-transform" />
-          </button>
+
+        <div style={{ background: '#d4d0c8', padding: 16 }}>
+          {/* Marquee */}
+          <div style={{ marginBottom: 12, borderTop: '1px solid #808080', borderBottom: '1px solid #fff', padding: '3px 0' }}>
+            <marquee style={{ fontSize: 11, color: '#000080', fontFamily: 'Tahoma, sans-serif' }}>
+              *** ASSAVA Coffee Platform &copy; 2026 *** Roasted to perfection *** Free shipping on orders over $80 *** ritual@assava.coffee *** Brooklyn, NY 11201 ***
+            </marquee>
+          </div>
+
+          {/* 4-column grid */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: 12, marginBottom: 12 }}>
+            {/* Brand */}
+            <div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 8 }}>
+                <div style={{ width: 24, height: 24, borderRadius: '50%', overflow: 'hidden', border: '1px solid #808080' }}>
+                  <img src="/logo.png" alt="ASSAVA" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                </div>
+                <span style={{ fontWeight: 'bold', fontSize: 13, color: '#000080', fontFamily: 'Tahoma, sans-serif' }}>ASSAVA</span>
+              </div>
+              <p style={{ fontSize: 10, color: '#444', fontFamily: 'Tahoma, sans-serif', lineHeight: 1.6, marginBottom: 8 }}>
+                Igniting the soul through cinematic coffee experiences. Crafted with precision for the modern ritual.
+              </p>
+              <div style={{ display: 'flex', gap: 4 }}>
+                <button className="win-btn" style={{ fontSize: 10, padding: '2px 6px' }}>IG</button>
+                <button className="win-btn" style={{ fontSize: 10, padding: '2px 6px' }}>TW</button>
+                <button className="win-btn" style={{ fontSize: 10, padding: '2px 6px' }}>FB</button>
+              </div>
+            </div>
+
+            {/* Experience */}
+            <div className="win-groupbox" style={{ position: 'relative' }}>
+              <div className="win-groupbox-label">Experience</div>
+              <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 4 }}>
+                {[
+                  { label: 'Our Story', path: '/about' },
+                  { label: 'Roasting Process', path: '/about' },
+                  { label: 'Brewing Guides', path: '/about' },
+                  { label: 'Locations', path: '/category' },
+                ].map(item => (
+                  <li key={item.label}>
+                    <Link to={item.path} className="win-link" style={{ fontSize: 11 }}>
+                      &gt; {item.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Collection */}
+            <div className="win-groupbox" style={{ position: 'relative' }}>
+              <div className="win-groupbox-label">Collection</div>
+              <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 4 }}>
+                {[
+                  { label: 'The Roastery', path: '/shopping' },
+                  { label: 'Global Spaces', path: '/category' },
+                  { label: 'Special Reserve', path: '/shopping' },
+                  { label: 'Membership', path: '/account' },
+                ].map(item => (
+                  <li key={item.label}>
+                    <Link to={item.path} className="win-link" style={{ fontSize: 11 }}>
+                      &gt; {item.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Contact */}
+            <div className="win-groupbox" style={{ position: 'relative' }}>
+              <div className="win-groupbox-label">Contact</div>
+              <div style={{ fontSize: 11, fontFamily: 'Tahoma, sans-serif', color: '#444', lineHeight: 1.8 }}>
+                <div>ritual@assava.coffee</div>
+                <div>Brooklyn, NY 11201</div>
+                <div style={{ marginTop: 6 }}>
+                  <Link to="/about" className="win-link" style={{ fontSize: 11 }}>&gt; Contact Us</Link>
+                </div>
+              </div>
+
+              {/* Newsletter */}
+              <div style={{ marginTop: 10 }}>
+                <div style={{ fontSize: 10, fontWeight: 'bold', color: '#000080', marginBottom: 4 }}>Newsletter</div>
+                <div style={{ display: 'flex', gap: 4 }}>
+                  <input className="win-input" style={{ flex: 1, fontSize: 10 }} placeholder="your@email.com" />
+                  <button className="win-btn win-btn-primary" style={{ fontSize: 10, padding: '2px 6px' }}>OK</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Bottom separator */}
+          <hr className="win-separator" />
+
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 8, flexWrap: 'wrap', gap: 8 }}>
+            <span style={{ fontSize: 10, color: '#666', fontFamily: 'Tahoma, sans-serif' }}>
+              &copy; 2026 ASSAVA COFFEE PLATFORM. All rights reserved. | Privacy Policy | Terms of Service
+            </span>
+            <button
+              className="win-btn"
+              onClick={scrollToTop}
+              style={{ fontSize: 10, padding: '3px 10px' }}
+            >
+              &#8593; Back to Top
+            </button>
+          </div>
         </div>
       </div>
     </footer>

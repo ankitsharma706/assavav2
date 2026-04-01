@@ -1,47 +1,46 @@
-import React, { Suspense } from 'react';
+import React from 'react';
 import { Navbar, Hero } from '../components/CoffeeComponents';
 import Collection from '../components/Collection';
 import Events from '../components/Events';
 import Instagram from '../components/Instagram';
 import Reviews from '../components/Reviews';
 import Footer from '../components/Footer';
-import { motion } from 'framer-motion';
-import { Canvas } from '@react-three/fiber';
-import { BeanCluster } from '../components/ThreeScene';
 
-const Home = ({ cartCount, onOpenCart, onOpenCategories, onAddToCart }: { cartCount: number, onOpenCart: () => void, onOpenCategories: () => void, onAddToCart: (item: any) => void }) => {
+const Home = ({ cartCount, onOpenCart, onOpenCategories, onAddToCart }: {
+  cartCount: number;
+  onOpenCart: () => void;
+  onOpenCategories: () => void;
+  onAddToCart: (item: any) => void;
+}) => {
   return (
-    <motion.main
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 1 }}
-      className="relative bg-coffee-dark"
+    <main
+      style={{
+        minHeight: '100vh',
+        background: '#008080',
+        backgroundImage: `url("data:image/svg+xml,%3Csvg width='4' height='4' viewBox='0 0 4 4' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='2' height='2' fill='%23007070' /%3E%3Crect x='2' y='2' width='2' height='2' fill='%23007070' /%3E%3C/svg%3E")`,
+        fontFamily: 'Tahoma, Verdana, Arial, sans-serif',
+        paddingBottom: 32,
+      }}
     >
-      <div className="grain" />
-      
-      {/* Global Immersive Background */}
-      <div className="fixed inset-0 pointer-events-none z-0 opacity-10">
-        <Suspense fallback={null}>
-          <Canvas gl={{ alpha: true }} camera={{ position: [0, 0, 15] }}>
-            <BeanCluster />
-          </Canvas>
-        </Suspense>
-      </div>
+      {/* Hero / Desktop section */}
+      <Hero />
 
-      <div className="relative z-10">
-        <Navbar 
-          onOpenCart={onOpenCart} 
-          onOpenCategories={onOpenCategories} 
-          cartCount={cartCount}
-        />
-        <Hero />
+      {/* Sections below rendered as Win2K panel pages */}
+      <div style={{ background: '#d4d0c8' }}>
         <Collection onAddToCart={onAddToCart} />
         <Events />
-        <Instagram />
         <Reviews />
+        <Instagram />
         <Footer />
       </div>
-    </motion.main>
+
+      {/* Taskbar fixed at bottom */}
+      <Navbar
+        onOpenCart={onOpenCart}
+        onOpenCategories={onOpenCategories}
+        cartCount={cartCount}
+      />
+    </main>
   );
 };
 
