@@ -43,23 +43,23 @@ export function BeanCluster() {
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
 
-  const beansCount = 3;
+  const beansCount = 150; // High-density surrounding ritual
   const beans = useMemo(() => {
     const b = [];
     for (let i = 0; i < beansCount; i++) {
-      const phi = Math.acos(-1 + (2 * i) / beansCount);
-      const theta = Math.sqrt(beansCount * Math.PI) * phi;
-      const radius = 20 + Math.random() * 28;
+      const radius = 15 + Math.random() * 40;
+      const angle = Math.random() * Math.PI * 2;
+      const height = (Math.random() - 0.5) * 45;
       const variant = BEAN_PALETTE[Math.floor(Math.random() * BEAN_PALETTE.length)];
       b.push({
         initialPos: new THREE.Vector3(
-          radius * Math.cos(theta) * Math.sin(phi) * 1.8,
-          radius * Math.sin(theta) * Math.sin(phi),
-          radius * Math.cos(phi) * 0.4
+          radius * Math.cos(angle),
+          height,
+          radius * Math.sin(angle)
         ),
-        scale: 0.012 + Math.random() * 0.015,
+        scale: 0.003 + Math.random() * 0.008, // Smaller beans for cinematic scale
         rotation: new THREE.Euler(Math.random() * Math.PI, Math.random() * Math.PI, Math.random() * Math.PI),
-        speed: 0.05 + Math.random() * 0.15,
+        speed: 0.01 + Math.random() * 0.04, // Slower, more majestic revolution
         ...variant
       });
     }
@@ -81,22 +81,24 @@ export function BeanCluster() {
       {/* ASSAVA lighting: warm amber key + cool dark fill */}
       <AssavaLightingRig />
 
-      {/* Hero center bean */}
-      <group scale={1}>
+      {/* Hero center bean (Large & Ethereal) */}
+      <group scale={1.8} position={[0, 0, -15]}>
         <ClusterBean
           initialPos={new THREE.Vector3(0, 0, 0)}
-          scale={0.03}
-          rotation={new THREE.Euler(0, 0, 0)}
-          speed={0.1}
+          scale={0.08}
+          rotation={new THREE.Euler(0.4, 0.2, 0.1)}
+          speed={0.05}
           mouse={mouse}
           texture={texture}
           color="#C68E5D"
-          roughness={0.18}
-          metalness={0.18}
+          roughness={0.8}    // Higher roughness for that soft look in the screenshot
+          metalness={0.1}
+          opacity={0.4}      // Translucent like the reference
+          transparent
         />
       </group>
 
-      {/* Orbiting beans */}
+      {/* Explosive Surrounding Discovery Ritual */}
       {beans.map((bean, i) => (
         <ClusterBean key={i} {...bean} mouse={mouse} texture={texture} />
       ))}
@@ -200,7 +202,7 @@ function AssavaOrbGlow() {
 }
 
 // --- Bean mesh: ASSAVA caramel with high clearcoat for that lacquered look ---
-function ClusterBean({ initialPos, scale, rotation, speed, mouse, texture, color, roughness, metalness }: any) {
+function ClusterBean({ initialPos, scale, rotation, speed, mouse, texture, color, roughness, metalness, opacity = 1, transparent = false }: any) {
   const groupRef = useRef<THREE.Group>(null);
   const tempVec = useMemo(() => new THREE.Vector3(), []);
 
@@ -259,6 +261,8 @@ function ClusterBean({ initialPos, scale, rotation, speed, mouse, texture, color
           reflectivity={0.7}
           emissive="#120800"
           emissiveIntensity={0.04}
+          opacity={opacity}
+          transparent={transparent}
         />
       </mesh>
       {/* Right lobe */}
@@ -274,6 +278,8 @@ function ClusterBean({ initialPos, scale, rotation, speed, mouse, texture, color
           reflectivity={0.7}
           emissive="#120800"
           emissiveIntensity={0.04}
+          opacity={opacity}
+          transparent={transparent}
         />
       </mesh>
     </group>
