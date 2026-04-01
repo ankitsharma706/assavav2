@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import { Canvas } from '@react-three/fiber';
 import { BeanCluster } from '../components/ThreeScene';
 
-const ProductDetail = ({ cartCount, onOpenCart, onOpenCategories, onAddToCart }: { cartCount: number, onOpenCart: () => void, onOpenCategories: () => void, onAddToCart: (item: any) => void }) => {
+const ProductDetail = ({ cartCount, wishlistCount, wishlist, onToggleWishlist, onOpenCart, onOpenCategories, onAddToCart }: { cartCount: number, wishlistCount: number, wishlist: any[], onToggleWishlist: (item: any) => void, onOpenCart: () => void, onOpenCategories: () => void, onAddToCart: (item: any) => void }) => {
   return (
     <motion.main
       initial={{ opacity: 0 }}
@@ -29,9 +29,10 @@ const ProductDetail = ({ cartCount, onOpenCart, onOpenCategories, onAddToCart }:
           onOpenCart={onOpenCart} 
           onOpenCategories={onOpenCategories} 
           cartCount={cartCount}
+          wishlistCount={wishlistCount}
         />
         
-        <CoffeeDetailPage onAddToCart={onAddToCart} />
+        <CoffeeDetailPage onAddToCart={onAddToCart} onToggleWishlist={onToggleWishlist} wishlist={wishlist} />
         
         <Footer />
       </div>

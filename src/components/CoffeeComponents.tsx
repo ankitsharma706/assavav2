@@ -1,18 +1,27 @@
 import React, { useState, useEffect, useRef, Suspense, useMemo } from 'react';
 import { motion, useScroll, useTransform, AnimatePresence } from 'motion/react';
-import { Search, Coffee, MapPin, Star, ArrowRight, Menu, X, User, ShoppingCart, Settings, Package, LogOut, ChevronRight, Filter, Check, Droplets, Zap, FlaskConical, Wind, Cylinder, Flame, ChevronDown, Plus, Info, Clock, ExternalLink } from 'lucide-react';
+import { Search, Coffee, MapPin, Star, ArrowRight, Menu, X, User, ShoppingCart, Settings, Package, LogOut, ChevronRight, ChevronLeft, Filter, Check, Droplets, Zap, FlaskConical, Wind, Cylinder, Flame, ChevronDown, Plus, Info, Clock, ExternalLink, Heart, CheckCircle } from 'lucide-react';
 import { Canvas } from '@react-three/fiber';
+import * as THREE from 'three';
 import { useTexture, Preload } from '@react-three/drei';
 import { EffectComposer, Bloom, DepthOfField, Vignette } from '@react-three/postprocessing';
-import { CoffeeBean, CoffeeDust, CoffeeSteam, LiquidBlob, BeanCluster, ExplodingHeroBean, FieryParticles } from './ThreeScene';
+import { CoffeeBean, CoffeeDust, CoffeeSteam, LiquidBlob, BeanCluster, ExplodingHeroBean } from './ThreeScene';
 import { cn } from '../lib/utils';
 import { Link, useLocation, useParams } from 'react-router-dom';
-import { PRODUCTS, COFFEE_COLLECTIONS, StoryStepDetails } from '../constants';
-import { Product } from '../types';
+import { PRODUCTS, COFFEE_COLLECTIONS, STORY_STEPS, STORY_CHAPTERS, COFFEE_VARIANTS, REVIEWS, PRODUCT_FAQS } from '../constants';
+import { Product, StoryStep, StoryChapter } from '../types';
 import Footer from './Footer';
+import ScrollIndicator from './ScrollIndicator';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useGSAP } from '@gsap/react';
+
+gsap.registerPlugin(ScrollTrigger);
+
+export { Footer, ScrollIndicator };
 
 // --- Navbar ---
-export function Navbar({ onOpenCart, onOpenCategories, cartCount }: { onOpenCart: () => void, onOpenCategories: () => void, cartCount: number }) {
+export function Navbar({ onOpenCart, onOpenCategories, cartCount, wishlistCount, className }: { onOpenCart: () => void, onOpenCategories: () => void, cartCount: number, wishlistCount?: number, className?: string }) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
@@ -50,17 +59,22 @@ export function Navbar({ onOpenCart, onOpenCategories, cartCount }: { onOpenCart
     <>
       <nav className={cn(
         "fixed top-0 left-0 w-full z-50 transition-all duration-500 px-6 py-4",
-        isScrolled ? "glass py-3" : "bg-transparent"
+        isScrolled ? "glass py-3" : "bg-transparent",
+        className
       )}>
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <Link to="/" className="flex items-center gap-3 group">
-            <div className="w-12 h-12 bg-caramel rounded-full flex items-center justify-center shadow-[0_0_30px_rgba(198,142,93,0.4)] group-hover:scale-110 transition-transform overflow-hidden">
-              <img src="/logo.png" alt="Assava Logo" className="w-8 h-8 object-contain" />
+            <div className="w-14 h-14 rounded-full flex items-center justify-center shadow-[0_0_40px_rgba(198,142,93,0.5)] group-hover:scale-110 transition-all duration-500 overflow-hidden relative border border-white/10">
+              <img 
+                src="/logo.png" 
+                alt="Assava Logo" 
+                className="w-full h-full object-cover scale-[1] transition-transform duration-700" 
+              />
             </div>
-            <span className="text-2xl font-bold tracking-tighter text-white group-hover:text-cream transition-colors uppercase">ASSAVA</span>
+            <span className={cn("text-3xl font-bold tracking-tighter group-hover:text-caramel transition-colors uppercase font-serif italic", !className || !className.includes('text-') ? "text-white" : "")}>ASSAVA</span>
           </Link>
 
-          <div className="hidden lg:flex items-center gap-6 xl:gap-8 text-[9px] font-bold uppercase tracking-[0.3em] text-cream/80">
+          <div className={cn("hidden lg:flex items-center gap-6 xl:gap-8 text-[9px] font-bold uppercase tracking-[0.3em]", !className || !className.includes('text-') ? "text-cream/80" : "")}>
             {navLinks.filter(l => l.name !== 'Account').map((link) => {
               if (link.path) {
                 return (
@@ -103,6 +117,14 @@ export function Navbar({ onOpenCart, onOpenCategories, cartCount }: { onOpenCart
                 {cartCount}
               </span>
             </Link>
+            <Link to="/account" className="relative p-2 hover:bg-cream/10 rounded-full transition-colors group">
+              <Heart className="w-5 h-5" />
+              {wishlistCount !== undefined && wishlistCount >= 0 && (
+                <span className="absolute -top-1 -right-1 w-4 h-4 bg-caramel text-coffee-dark text-[10px] font-bold rounded-full flex items-center justify-center">
+                  {wishlistCount}
+                </span>
+              )}
+            </Link>
             <Link to="/account" className="hidden sm:flex items-center gap-2 glass px-4 py-2 rounded-full text-sm font-semibold hover:glow-border transition-all">
               <User className="w-4 h-4" />
               <span>Account</span>
@@ -128,10 +150,10 @@ export function Navbar({ onOpenCart, onOpenCategories, cartCount }: { onOpenCart
           >
             <div className="flex justify-between items-center mb-20">
               <Link to="/" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-3">
-                <div className="w-12 h-12 bg-caramel rounded-full flex items-center justify-center overflow-hidden">
-                  <img src="/logo.png" alt="Assava Logo" className="w-8 h-8 object-contain" />
-                </div>
-                <span className="text-2xl font-bold tracking-tighter text-white uppercase">ASSAVA</span>
+              <div className="w-14 h-14 rounded-full flex items-center justify-center shadow-[0_0_40px_rgba(198,142,93,0.5)] overflow-hidden relative border border-white/10">
+                <img src="/logo.png" alt="Assava Logo" className="w-full h-full object-cover scale-[0.8]" />
+              </div>
+              <span className="text-3xl font-bold tracking-tighter text-white uppercase font-serif italic">ASSAVA</span>
               </Link>
               <button 
                 onClick={() => setIsMobileMenuOpen(false)}
@@ -188,6 +210,34 @@ export function Navbar({ onOpenCart, onOpenCategories, cartCount }: { onOpenCart
   );
 }
 
+// --- AddToCart Notification Ritual ---
+export function RitualToast({ item, isVisible }: { item: any, isVisible: boolean }) {
+  if (!item) return null;
+  return (
+    <AnimatePresence>
+      {isVisible && (
+        <motion.div
+          initial={{ opacity: 0, y: 50, scale: 0.9 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          exit={{ opacity: 0, y: 20, scale: 0.95 }}
+          className="fixed bottom-12 right-12 z-[200] glass px-8 py-6 rounded-[32px] flex items-center gap-6 glow-border shadow-[0_20px_50px_rgba(0,0,0,0.5)] border-white/10"
+        >
+          <div className="w-16 h-16 rounded-[20px] overflow-hidden glass border border-white/10 flex-shrink-0">
+            <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
+          </div>
+          <div className="space-y-1">
+            <span className="text-caramel font-mono text-[8px] uppercase tracking-widest font-bold">Added to Ritual</span>
+            <h4 className="text-lg font-bold tracking-tight text-white uppercase">{item.name}</h4>
+            <div className="flex items-center gap-2 text-[10px] text-cream/40 font-bold uppercase tracking-widest">
+              <CheckCircle className="w-3 h-3 text-caramel" /> Successfully Secured
+            </div>
+          </div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+}
+
 // --- Hero Section ---
 function FloatingBeans() {
   const beanTexture = useTexture('https://images.unsplash.com/photo-1559056199-641a0ac8b55e?auto=format&fit=crop&q=80&w=500');
@@ -204,107 +254,123 @@ function FloatingBeans() {
   );
 }
 
+// --- Hero Section (UPGRADED MASSIVELY WITH GSAP & R3F) ---
 export function Hero() {
+  const containerRef = useRef(null);
+  const textRef = useRef(null);
+  const subtextRef = useRef(null);
+
+  useGSAP(() => {
+     const tl = gsap.timeline({
+        scrollTrigger: {
+           trigger: containerRef.current,
+           start: 'top top',
+           end: 'bottom top',
+           scrub: true,
+        }
+     });
+
+     tl.to(textRef.current, {
+        scale: 1.5,
+        opacity: 0,
+        y: -100,
+        ease: 'none'
+     }, 0);
+
+     tl.to(subtextRef.current, {
+        opacity: 0,
+        y: 50,
+        ease: 'none'
+     }, 0);
+
+     tl.to('.hero-beans-container', {
+        scale: 2,
+        z: 100,
+        ease: 'none'
+     }, 0);
+
+  }, { scope: containerRef });
+
   return (
-    <section className="relative h-screen w-full flex items-center justify-center overflow-hidden bg-coffee-dark">
-      {/* 3D Background */}
-      <div className="absolute inset-0 z-0">
-        <Suspense fallback={<div className="absolute inset-0 flex items-center justify-center bg-coffee-dark/20 text-caramel/50 font-mono text-xs tracking-widest uppercase">Loading Cinematic Scene...</div>}>
-          <Canvas 
-            gl={{ 
-              antialias: true, 
-              alpha: true,
-              powerPreference: "high-performance",
-              preserveDrawingBuffer: true
-            }}
-            camera={{ position: [0, 0, 8], fov: 45 }}
-            dpr={[1, 2]}
-          >
-            <Suspense fallback={null}>
-              <ambientLight intensity={0.4} />
-              <pointLight position={[10, 10, 10]} intensity={3} color="#C68E5D" />
-              <pointLight position={[-10, -10, -10]} intensity={2} color="#4E342E" />
-              <pointLight position={[0, 0, 5]} intensity={2} color="#FFFFFF" />
-              <CoffeeDust count={300} />
-              <FieryParticles count={200} />
+    <section ref={containerRef} className="relative h-[160vh] w-full bg-[#000000]">
+      {/* Apple-Level Minimalist Background Ritual */}
+      <div 
+        className="absolute inset-0 z-0 opacity-100" 
+        style={{
+          background: 'radial-gradient(circle at center, rgba(90, 62, 43, 0.15) 0%, #000000 80%)'
+        }}
+      />
+      
+      {/* Stick the scene */}
+      <div className="sticky top-0 h-screen w-full flex items-center justify-center overflow-hidden">
+        
+        {/* Cinematic 3D Engine (Minimalist recalibrated) */}
+        <div className="hero-beans-container absolute inset-0 z-0">
+          <Suspense fallback={null}>
+            <Canvas 
+              shadows
+              gl={{ 
+                antialias: true, 
+                alpha: true,
+                toneMapping: THREE.ACESFilmicToneMapping,
+                powerPreference: "high-performance"
+              }} 
+              camera={{ position: [0, 0, 12], fov: 26 }}
+            >
               <BeanCluster />
+              
+              {/* Post-Processing Ritual (Cine-Lux Minimalism) */}
+              <EffectComposer multisampling={4}>
+                <Bloom 
+                   luminanceThreshold={0.6} 
+                   luminanceSmoothing={0.9} 
+                   intensity={0.2} 
+                   radius={0.7} 
+                />
+                <DepthOfField 
+                   focusDistance={0.015} 
+                   focalLength={0.035} 
+                   bokehScale={5} 
+                   height={480} 
+                />
+                <Vignette 
+                   offset={0.4} 
+                   darkness={0.8} 
+                   eskil={false} 
+                />
+              </EffectComposer>
+              
               <Preload all />
-            </Suspense>
-            
-            <EffectComposer multisampling={0}>
-              <Bloom 
-                intensity={2.0} 
-                luminanceThreshold={0.15} 
-                luminanceSmoothing={0.9} 
-                mipmapBlur
-              />
-              <DepthOfField 
-                focusDistance={0} 
-                focalLength={0.02} 
-                bokehScale={2} 
-                height={480} 
-              />
-              <Vignette eskil={false} offset={0.1} darkness={1.2} />
-            </EffectComposer>
-          </Canvas>
-        </Suspense>
-      </div>
+            </Canvas>
+          </Suspense>
+        </div>
 
-      {/* Content */}
-      <div className="relative z-10 text-center px-6 max-w-5xl pointer-events-none">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1] }}
-          className="bg-coffee-dark/20 backdrop-blur-none rounded-2xl px-8 py-10"
-        >
-          <motion.span 
-            initial={{ opacity: 0, letterSpacing: "0.5em" }}
-            animate={{ opacity: 1, letterSpacing: "1em" }}
-            transition={{ duration: 2, delay: 0.5 }}
-            className="text-cream/60 font-mono text-[9px] uppercase block mb-6 font-bold"
-          >
-            THE ULTIMATE AWAKENING
-          </motion.span>
-          <h1 className="text-5xl md:text-8xl font-bold tracking-tighter mb-8 leading-[0.8] uppercase text-white drop-shadow-[0_0_30px_rgba(255,255,255,0.2)]">
-            Ignite <br />
-            <span className="text-caramel italic serif lowercase drop-shadow-[0_0_30px_rgba(198,142,93,0.4)]">The Soul</span>
-          </h1>
-          <p className="text-cream/75 text-base md:text-xl mb-12 max-w-2xl mx-auto font-light tracking-wide leading-relaxed">
-            Experience the explosive intensity of our volcanic-grown beans, roasted to perfection for the modern ritual.
-          </p>
-          
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 1.2, duration: 1 }}
-            className="pointer-events-auto"
-          >
-            <Link to="/shopping">
-              <button className="group relative px-12 py-5 rounded-full overflow-hidden glass border-white/10 hover:glow-border transition-all duration-500">
-                <div className="absolute inset-0 bg-caramel/10 translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
-                <span className="relative z-10 text-[10px] font-bold uppercase tracking-[0.4em] text-cream group-hover:text-cream transition-colors">
-                  Explore Collection
-                </span>
+        {/* Cinematic Narrative Mask */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black opacity-60 z-[1]" />
+        
+        {/* Text Layer (Sun-Drenched Contrast Protocol) */}
+        <div className="relative z-10 text-center px-6">
+           <div ref={textRef} className="space-y-4">
+              <span className="text-[#A67C52] font-mono text-[10px] uppercase tracking-[1.5em] block animate-pulse opacity-60">/ EST. 2021 ARCHIVE</span>
+              <h1 className="text-5xl md:text-9xl font-serif font-black text-[#C68E5D] tracking-tighter leading-none uppercase italic parallax">
+                 ASSAVA <br /> <span className="text-[#F5F5DC] font-light lowercase md:text-8xl">Collective</span>
+              </h1>
+           </div>
+           
+           <div ref={subtextRef} className="mt-20 flex flex-col md:flex-row items-center justify-center gap-12">
+              <p className="text-lg md:text-xl text-[#F5F5DC]/70 italic font-serif max-w-sm parallax leading-relaxed">Every bean a ritual. <br /> Every cup a translation of terroir.</p>
+              <div className="w-[1px] h-20 bg-[#C68E5D]/20 hidden md:block" />
+              <button className="px-16 py-6 bg-[#1A120B] text-[#F5F5DC] border border-[#C68E5D]/20 rounded-full font-black uppercase tracking-[0.5em] text-[10px] shadow-2xl hover:bg-[#3B2A1E] hover:border-[#C68E5D] transition-all magnetic">
+                 Explore Archive
               </button>
-            </Link>
-          </motion.div>
-        </motion.div>
+           </div>
+        </div>
+
+        {/* Scroll Ritual Indicator */}
+        <div className="absolute bottom-12 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-4 opacity-30">
+           <div className="w-[1px] h-20 bg-gradient-to-b from-[#C68E5D] to-transparent animate-bounce" />
+        </div>
       </div>
-
-      {/* Scroll Indicator */}
-      <motion.div 
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 2, duration: 1 }}
-        className="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-4"
-      >
-        <span className="text-[8px] uppercase tracking-[0.5em] text-cream/50 font-bold">Scroll to Discover</span>
-        <div className="w-[1px] h-12 bg-gradient-to-b from-cream/40 to-transparent" />
-      </motion.div>
-
-      {/* Ambient Glow */}
-      <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-coffee-dark/0 via-coffee-dark/20 to-coffee-dark pointer-events-none" />
     </section>
   );
 }
@@ -393,7 +459,7 @@ export function CartPanel({ isOpen, onClose, items, onRemove, onUpdateQty }: {
   onRemove: (id: string) => void,
   onUpdateQty: (id: string, delta: number) => void
 }) {
-  const subtotal = items.reduce((acc, item) => acc + (item.price * item.qty), 0);
+  const subtotal = items.reduce((acc, item) => acc + (item.price * (item.quantity || 1)), 0);
 
   return (
     <AnimatePresence>
@@ -457,7 +523,7 @@ export function CartPanel({ isOpen, onClose, items, onRemove, onUpdateQty }: {
                           >
                             -
                           </button>
-                          <span className="text-xs font-bold w-4 text-center">{item.qty}</span>
+                          <span className="text-xs font-bold w-4 text-center">{item.quantity || 1}</span>
                           <button 
                             onClick={() => onUpdateQty(item.id, 1)}
                             className="w-6 h-6 rounded-full flex items-center justify-center text-xs hover:text-cream transition-all"
@@ -487,7 +553,7 @@ export function CartPanel({ isOpen, onClose, items, onRemove, onUpdateQty }: {
                   </div>
                   <div className="flex justify-between text-2xl font-bold tracking-tighter">
                     <span className="uppercase">Total</span>
-                    <span className="text-cream font-mono">${subtotal.toFixed(2)}</span>
+                    <span className="text-cream font-mono">Rs{subtotal.toFixed(2)}</span>
                   </div>
                 </div>
                 <Link to="/thankyou" onClick={onClose} className="block">
@@ -667,7 +733,9 @@ export function AccountDashboard() {
 }
 
 // --- Card Component ---
-export function CoffeeCard({ title, location, rating, image, price, oldPrice, tag, description, id = "1", onAddToCart }: any) {
+export function CoffeeCard({ title, location, rating, image, price, oldPrice, tag, description, id = "1", onAddToCart, onToggleWishlist, isWishlisted }: any) {
+  const [isImageLoaded, setIsImageLoaded] = useState(false);
+
   return (
     <motion.div
       whileHover={{ y: -10, scale: 1.04, boxShadow: "0px 10px 30px rgba(198,142,93,0.4)" }}
@@ -675,12 +743,21 @@ export function CoffeeCard({ title, location, rating, image, price, oldPrice, ta
       className="glass rounded-[40px] overflow-hidden group cursor-pointer relative glow-border-hover z-0"
     >
       <Link to={`/coffeeDetail/${id}`}>
-        <div className="relative h-72 overflow-hidden">
+        <div className="relative aspect-[4/5] overflow-hidden bg-coffee-dark/20">
+          {!isImageLoaded && (
+            <div className="absolute inset-0 animate-pulse bg-gradient-to-r from-coffee-dark via-coffee-dark/40 to-coffee-dark flex items-center justify-center">
+              <div className="w-12 h-12 rounded-full border-2 border-caramel/20 border-t-caramel animate-spin" />
+            </div>
+          )}
           <img 
             src={image} 
             alt={title} 
             loading="lazy"
-            className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
+            onLoad={() => setIsImageLoaded(true)}
+            className={cn(
+              "w-full h-full object-cover transition-all duration-1000",
+              isImageLoaded ? "opacity-100 scale-100 group-hover:scale-110" : "opacity-0 scale-110"
+            )}
             referrerPolicy="no-referrer"
           />
           <div className="absolute inset-0 card-gradient" />
@@ -692,9 +769,24 @@ export function CoffeeCard({ title, location, rating, image, price, oldPrice, ta
             </div>
           </div>
 
-          <div className="absolute top-6 right-6 glass px-4 py-2 rounded-full flex items-center gap-2 text-xs font-bold glow-border">
-            <Star className="w-3 h-3 text-gold fill-gold" />
-            <span>{rating}</span>
+          <div className="absolute top-6 right-6 flex items-center gap-2">
+            <button 
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                onToggleWishlist && onToggleWishlist({ id, title, price, image, location, rating, description });
+              }}
+              className={cn(
+                "glass p-2 rounded-full transition-all duration-300 hover:scale-110",
+                isWishlisted ? "bg-caramel text-coffee-dark" : "hover:bg-white/10"
+              )}
+            >
+              <Heart className={cn("w-4 h-4", isWishlisted && "fill-current")} />
+            </button>
+            <div className="glass px-4 py-2 rounded-full flex items-center gap-2 text-xs font-bold glow-border">
+              <Star className="w-3 h-3 text-gold fill-gold" />
+              <span>{rating}</span>
+            </div>
           </div>
         </div>
       </Link>
@@ -745,7 +837,7 @@ export function CoffeeCard({ title, location, rating, image, price, oldPrice, ta
             className="px-6 py-3 rounded-full bg-caramel text-coffee-dark font-bold text-sm flex items-center gap-2 shadow-[0_0_20px_rgba(198,142,93,0.3)] hover:opacity-90 transition-all"
           >
             <Plus className="w-4 h-4" />
-            <span>Add to Cart</span>
+            <span>Add</span>
           </motion.button>
         </div>
       </div>
@@ -754,7 +846,7 @@ export function CoffeeCard({ title, location, rating, image, price, oldPrice, ta
 }
 
 // --- Search Page ---
-export function SearchPage({ onOpenCart, onOpenCategories, cartCount }: { onOpenCart: () => void, onOpenCategories: () => void, cartCount: number }) {
+export function SearchPage({ onOpenCart, onOpenCategories, cartCount, wishlistCount, onAddToCart, onToggleWishlist, wishlist }: { onOpenCart: () => void, onOpenCategories: () => void, cartCount: number, wishlistCount: number, onAddToCart: (item: any) => void, onToggleWishlist: (item: any) => void, wishlist: any[] }) {
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 1500);
@@ -765,7 +857,7 @@ export function SearchPage({ onOpenCart, onOpenCategories, cartCount }: { onOpen
 
   return (
     <div className="min-h-screen bg-coffee-dark pt-32 pb-20 px-6 relative overflow-hidden">
-      <Navbar onOpenCart={onOpenCart} onOpenCategories={onOpenCategories} cartCount={cartCount} />
+      <Navbar onOpenCart={onOpenCart} onOpenCategories={onOpenCategories} cartCount={cartCount} wishlistCount={wishlistCount} />
       {/* Background Effects */}
       <div className="fixed inset-0 pointer-events-none z-0">
         <Canvas gl={{ antialias: false, alpha: true, powerPreference: "low-power" }} camera={{ position: [0, 0, 5] }} dpr={[1, 1.5]}>
@@ -797,7 +889,13 @@ export function SearchPage({ onOpenCart, onOpenCategories, cartCount }: { onOpen
             ))
           ) : (
             results.map((item, index) => (
-              <CoffeeCard key={index} {...item} />
+              <CoffeeCard 
+                key={index} 
+                {...item} 
+                onAddToCart={onAddToCart}
+                onToggleWishlist={onToggleWishlist}
+                isWishlisted={wishlist.some(i => i.id === item.id)}
+              />
             ))
           )}
         </div>
@@ -846,8 +944,9 @@ export function TiltWrapper({ children, className = "" }: { children: React.Reac
 }
 
 // --- Showcase Card ---
-export function ShowcaseCard({ item, onAddToCart }: { item: any, onAddToCart: (item: any) => void }) {
+export function ShowcaseCard({ item, onAddToCart, onToggleWishlist, isWishlisted }: { item: any, onAddToCart: (item: any) => void, onToggleWishlist?: (item: any) => void, isWishlisted?: boolean }) {
   const [rotate, setRotate] = useState({ x: 0, y: 0 });
+  const [isImageLoaded, setIsImageLoaded] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -883,11 +982,35 @@ export function ShowcaseCard({ item, onAddToCart }: { item: any, onAddToCart: (i
     >
       <Link to={`/coffeeDetail/${item.id}`}>
         <div className="relative aspect-[3/4] overflow-hidden rounded-[50px] bg-coffee-dark border border-white/5 transition-all duration-700 group-hover:glow-border group-hover:-translate-y-6 shadow-[0_30px_60px_rgba(0,0,0,0.5)] group-hover:shadow-[0_50px_100px_rgba(0,0,0,0.8)]">
+          {/* Wishlist Button */}
+          <button 
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              onToggleWishlist && onToggleWishlist(item);
+            }}
+            className={cn(
+              "absolute top-8 right-8 z-20 glass p-3 rounded-full transition-all duration-300 hover:scale-110",
+              isWishlisted ? "bg-caramel text-coffee-dark" : "hover:bg-white/10 opacity-0 group-hover:opacity-100"
+            )}
+          >
+            <Heart className={cn("w-5 h-5", isWishlisted && "fill-current")} />
+          </button>
           {/* Image */}
+          {!isImageLoaded && (
+            <div className="absolute inset-0 animate-pulse bg-gradient-to-r from-coffee-dark via-coffee-dark/40 to-coffee-dark flex items-center justify-center z-10">
+              <div className="w-16 h-16 rounded-full border-2 border-caramel/20 border-t-caramel animate-spin" />
+            </div>
+          )}
           <motion.img
             src={item.image}
             alt={item.name}
-            className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110 group-hover:opacity-40"
+            loading="lazy"
+            onLoad={() => setIsImageLoaded(true)}
+            className={cn(
+              "w-full h-full object-cover transition-all duration-1000",
+              isImageLoaded ? "opacity-100 scale-100 group-hover:scale-110 group-hover:opacity-40" : "opacity-0 scale-110"
+            )}
             referrerPolicy="no-referrer"
           />
           
@@ -907,9 +1030,9 @@ export function ShowcaseCard({ item, onAddToCart }: { item: any, onAddToCart: (i
                   <h3 className="text-3xl md:text-4xl lg:text-[40px] font-bold tracking-tighter text-white group-hover:text-cream transition-colors duration-500 uppercase leading-[0.9] break-words">
                     {item.name}
                   </h3>
-                  <Link to={`/coffeeDetail/${item.id}`} className="text-[10px] text-caramel uppercase tracking-widest font-bold mt-4 inline-block hover:text-white transition-colors">
+                  <div className="text-[10px] text-caramel uppercase tracking-widest font-bold mt-4 inline-block hover:text-white transition-colors">
                     View Details
-                  </Link>
+                  </div>
                 </div>
                 <div className="text-right shrink-0">
                   <span className="text-2xl md:text-3xl font-bold text-caramel font-mono tracking-tighter block drop-shadow-md pb-1">Rs{item.price.toFixed(2)}</span>
@@ -945,7 +1068,7 @@ export function ShowcaseCard({ item, onAddToCart }: { item: any, onAddToCart: (i
   );
 }
 
-export function ShoppingPage({ onAddToCart }: { onAddToCart: (item: any) => void }) {
+export function ShoppingPage({ onAddToCart, onToggleWishlist, wishlist }: { onAddToCart: (item: any) => void, onToggleWishlist: (item: any) => void, wishlist: any[] }) {
   const [activeCategory, setActiveCategory] = useState('All');
   const [activeLocation, setActiveLocation] = useState('All');
   const [activeTime, setActiveTime] = useState('All');
@@ -1117,7 +1240,12 @@ export function ShoppingPage({ onAddToCart }: { onAddToCart: (item: any) => void
                   ease: [0.16, 1, 0.3, 1]
                 }}
               >
-                <ShowcaseCard item={item} onAddToCart={onAddToCart} />
+                <ShowcaseCard 
+                  item={item} 
+                  onAddToCart={onAddToCart} 
+                  onToggleWishlist={onToggleWishlist}
+                  isWishlisted={wishlist.some(i => i.id === item.id)}
+                />
               </motion.div>
             ))}
           </AnimatePresence>
@@ -1137,13 +1265,58 @@ export function ShoppingPage({ onAddToCart }: { onAddToCart: (item: any) => void
   );
 }
 
-// --- Coffee Detail Page ---
-export function CoffeeDetailPage({ onAddToCart }: { onAddToCart: (item: any) => void }) {
-  const { id } = useParams();
-  const item = PRODUCTS.find(l => l.id === id) || PRODUCTS[0];
+
+// --- FAQ Accordion Component ---
+function FAQAccordion({ items }: { items: { question: string, answer: string }[] }) {
+  const [openIndex, setOpenIndex] = useState<number | null>(0);
 
   return (
-    <div className="min-h-screen bg-coffee-dark pt-32 pb-20 px-6 relative overflow-hidden">
+    <div className="space-y-4">
+      {items.map((item, idx) => (
+        <div key={idx} className="glass rounded-[32px] overflow-hidden border border-white/5 bg-white/2 backdrop-blur-3xl">
+          <button
+            onClick={() => setOpenIndex(openIndex === idx ? null : idx)}
+            className="w-full px-8 py-6 flex items-center justify-between text-left group"
+          >
+            <span className="text-lg font-bold tracking-tight text-cream/90 group-hover:text-cream transition-colors">{item.question}</span>
+            <ChevronDown className={cn("w-5 h-5 text-caramel transition-transform duration-500", openIndex === idx ? "rotate-180" : "")} />
+          </button>
+          <AnimatePresence>
+            {openIndex === idx && (
+              <motion.div
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: "auto", opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+              >
+                <div className="px-8 pb-8 text-cream/50 leading-relaxed font-light">
+                  {item.answer}
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// --- Coffee Detail Page ---
+export function CoffeeDetailPage({ onAddToCart, onToggleWishlist, wishlist }: { onAddToCart: (item: any) => void, onToggleWishlist: (item: any) => void, wishlist: any[] }) {
+  const { id } = useParams();
+  const item = PRODUCTS.find(l => l.id === id) || PRODUCTS[0];
+  const [activeImage, setActiveImage] = useState(0);
+  const [isImageLoaded, setIsImageLoaded] = useState(false);
+  const images = item.images || [item.image];
+
+  const nextImage = () => setActiveImage((prev) => (prev + 1) % images.length);
+  const prevImage = () => setActiveImage((prev) => (prev - 1 + images.length) % images.length);
+
+  const averageRating = 4.8;
+  const ratingDistribution = [85, 10, 3, 2, 0]; // 5 stars to 1 star percentage
+
+  return (
+    <div className="min-h-screen bg-coffee-dark pt-32 pb-20 px-6 relative overflow-x-hidden">
       {/* Background Effects */}
       <div className="fixed inset-0 pointer-events-none z-0">
         <Canvas gl={{ antialias: false, alpha: true, powerPreference: "low-power" }} camera={{ position: [0, 0, 5] }} dpr={[1, 1.5]}>
@@ -1152,165 +1325,271 @@ export function CoffeeDetailPage({ onAddToCart }: { onAddToCart: (item: any) => 
         </Canvas>
       </div>
 
-      <div className="max-w-7xl mx-auto relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-start">
-          {/* Left: 3D Model Placeholder */}
-          <div className="sticky top-32">
-            <div className="relative h-[600px] glass rounded-[60px] overflow-hidden group shadow-[0_0_50px_rgba(0,0,0,0.3)] bg-white/5 border border-white/10">
-               <Canvas gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }} camera={{ position: [0, 0, 5] }} dpr={[1, 2]}>
-                 <Suspense fallback={null}>
-                   <ambientLight intensity={0.5} />
-                   <pointLight position={[10, 10, 10]} intensity={1} color="#FFD700" />
-                   <CoffeeDust count={200} />
-                   <CoffeeSteam count={30} />
-                   <CoffeeBean position={[0, 0, 0]} rotation={[0, 0, 0]} scale={1.8} />
-                   <LiquidBlob />
-                 </Suspense>
-               </Canvas>
-               <div className="absolute bottom-10 left-1/2 -translate-x-1/2 glass px-6 py-3 rounded-full text-xs font-bold uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity">
-                 Interactive 3D Harvest
-               </div>
-               
-               {/* Floating Badge */}
-               <motion.div 
-                 animate={{ y: [0, -10, 0] }}
-                 transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
-                 className="absolute top-10 left-10 glass p-6 rounded-3xl border-white/20 bg-coffee-dark/40 backdrop-blur-xl"
-               >
-                 <span className="text-[10px] uppercase tracking-[0.3em] text-cream font-bold block mb-2">Purity Level</span>
-                 <div className="text-3xl font-bold font-mono">98.4%</div>
-               </motion.div>
-            </div>
-          </div>
+      <div className="max-w-7xl mx-auto relative z-10 space-y-32">
+        {/* --- SECTION 1: HERO SECTION --- */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-20">
+          {/* Hero Image Section */}
+          <div className="lg:sticky lg:top-32 h-fit space-y-8">
+            <div className="relative h-[500px] md:h-[600px] glass rounded-[60px] overflow-hidden group shadow-2xl bg-white/5 border border-white/10">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={activeImage}
+                  initial={{ opacity: 0, scale: 1.1 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.9 }}
+                  transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+                  className="absolute inset-0 w-full h-full"
+                >
+                  {!isImageLoaded && (
+                    <div className="absolute inset-0 animate-pulse bg-white/5 flex items-center justify-center z-10">
+                       <div className="w-16 h-16 rounded-full border-2 border-caramel/20 border-t-caramel animate-spin" />
+                    </div>
+                  )}
+                  <img 
+                    src={images[activeImage]} 
+                    alt={item.name}
+                    loading="lazy"
+                    onLoad={() => setIsImageLoaded(true)}
+                    className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
+                    referrerPolicy="no-referrer"
+                  />
+                  <div className="absolute inset-0 card-gradient opacity-40" />
+                </motion.div>
+              </AnimatePresence>
 
-          {/* Right: Details */}
-          <div className="space-y-16">
-            <section>
-              <motion.span 
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                className="text-caramel font-mono text-sm uppercase tracking-[0.4em] mb-6 block font-bold"
-              >
-                Special Reserve • {item.profile?.origin}
-              </motion.span>
-              <h1 className="text-6xl md:text-8xl font-bold tracking-tighter mb-8 text-glow leading-[0.9] uppercase">
-                {item.name}
-              </h1>
-              
-              <div className="flex items-center gap-10">
-                <div className="flex items-center gap-3">
-                  <div className="flex gap-1">
-                    {[...Array(5)].map((_, i) => (
-                      <Star key={i} className={cn("w-4 h-4", i < Math.floor(item.rating || 5) ? "text-cream fill-cream" : "text-white/10")} />
-                    ))}
-                  </div>
-                  <span className="font-bold text-cream">{item.rating || 5.0}</span>
-                  <span className="text-cream/20 text-xs uppercase tracking-widest">({item.reviews || 100} Reviews)</span>
+              {/* Navigation Controls */}
+              {images.length > 1 && (
+                <div className="absolute inset-0 flex items-center justify-between px-6 pointer-events-none">
+                  <button 
+                    onClick={(e) => { e.preventDefault(); prevImage(); }}
+                    className="pointer-events-auto p-4 rounded-full glass hover:bg-caramel hover:text-coffee-dark transition-all duration-300 -translate-x-20 group-hover:translate-x-0 opacity-0 group-hover:opacity-100"
+                  >
+                    <ChevronLeft className="w-6 h-6" />
+                  </button>
+                  <button 
+                    onClick={(e) => { e.preventDefault(); nextImage(); }}
+                    className="pointer-events-auto p-4 rounded-full glass hover:bg-caramel hover:text-coffee-dark transition-all duration-300 translate-x-20 group-hover:translate-x-0 opacity-0 group-hover:opacity-100"
+                  >
+                    <ChevronRight className="w-6 h-6" />
+                  </button>
                 </div>
-                <div className="h-4 w-[1px] bg-white/10" />
-                <div className="flex items-center gap-2 text-cream/60 text-sm">
-                  <MapPin className="w-4 h-4 text-caramel" />
-                  {item.location || "Global"}
-                </div>
+              )}
+
+              {/* Exclusive Badge */}
+              <div className="absolute top-10 left-10 glass px-6 py-3 rounded-full border-white/10 flex items-center gap-3">
+                <div className="w-2 h-2 rounded-full bg-caramel animate-pulse" />
+                <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-cream">Reserve Batch</span>
               </div>
-            </section>
+            </div>
 
-            <section className="space-y-8">
-              <h3 className="text-[10px] uppercase tracking-[0.4em] text-cream font-bold">The Story</h3>
-              <p className="text-2xl text-cream/60 leading-relaxed font-light italic font-serif">
-                "{item.description}"
-              </p>
-            </section>
-
-            <section className="grid grid-cols-2 md:grid-cols-4 gap-6">
-              {[
-                { label: "Origin", value: item.profile?.origin || "Unknown", icon: MapPin },
-                { label: "Roast", value: item.profile?.roast || "Medium", icon: Coffee },
-                { label: "Body", value: item.profile?.body || "Medium", icon: Droplets },
-                { label: "Acidity", value: item.profile?.acidity || "Balanced", icon: Zap },
-              ].map((attr, i) => (
-                <TiltWrapper key={i}>
-                  <div className="glass p-6 rounded-3xl border-white/5 hover:glow-border transition-all bg-white/5 h-full">
-                    <attr.icon className="w-5 h-5 text-caramel mb-4" />
-                    <span className="text-[10px] uppercase tracking-widest text-cream/40 font-bold block mb-1">{attr.label}</span>
-                    <span className="text-sm font-bold text-cream">{attr.value}</span>
-                  </div>
-                </TiltWrapper>
-              ))}
-            </section>
-
-            <section className="space-y-8">
-              <h3 className="text-[10px] uppercase tracking-[0.4em] text-cream font-bold">Flavor Profile</h3>
-              <div className="flex flex-wrap gap-4">
-                {(item.flavorNotes || ["Chocolate", "Caramel", "Nutty"]).map((note: string, i: number) => (
-                  <TiltWrapper key={i}>
-                    <motion.div 
-                      whileHover={{ scale: 1.1, backgroundColor: "rgba(255, 255, 255, 0.1)" }}
-                      className="glass px-6 py-3 rounded-full border-white/20 text-sm font-bold text-cream shadow-[0_0_15px_rgba(255,255,255,0.05)] cursor-default bg-white/5"
-                    >
-                      {note}
-                    </motion.div>
-                  </TiltWrapper>
+            {/* Thumbnail Navigation */}
+            {images.length > 1 && (
+              <div className="flex gap-4 justify-center py-4">
+                {images.map((img, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => { setActiveImage(idx); setIsImageLoaded(false); }}
+                    className={cn(
+                      "w-20 h-20 rounded-2xl overflow-hidden glass transition-all duration-500 border-2",
+                      activeImage === idx ? "border-caramel scale-110 shadow-lg" : "border-transparent opacity-40 hover:opacity-100"
+                    )}
+                  >
+                    <img src={img} alt={`Thumb ${idx}`} className="w-full h-full object-cover" />
+                  </button>
                 ))}
               </div>
-            </section>
+            )}
+          </div>
 
-            <section className="space-y-8">
-              <h3 className="text-[10px] uppercase tracking-[0.4em] text-cream font-bold">Recommended Brewing</h3>
-              <div className="flex gap-10">
-                {(item.brewingMethods || ["V60", "Espresso"]).map((method: string, i: number) => {
-                  const MethodIcon = method.includes('V60') ? Wind : 
-                                   method.includes('Chemex') ? FlaskConical :
-                                   method.includes('Aeropress') ? Cylinder :
-                                   method.includes('Espresso') ? Coffee :
-                                   method.includes('Moka') ? Flame :
-                                   Coffee;
-                  return (
-                    <div key={i} className="flex flex-col items-center gap-4 group">
-                      <div className="w-16 h-16 rounded-full glass flex items-center justify-center group-hover:bg-caramel group-hover:text-coffee-dark transition-all duration-500 bg-white/5">
-                        <MethodIcon className="w-6 h-6" />
-                      </div>
-                      <span className="text-[10px] uppercase tracking-widest font-bold text-cream/40 group-hover:text-cream transition-colors">{method}</span>
-                    </div>
-                  );
-                })}
-              </div>
-            </section>
-
-            <section className="pt-10 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-10">
-              <div className="flex flex-col">
-                <span className="text-[10px] uppercase tracking-widest text-cream/40 font-bold mb-2">Price per 250g</span>
-                <span className="text-6xl font-bold text-cream font-mono tracking-tighter">Rs{item.price.toFixed(2)}</span>
-              </div>
+          {/* --- HERO CONTENT SECTION --- */}
+          <div className="flex flex-col justify-center space-y-12 py-10">
+            <div className="space-y-6">
+              <span className="text-caramel font-mono text-[10px] uppercase tracking-[0.8em] font-bold">The Ultimate extraction</span>
+              <h1 className="text-6xl md:text-8xl font-bold tracking-tighter leading-[0.9] text-glow uppercase">{item.name}</h1>
               
+              <div className="flex items-center gap-6">
+                <div className="flex gap-1 text-caramel">
+                  {[...Array(5)].map((_, i) => <Star key={i} className="w-4 h-4 fill-current fill-caramel text-caramel" />)}
+                </div>
+                <span className="text-cream text-lg font-bold">{item.rating || 4.9}</span>
+                <span className="text-cream/30 text-xs font-bold uppercase tracking-widest">({item.reviews || 128} Reviews)</span>
+              </div>
+
+              <div className="flex items-end gap-6 pt-4">
+                <span className="text-7xl font-bold text-cream font-mono tracking-tighter leading-none">Rs{item.price.toFixed(2)}</span>
+              </div>
+
+              <p className="text-xl text-cream/50 leading-relaxed font-light italic font-serif max-w-xl">"{item.description}"</p>
+            </div>
+
+            <div className="flex flex-col sm:flex-row gap-6 pt-8">
               <motion.button 
                 onClick={() => onAddToCart(item)}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                animate={{ 
-                  boxShadow: ["0 0 20px rgba(198,142,93,0.2)", "0 0 40px rgba(198,142,93,0.5)", "0 0 20px rgba(198,142,93,0.2)"]
-                }}
-                transition={{ repeat: Infinity, duration: 2 }}
-                className="px-16 py-8 bg-caramel text-coffee-dark rounded-full font-bold uppercase tracking-[0.3em] text-sm shadow-[0_0_40px_rgba(198,142,93,0.4)] hover:opacity-90 transition-all relative overflow-hidden group"
+                className="px-16 py-8 bg-caramel text-coffee-dark rounded-full font-bold uppercase tracking-[0.4em] text-sm shadow-[0_20px_50px_rgba(198,142,93,0.3)]"
               >
-                <span className="relative z-10">Add to Ritual</span>
-                <motion.div 
-                  className="absolute inset-0 bg-white/20 -translate-x-full group-hover:translate-x-full transition-transform duration-1000"
-                />
+                Initiate Ritual
               </motion.button>
-            </section>
+              <motion.button 
+                onClick={() => onToggleWishlist(item)}
+                className={cn("px-10 py-8 rounded-full border transition-all font-bold uppercase tracking-[0.4em] text-[10px]", wishlist.some(i => i.id === item.id) ? "bg-caramel text-coffee-dark border-caramel shadow-xl" : "glass border-white/10 text-cream")}
+              >
+                {wishlist.some(i => i.id === item.id) ? "Saved to Sanctuary" : "Save to Sanctuary"}
+              </motion.button>
+            </div>
+
+            <div className="grid grid-cols-2 gap-12 pt-12 border-t border-white/5">
+              <div className="space-y-2">
+                <span className="text-[10px] text-cream/30 font-bold uppercase tracking-widest">Roast Level</span>
+                <span className="text-sm font-bold text-cream">{item.productDetails?.roastLevel || item.profile?.roast}</span>
+              </div>
+              <div className="space-y-2">
+                <span className="text-[10px] text-cream/30 font-bold uppercase tracking-widest">Weight</span>
+                <span className="text-sm font-bold text-cream">{item.productDetails?.weight || "250g"}</span>
+              </div>
+            </div>
+            
+            <div className="pt-8">
+              <ScrollIndicator text="Discover the Soul" onClick={() => window.scrollTo({ top: window.innerHeight * 0.9, behavior: 'smooth' })} />
+            </div>
           </div>
         </div>
+
+        {/* --- SECTION 2: ELEMENTS (COFFEE DETAILS) --- */}
+        <section className="space-y-40">
+          <div className="text-center space-y-4">
+            <span className="text-caramel font-mono text-[10px] uppercase tracking-[0.8em] font-bold">The Anatomy</span>
+            <h2 className="text-5xl md:text-7xl font-bold tracking-tighter uppercase">The Elements</h2>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+            {(item.coffeeDetails || COFFEE_VARIANTS).map((v, i) => (
+              <motion.div key={i} whileHover={{ y: -10 }} className="glass rounded-[60px] p-12 border border-white/5 grid md:grid-cols-[200px_1fr] gap-12 hover:glow-border transition-all duration-700 bg-white/2 overflow-hidden relative">
+                <div className="absolute top-0 right-0 p-8 opacity-5"><Coffee className="w-32 h-32 rotate-12" /></div>
+                <div className="aspect-square rounded-[40px] overflow-hidden glass border border-white/10">
+                  <img src={'image' in v && v.image ? v.image : item.image} alt={v.title} className="w-full h-full object-cover" />
+                </div>
+                <div className="space-y-8">
+                  <div>
+                    <span className="text-caramel font-mono text-[10px] uppercase tracking-widest font-bold block mb-2">{v.origin}</span>
+                    <h3 className="text-4xl font-bold tracking-tight uppercase">{v.title}</h3>
+                  </div>
+                  <p className="text-cream/50 text-sm leading-relaxed italic">"{v.description}"</p>
+                  <div className="flex flex-wrap gap-2">
+                    {('notes' in v ? v.notes : (v as any).flavorNotes).map((n: string, idx: number) => (
+                      <span key={idx} className="px-4 py-2 rounded-full glass border-white/5 text-[9px] font-bold uppercase tracking-widest text-cream/40">{n}</span>
+                    ))}
+                  </div>
+                  <div className="pt-6 border-t border-white/5 grid grid-cols-2 gap-4 text-[10px] font-bold uppercase tracking-widest">
+                     <div><span className="text-cream/20 block mb-1">Process</span><span className="text-cream">{'process' in v ? v.process : (v as any).processing}</span></div>
+                     <div><span className="text-cream/20 block mb-1">Roast</span><span className="text-cream">{'roast' in v ? v.roast : (v as any).roastLevel}</span></div>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </section>
+
+        {/* --- SECTION 3: STORY --- */}
+        {item.story && (
+          <section className="relative h-[80vh] flex items-center justify-center rounded-[80px] overflow-hidden glass border border-white/10">
+            <div className="absolute inset-0">
+               <img src={item.images?.[2] || item.image} className="w-full h-full object-cover opacity-20 scale-110" />
+               <div className="absolute inset-0 bg-gradient-to-b from-coffee-dark via-transparent to-coffee-dark" />
+            </div>
+            <div className="relative z-10 max-w-4xl mx-auto text-center space-y-12 px-6">
+              <span className="text-caramel font-mono text-[10px] uppercase tracking-[0.8em] font-bold">The Origin Narrative</span>
+              <h2 className="text-5xl md:text-8xl font-bold tracking-tighter uppercase leading-none">{item.story.title}</h2>
+              <p className="text-2xl md:text-3xl text-cream/60 font-light italic leading-relaxed font-serif max-w-3xl mx-auto">
+                "{item.story.description}"
+              </p>
+              <div className="w-[1px] h-24 bg-gradient-to-b from-caramel to-transparent mx-auto" />
+            </div>
+          </section>
+        )}
+
+        {/* --- SECTION 4: FLAVOR & BREWING --- */}
+        <section className="grid grid-cols-1 lg:grid-cols-2 gap-24">
+          <div className="space-y-12">
+            <div className="space-y-4"><span className="text-caramel font-mono text-[10px] uppercase tracking-[0.5em] font-bold">Sensory Profile</span><h2 className="text-5xl font-bold uppercase tracking-tighter">Flavor Matrix</h2></div>
+            <div className="flex flex-wrap gap-6">
+              {(item.flavorNotes || []).map((note, i) => (
+                <motion.div key={i} whileInView={{ opacity: 1, scale: 1 }} initial={{ opacity: 0, scale: 0.9 }} className="px-10 py-6 rounded-full glass border border-white/5 hover:border-caramel/30 transition-all cursor-default text-sm font-bold uppercase tracking-[0.3em] text-cream/70">{note}</motion.div>
+              ))}
+            </div>
+          </div>
+          <div className="space-y-12">
+            <div className="space-y-4 text-right lg:text-left"><span className="text-caramel font-mono text-[10px] uppercase tracking-[0.5em] font-bold">The Extraction</span><h2 className="text-5xl font-bold uppercase tracking-tighter">Brewing Guide</h2></div>
+            <div className="grid grid-cols-1 gap-4">
+              {(item.brewingGuide || [ { method: "V60", grind: "Medium", time: "3:00 min" } ]).map((g, i) => (
+                <div key={i} className="glass p-8 rounded-[32px] border border-white/5 flex items-center justify-between hover:bg-white/2 transition-colors">
+                  <div className="flex items-center gap-6">
+                    <div className="w-12 h-12 rounded-full glass flex items-center justify-center text-caramel"><Settings className="w-5 h-5" /></div>
+                    <div><h4 className="text-xl font-bold uppercase tracking-tight">{g.method}</h4><span className="text-[10px] text-cream/30 uppercase font-bold tracking-widest">{g.grind} Grind</span></div>
+                  </div>
+                  <span className="text-2xl font-mono font-bold text-caramel">{g.time}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* --- SECTION 5: REVIEWS --- */}
+        <section className="space-y-20">
+          <div className="flex flex-col md:flex-row justify-between items-end gap-12">
+            <div className="space-y-4"><span className="text-caramel font-mono text-[10px] uppercase tracking-[0.5em] font-bold">Archive</span><h2 className="text-5xl md:text-7xl font-bold tracking-tighter uppercase leading-none">Customer <br /> Chronicles</h2></div>
+            <div className="flex items-center gap-6 pb-2">
+               <span className="text-6xl font-bold text-cream leading-none">{averageRating}</span>
+               <div className="space-y-2"><div className="flex gap-1 text-caramel">{[...Array(5)].map((_, i) => <Star key={i} className="w-4 h-4 fill-current fill-caramel text-caramel" />)}</div><span className="text-[10px] text-cream/30 uppercase font-bold tracking-widest">({item.reviews || 128} Cuppings)</span></div>
+            </div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {(item.productReviews || REVIEWS.slice(0, 3)).map((r, i) => (
+              <div key={i} className="glass p-10 rounded-[48px] border border-white/5 space-y-8 bg-white/2 hover:glow-border transition-all duration-700">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-4">
+                    <div className="w-14 h-14 rounded-full overflow-hidden glass border border-white/10"><img src={'userImage' in r ? (r as any).userImage : '/default-user.jpg'} alt={r.userName} className="w-full h-full object-cover" /></div>
+                    <div><h4 className="text-lg font-bold text-cream">{r.userName}</h4><span className="text-[9px] text-cream/30 uppercase tracking-widest">{r.date || 'April 2026'}</span></div>
+                  </div>
+                  <div className="flex gap-0.5 text-caramel">{[...Array(5)].map((_, idx) => <Star key={idx} className={cn("w-3 h-3 text-caramel fill-caramel", idx < r.rating ? "fill-current" : "opacity-10")} />)}</div>
+                </div>
+                <p className="text-cream/50 text-lg leading-relaxed italic font-light">"{r.text}"</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* --- SECTION 6: FAQ --- */}
+        <section className="grid grid-cols-1 lg:grid-cols-2 gap-40 items-start">
+          <div className="space-y-8 lg:sticky lg:top-40">
+            <span className="text-caramel font-mono text-[10px] uppercase tracking-[0.5em] font-bold">Support Base</span>
+            <h2 className="text-5xl md:text-7xl font-bold tracking-tighter uppercase leading-tight">Query <br /> Resolution</h2>
+            <p className="text-xl text-cream/40 leading-relaxed font-light italic font-serif">"Precision requires clarity. Find answers to the most nuanced aspects of the Assava ritual."</p>
+          </div>
+          <div className="lg:col-span-1"><FAQAccordion items={item.faqs || PRODUCT_FAQS} /></div>
+        </section>
+
+        {/* --- SECTION 7: CTA --- */}
+        <section className="text-center py-40 relative px-6 glass rounded-[80px] border border-white/5 overflow-hidden">
+           <div className="absolute inset-0 opacity-[0.02] -rotate-12 translate-x-20 scale-150 pointer-events-none"><span className="text-[400px] font-black uppercase tracking-tighter select-none">ASV</span></div>
+           <div className="relative z-10 space-y-16">
+              <h2 className="text-6xl md:text-9xl font-bold tracking-tighter uppercase leading-none">The Ritual Awaits</h2>
+              <div className="flex flex-col sm:flex-row gap-12 justify-center items-center">
+                 <button onClick={() => onAddToCart(item)} className="px-20 py-10 bg-caramel text-coffee-dark rounded-full font-bold uppercase tracking-[0.6em] text-sm shadow-2xl hover:scale-105 transition-all">Secure Batch</button>
+                 <Link to="/shopping" className="text-cream/40 hover:text-caramel transition-colors text-xs font-bold uppercase tracking-[0.5em] border-b border-white/10 pb-2">View Full Collection</Link>
+              </div>
+           </div>
+        </section>
+
       </div>
     </div>
   );
 }
 
+
 // --- Thank You Page ---
-export function ThankYouPage({ onOpenCart, onOpenCategories, cartCount }: { onOpenCart: () => void, onOpenCategories: () => void, cartCount: number }) {
+export function ThankYouPage({ onOpenCart, onOpenCategories, cartCount, wishlistCount }: { onOpenCart: () => void, onOpenCategories: () => void, cartCount: number, wishlistCount?: number }) {
   return (
     <div className="min-h-screen bg-coffee-dark flex items-center justify-center text-center px-6 relative overflow-hidden">
-      <Navbar onOpenCart={onOpenCart} onOpenCategories={onOpenCategories} cartCount={cartCount} />
+      <Navbar onOpenCart={onOpenCart} onOpenCategories={onOpenCategories} cartCount={cartCount} wishlistCount={wishlistCount} />
       {/* Background Effects */}
       <div className="fixed inset-0 pointer-events-none z-0">
         <Canvas gl={{ antialias: false, alpha: true, powerPreference: "low-power" }} camera={{ position: [0, 0, 5] }} dpr={[1, 1.5]}>
@@ -1372,10 +1651,10 @@ export function ThankYouPage({ onOpenCart, onOpenCategories, cartCount }: { onOp
 }
 
 // --- Order History Page ---
-export function OrderHistoryPage({ onOpenCart, onOpenCategories, cartCount }: { onOpenCart: () => void, onOpenCategories: () => void, cartCount: number }) {
+export function OrderHistoryPage({ onOpenCart, onOpenCategories, cartCount, wishlistCount }: { onOpenCart: () => void, onOpenCategories: () => void, cartCount: number, wishlistCount?: number }) {
   return (
     <div className="min-h-screen bg-coffee-dark pt-32 pb-20 px-6 relative overflow-hidden">
-      <Navbar onOpenCart={onOpenCart} onOpenCategories={onOpenCategories} cartCount={cartCount} />
+      <Navbar onOpenCart={onOpenCart} onOpenCategories={onOpenCategories} cartCount={cartCount} wishlistCount={wishlistCount} />
       {/* Background Effects */}
       <div className="fixed inset-0 pointer-events-none z-0">
         <Canvas gl={{ antialias: false, alpha: true, powerPreference: "low-power" }} camera={{ position: [0, 0, 5] }} dpr={[1, 1.5]}>
@@ -1432,7 +1711,7 @@ export function OrderHistoryPage({ onOpenCart, onOpenCategories, cartCount }: { 
 }
 
 // --- Tracking Page ---
-export function TrackingPage({ onOpenCart, onOpenCategories, cartCount }: { onOpenCart: () => void, onOpenCategories: () => void, cartCount: number }) {
+export function TrackingPage({ onOpenCart, onOpenCategories, cartCount, wishlistCount }: { onOpenCart: () => void, onOpenCategories: () => void, cartCount: number, wishlistCount?: number }) {
   const steps = [
     { label: "Order Placed", date: "Mar 24, 10:30 AM", status: "completed" },
     { label: "Master Roasting", date: "Mar 24, 02:15 PM", status: "completed" },
@@ -1443,7 +1722,7 @@ export function TrackingPage({ onOpenCart, onOpenCategories, cartCount }: { onOp
 
   return (
     <div className="min-h-screen bg-coffee-dark pt-32 pb-20 px-6 relative overflow-hidden">
-      <Navbar onOpenCart={onOpenCart} onOpenCategories={onOpenCategories} cartCount={cartCount} />
+      <Navbar onOpenCart={onOpenCart} onOpenCategories={onOpenCategories} cartCount={cartCount} wishlistCount={wishlistCount} />
       {/* Background Effects */}
       <div className="fixed inset-0 pointer-events-none z-0">
         <Canvas gl={{ antialias: false, alpha: true, powerPreference: "low-power" }} camera={{ position: [0, 0, 5] }} dpr={[1, 1.5]}>
@@ -1591,15 +1870,111 @@ export function LoadingScreen() {
   );
 }
 
+// --- Category Card Sub-component ---
+function CategoryCard({ cat, i }: { cat: any, i: number }) {
+  return (
+    <Link to={`/category/${cat.id}`}>
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ delay: i * 0.1, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+        className="group relative h-[450px] md:h-[500px] rounded-[40px] overflow-hidden cursor-pointer bg-coffee-dark border border-white/5 h-full"
+      >
+      {/* Background Image */}
+      <div className="absolute inset-0">
+        <motion.img 
+          src={cat.image} 
+          alt={cat.name}
+          className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110 opacity-60 group-hover:opacity-100"
+          referrerPolicy="no-referrer"
+        />
+        {/* Cinematic Overlays */}
+        <div className="absolute inset-0 bg-gradient-to-t from-coffee-dark via-coffee-dark/20 to-transparent opacity-90 group-hover:opacity-70 transition-opacity duration-700" />
+        <div className="absolute inset-0 bg-black/40 group-hover:bg-black/10 transition-colors duration-700" />
+      </div>
+
+      {/* Content */}
+      <div className="absolute inset-0 p-10 flex flex-col justify-end">
+        <div className="relative z-10 transition-transform duration-700 group-hover:-translate-y-2">
+          <div className="overflow-hidden h-6 mb-2">
+            <motion.span 
+              initial={{ y: 20, opacity: 0 }}
+              whileInView={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.5 + i * 0.1 }}
+              className="text-[10px] text-caramel uppercase tracking-[0.5em] font-bold block"
+            >
+              {cat.count} Artifacts
+            </motion.span>
+          </div>
+          
+          <h3 className="text-3xl md:text-4xl font-bold text-white mb-4 tracking-tighter uppercase leading-none transition-all group-hover:text-glow">
+            {cat.name}
+          </h3>
+          
+          <p className="text-cream/50 text-sm font-light leading-relaxed max-w-[90%] line-clamp-2 opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-4 group-hover:translate-y-0 italic">
+            {cat.desc}
+          </p>
+          
+          <div className="mt-8 flex items-center gap-4 opacity-0 group-hover:opacity-100 transition-all duration-700 translate-y-4 group-hover:translate-y-0">
+            <span className="text-[9px] uppercase tracking-[0.4em] text-white font-bold">Discover Collection</span>
+            <div className="h-[1px] w-12 bg-caramel/50 group-hover:w-20 transition-all duration-700" />
+          </div>
+        </div>
+      </div>
+
+      {/* Soft Glow */}
+      <div className="absolute -bottom-20 -left-20 w-64 h-64 bg-caramel/5 rounded-full blur-[100px] opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
+      </motion.div>
+    </Link>
+  );
+}
+
 // --- Category Page ---
-export function CategoryPage({ onOpenCart, onOpenCategories, cartCount }: { onOpenCart: () => void, onOpenCategories: () => void, cartCount: number }) {
+export function CategoryPage({ onOpenCart, onOpenCategories, cartCount, wishlistCount }: { onOpenCart: () => void, onOpenCategories: () => void, cartCount: number, wishlistCount?: number }) {
   const categories = [
-    { name: "Single Origin", icon: "🌍", count: 24, desc: "Pure essence from specific regions" },
-    { name: "House Blends", icon: "🏠", count: 12, desc: "Our signature balanced creations" },
-    { name: "Rare Finds", icon: "💎", count: 5, desc: "Limited edition micro-lots" },
-    { name: "Brewing Gear", icon: "⚖️", count: 18, desc: "Tools for the perfect extraction" },
-    { name: "Coffee Spaces", icon: "🏢", count: 8, desc: "Curated furniture for your ritual" },
-    { name: "Workshops", icon: "🎓", count: 4, desc: "Master the art of the brew" },
+    { 
+      id: "single-origin",
+      name: "Single Origin", 
+      image: "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&q=80&w=1000",
+      count: 24, 
+      desc: "An unapologetic exploration of terroir. Pure essence captured from the world's most distinct micro-climates."
+    },
+    { 
+      id: "house-blends",
+      name: "House Blends", 
+      image: "https://images.unsplash.com/photo-1541167760496-1628856ab772?auto=format&fit=crop&q=80&w=1000",
+      count: 12, 
+      desc: "The alchemy of balance. Our signature orchestrations designed for the discerning daily ritual." 
+    },
+    { 
+      id: "rare-finds",
+      name: "Rare Finds", 
+      image: "https://img.freepik.com/premium-photo/coffee-grinder-with-coffee-beans-counter_379823-34103.jpg?w=1480",
+      count: 5, 
+      desc: "Limited expressions of extraordinary character. Sourced from disappearing varietals and experimental lots." 
+    },
+    { 
+      id: "brewing-gear",
+      name: "Brewing Gear", 
+      image: "https://img.freepik.com/premium-photo/coffee-cup-old-table_231794-1679.jpg",
+      count: 18, 
+      desc: "The tools of precision. Engineered instruments for the master of the manual extraction." 
+    },
+    { 
+      id: "coffee-spaces",
+      name: "Coffee Spaces", 
+      image: "https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&q=80&w=1000",
+      count: 8, 
+      desc: "Environment as ingredient. Curated elements to elevate your sanctuary of stillness." 
+    },
+    { 
+      id: "workshops",
+      name: "Workshops", 
+      image: "https://images.unsplash.com/photo-1461023058943-07fcbe16d735?auto=format&fit=crop&q=80&w=1000",
+      count: 4, 
+      desc: "Knowledge refined. Immersive sessions focused on the science and soul of the perfect cup." 
+    },
   ];
 
   return (
@@ -1607,59 +1982,44 @@ export function CategoryPage({ onOpenCart, onOpenCategories, cartCount }: { onOp
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 1 }}
-      className="relative min-h-screen bg-coffee-dark flex flex-col"
+      className="relative min-h-screen bg-coffee-dark flex flex-col overflow-x-hidden"
     >
-      <Navbar onOpenCart={onOpenCart} onOpenCategories={onOpenCategories} cartCount={cartCount} />
+      <Navbar onOpenCart={onOpenCart} onOpenCategories={onOpenCategories} cartCount={cartCount} wishlistCount={wishlistCount} />
 
-      {/* Background Effects */}
+      {/* Grain Overlay */}
+      <div className="grain pointer-events-none opacity-[0.03]" />
+
+      {/* Global Background Scene */}
       <div className="fixed inset-0 pointer-events-none z-0">
-        <Canvas gl={{ antialias: false, alpha: true, powerPreference: "low-power" }} camera={{ position: [0, 0, 5] }} dpr={[1, 1.5]}>
-          <CoffeeDust />
+        <Canvas gl={{ antialias: false, alpha: true }} camera={{ position: [0, 0, 5] }} dpr={[1, 1.5]}>
+          <CoffeeDust count={200} />
           <LiquidBlob />
         </Canvas>
       </div>
 
-      <div className="flex-grow pt-32 pb-20 px-6 max-w-7xl mx-auto relative z-10 w-full">
-        <div className="mb-16">
+      <div className="flex-grow pt-48 pb-32 px-6 max-w-7xl mx-auto relative z-10 w-full">
+        {/* Header Section */}
+        <div className="mb-24 text-center">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
           >
-            <span className="text-caramel font-mono text-xs uppercase tracking-[0.4em] mb-6 block font-bold">Explore</span>
-            <h2 className="text-5xl md:text-7xl font-bold tracking-tighter text-glow uppercase">Categories</h2>
+            <span className="text-caramel font-mono text-[10px] uppercase tracking-[0.8em] mb-8 block font-bold">Discover</span>
+            <h1 className="text-6xl md:text-9xl font-bold tracking-tighter text-white uppercase leading-none drop-shadow-2xl">
+              Categories
+            </h1>
+            <div className="h-[1px] w-24 bg-caramel/30 mx-auto mt-12 mb-8" />
+            <p className="text-cream/40 text-lg md:text-xl font-light italic max-w-2xl mx-auto font-serif">
+              "Every bean tells a story. Every category defines a ritual."
+            </p>
           </motion.div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        {/* Categories Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-12">
           {categories.map((cat, i) => (
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.1 }}
-              whileHover={{ scale: 1.05, y: -10 }}
-              className="glass p-12 rounded-[48px] text-left group hover:glow-border transition-all cursor-pointer bg-white/5 backdrop-blur-2xl border border-white/10 relative overflow-hidden"
-            >
-              <div className="absolute -right-10 -top-10 w-40 h-40 bg-caramel/5 rounded-full blur-3xl group-hover:bg-caramel/20 transition-all" />
-              
-              <span className="text-7xl mb-10 block drop-shadow-[0_0_30px_rgba(255,255,255,0.1)] group-hover:scale-110 transition-transform duration-500">
-                {cat.icon}
-              </span>
-              <h3 className="text-3xl font-bold mb-4 group-hover:text-cream transition-colors tracking-tighter uppercase">
-                {cat.name}
-              </h3>
-              <p className="text-cream/40 text-sm mb-8 leading-relaxed italic">
-                {cat.desc}
-              </p>
-              <div className="flex items-center justify-between">
-                <span className="text-xs text-caramel uppercase tracking-[0.3em] font-bold">
-                  {cat.count} Items
-                </span>
-                <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-caramel group-hover:text-coffee-dark transition-all">
-                  <ArrowRight className="w-5 h-5" />
-                </div>
-              </div>
-            </motion.div>
+            <CategoryCard key={cat.name} cat={cat} i={i} />
           ))}
         </div>
       </div>
@@ -1670,57 +2030,79 @@ export function CategoryPage({ onOpenCart, onOpenCategories, cartCount }: { onOp
 }
 
 // --- Scroll Story (About Page) ---
-export function ScrollStory({ onOpenCart, onOpenCategories, cartCount }: { onOpenCart: () => void, onOpenCategories: () => void, cartCount: number }) {
-
+export function ScrollStory({ onOpenCart, onOpenCategories, cartCount, wishlistCount }: { onOpenCart: () => void, onOpenCategories: () => void, cartCount: number, wishlistCount?: number }) {
+  const heroRef = useRef<HTMLElement>(null);
+  const { scrollYProgress: heroScroll } = useScroll({
+    target: heroRef, offset: ['start start', 'end start'],
+  });
+  const heroY = useTransform(heroScroll, [0, 1], ['0%', '30%']);
+  const heroOpacity = useTransform(heroScroll, [0, 0.7], [1, 0]);
 
   return (
     <div className="bg-coffee-dark font-sans text-cream min-h-screen relative">
-      <Navbar onOpenCart={onOpenCart} onOpenCategories={onOpenCategories} cartCount={cartCount} />
+      <Navbar onOpenCart={onOpenCart} onOpenCategories={onOpenCategories} cartCount={cartCount} wishlistCount={wishlistCount} />
 
-      {/* Fixed 3D Background */}
-      <div className="fixed inset-0 pointer-events-none -z-10 opacity-30">
-        <Canvas gl={{ antialias: false, alpha: true, powerPreference: "low-power" }} camera={{ position: [0, 0, 5] }} dpr={[1, 1.5]}>
-          <Suspense fallback={null}>
-            <ambientLight intensity={0.5} />
-            <pointLight position={[10, 10, 10]} intensity={1} color="#C68E5D" />
-            <CoffeeDust count={400} />
-            <LiquidBlob />
-            <CoffeeBean position={[0, 0, 0]} rotation={[0, 0, 0]} scale={2} />
-          </Suspense>
-        </Canvas>
-      </div>
-
-      {/* Main Narrative Content */}
-      <main className="relative z-10 pt-32 pb-32 px-6 max-w-7xl mx-auto flex flex-col gap-32 md:gap-48 overflow-x-hidden">
-        
-        {/* Intro Step */}
-        <motion.div 
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1.2, ease: "easeOut" }}
-          className="min-h-[70vh] flex flex-col items-center justify-center text-center mt-12"
-        >
-          <span className="text-caramel font-mono text-xs md:text-sm uppercase tracking-[0.5em] mb-4 block font-bold">ASSAVA Presents</span>
-          <h1 className="text-5xl md:text-8xl font-bold mb-8 text-cream uppercase tracking-tighter drop-shadow-[0_0_20px_rgba(255,255,255,0.1)]">
-            The Story of Coffee
-          </h1>
-          <p className="text-xl md:text-3xl text-cream/80 max-w-2xl mx-auto font-light leading-relaxed tracking-wide mb-16">
-            Behind everything we do.
-          </p>
-          <motion.div 
-            animate={{ y: [0, 10, 0] }} 
-            transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
-            className="flex flex-col items-center gap-4 opacity-70"
-          >
-            <span className="text-[10px] uppercase tracking-[0.3em] font-bold text-caramel">Scroll Down To Discover</span>
-            <div className="w-[1px] h-16 bg-gradient-to-b from-caramel to-transparent" />
-          </motion.div>
+      {/* SECTION 1 — CINEMATIC HERO (MATCHING ABOUT PAGE) */}
+      <section ref={heroRef} className="relative h-screen flex items-center justify-center overflow-hidden">
+        {/* Parallax Background */}
+        <motion.div style={{ y: heroY }} className="absolute inset-0 z-0">
+          <img 
+            src="https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?auto=format&fit=crop&q=85&w=2400" 
+            alt="The Assava Journey" 
+            className="w-full h-full object-cover object-center"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-coffee-dark/30 via-coffee-dark/50 to-coffee-dark" />
         </motion.div>
 
+        {/* Hero Content */}
+        <motion.div 
+          style={{ opacity: heroOpacity }}
+          className="relative z-10 text-center px-6 max-w-5xl"
+        >
+          <motion.span 
+            initial={{ opacity: 0, letterSpacing: '0.3em' }}
+            animate={{ opacity: 1, letterSpacing: '0.55em' }}
+            transition={{ duration: 2, delay: 0.3 }}
+            className="block font-mono text-[10px] uppercase text-caramel mb-8 tracking-[0.55em] font-bold"
+          >
+            The Assava Journey
+          </motion.span>
+          
+          <motion.h1 
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1.2, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
+            className="text-6xl md:text-9xl font-bold tracking-tighter leading-[0.9] mb-8 font-serif uppercase italic"
+          >
+            Soil to Soul <br /> 
+            <span className="text-caramel italic font-light lowercase">The Narrative</span>
+          </motion.h1>
+          
+          <motion.p 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1, delay: 1 }}
+            className="relative text-xl md:text-3xl text-cream/70 max-w-3xl mx-auto font-light leading-relaxed tracking-wide italic font-serif"
+          >
+            "A 15-step ritual of precision, patience, and absolute obsession."
+          </motion.p>
+        </motion.div>
+
+        <ScrollIndicator 
+          className="absolute bottom-10 left-1/2 -translate-x-1/2 z-[20] cursor-pointer"
+          onClick={() => window.scrollTo({ top: window.innerHeight, behavior: 'smooth' })}
+        />
+      </section>
+
+      {/* Main Narrative Content */}
+      <main className="relative z-10 py-32 px-6 max-w-7xl mx-auto flex flex-col gap-32 md:gap-64 overflow-x-hidden">
+
         {/* Story Steps */}
-        {StoryStepDetails.map((step, index) => (
-          <StoryStep key={index} step={step} index={index} />
-        ))}
+        <div className="space-y-32 md:space-y-64">
+          {STORY_STEPS.map((step, index) => (
+            <StoryStepBlock key={step.id} step={step} index={index} />
+          ))}
+        </div>
       </main>
 
       <Footer />
@@ -1728,83 +2110,119 @@ export function ScrollStory({ onOpenCart, onOpenCategories, cartCount }: { onOpe
   );
 }
 
-function StoryStep({ step, index }: { step: any, index: number }) {
+function StoryStepBlock({ step, index }: { step: StoryStep, index: number }) {
   const isEven = index % 2 === 0;
+  const chapter = STORY_CHAPTERS.find(c => c.id === step.chapterId);
 
   return (
-    <motion.div 
-      initial={{ opacity: 0, y: 80 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-15%" }}
-      transition={{ duration: 0.8, ease: "easeOut" }}
-      className={`relative grid md:grid-cols-2 gap-12 lg:gap-24 items-center min-h-[60vh]`}
-    >
-      {/* Background Image Panel */}
-      <div className={`relative h-[60vh] md:h-[80vh] w-full rounded-3xl overflow-hidden glass shadow-2xl ${!isEven ? 'md:order-last' : ''}`}>
-        <img 
-          src={step.img} 
-          loading="lazy"
-          alt={step.title}
-          className="w-full h-full object-cover opacity-80 transition-transform duration-1000 hover:scale-105" 
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-coffee-dark via-coffee-dark/40 to-transparent" />
-        
-        {/* Floating Icon */}
-        <div className="absolute bottom-8 left-8">
-          <motion.span 
-            animate={{ y: [0, -10, 0] }}
-            transition={{ repeat: Infinity, duration: 4, delay: index * 0.2, ease: "easeInOut" }}
-            className="block text-6xl drop-shadow-[0_0_30px_rgba(255,255,255,0.4)]"
+    <div className="relative">
+      {/* Chapter Divider */}
+      {step.isChapterStart && (
+        <motion.div 
+          initial={{ opacity: 0, x: -50 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          className="mb-20 md:mb-40"
+        >
+          <div className="flex items-center gap-6 mb-4">
+             <div className="h-[2px] w-12" style={{ backgroundColor: chapter?.accentColor }} />
+             <span className="text-caramel font-mono text-sm uppercase tracking-widest font-bold">
+               {chapter?.label}
+             </span>
+          </div>
+          <h2 className="text-5xl md:text-7xl font-bold text-cream uppercase mb-4 tracking-tighter italic">
+            {chapter?.title}
+          </h2>
+          <p className="text-cream/50 text-lg md:text-xl max-w-2xl font-light italic">
+            {chapter?.subtitle}
+          </p>
+        </motion.div>
+      )}
+
+      <motion.div 
+        initial={{ opacity: 0, y: 80 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-15%" }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
+        className={`relative grid md:grid-cols-2 gap-12 lg:gap-24 items-center min-h-[60vh]`}
+      >
+        {/* Background Image Panel */}
+        <div className={`relative h-[60vh] md:h-[80vh] w-full rounded-3xl overflow-hidden glass shadow-2xl ${!isEven ? 'md:order-last' : ''}`}>
+          <img 
+            src={step.image} 
+            loading="lazy"
+            alt={step.imageAlt}
+            className="w-full h-full object-cover opacity-80 transition-transform duration-1000 hover:scale-105" 
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-coffee-dark via-coffee-dark/40 to-transparent" />
+          
+          {/* Badge */}
+          <div className="absolute top-8 left-8">
+            <span className="px-4 py-2 bg-coffee-dark/80 backdrop-blur-md rounded-full border border-white/10 text-[10px] uppercase font-bold tracking-widest text-cream">
+              {step.badge}
+            </span>
+          </div>
+
+          {/* Floating Icon */}
+          <div className="absolute bottom-8 left-8">
+            <motion.span 
+              animate={{ y: [0, -10, 0] }}
+              transition={{ repeat: Infinity, duration: 4, delay: index * 0.2, ease: "easeInOut" }}
+              className="block text-6xl drop-shadow-[0_0_30px_rgba(255,255,255,0.4)]"
+            >
+              {step.icon}
+            </motion.span>
+          </div>
+
+          {/* Stat Pill */}
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.9 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            className="absolute bottom-8 right-8 glass bg-white/5 border border-white/10 backdrop-blur-xl p-6 rounded-2xl md:min-w-[160px]"
           >
-            {step.icon}
-          </motion.span>
+            <span className="block text-2xl md:text-3xl font-bold text-caramel mb-1 drop-shadow-sm">{step.stat}</span>
+            <span className="text-[10px] uppercase tracking-widest text-cream/50 font-bold">{step.statLabel}</span>
+          </motion.div>
         </div>
-      </div>
 
-      {/* Content Panel */}
-      <div className="relative z-10 flex flex-col justify-center">
-        <div className="flex items-center gap-3 text-caramel font-mono text-[10px] md:text-xs uppercase tracking-[0.3em] mb-6 font-bold">
-          <span>{step.tag || `Chapter ${step.title.split(' ')[1]}`}</span>
-          {step.badge && (
-            <>
-              <span className="w-1 h-1 rounded-full bg-caramel/50" />
-              <span className="text-cream/80 tracking-widest">{step.badge}</span>
-            </>
-          )}
-        </div>
-        
-        <h2 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-8 text-cream uppercase tracking-tighter drop-shadow-md">
-          {step.title}
-        </h2>
-        
-        <p className="text-lg md:text-2xl text-cream/90 font-light leading-relaxed tracking-wide mb-8">
-          {step.desc}
-        </p>
+        {/* Content Panel */}
+        <div className="relative z-10 flex flex-col justify-center">
+          <div className="flex items-center gap-3 text-caramel font-mono text-[10px] md:text-xs uppercase tracking-[0.3em] mb-6 font-bold">
+            <span>{step.tag}</span>
+            <span className="w-1 h-1 rounded-full bg-caramel/50" />
+            <span className="text-cream/40">{chapter?.title}</span>
+          </div>
+          
+          <h2 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-8 text-cream uppercase tracking-tighter drop-shadow-md italic leading-tight">
+            {step.title}
+          </h2>
+          
+          <p className="text-xl md:text-2xl text-caramel font-serif italic mb-8 leading-snug">
+            {step.desc}
+          </p>
 
-        {/* Specifications Grid */}
-        {(step.detail || step.stat) && (
-          <div className="flex flex-col gap-8 w-full border-t border-white/10 pt-8 mt-4">
-             <p className="text-sm md:text-base text-cream/70 leading-relaxed">
-               {step.detail}
-             </p>
-             
-             <div className="grid grid-cols-2 gap-4">
-               {step.stat && (
-                 <div className="glass p-4 rounded-2xl border border-white/5 bg-white/5">
-                   <span className="block text-2xl md:text-3xl font-bold text-caramel mb-1">{step.stat}</span>
-                   <span className="text-[10px] md:text-xs uppercase tracking-widest text-cream/50">{step.statLabel}</span>
-                 </div>
-               )}
-               {step.region && (
-                 <div className="glass p-4 rounded-2xl border border-white/5 bg-white/5">
-                   <span className="block text-sm md:text-base font-semibold text-cream mb-1">{step.region}</span>
-                   <span className="text-[10px] md:text-xs uppercase tracking-widest text-caramel/70">Location</span>
-                 </div>
-               )}
+          <p className="text-sm md:text-lg text-cream/70 leading-relaxed font-light mb-12">
+            {step.detail}
+          </p>
+
+          {/* Metadata Chips */}
+          <div className="flex flex-wrap gap-4 pt-8 border-t border-white/10">
+            <div className="flex flex-col">
+              <span className="text-[10px] uppercase tracking-widest text-cream/30 mb-1 font-bold">Region</span>
+              <span className="text-xs md:text-sm text-cream/80 font-medium">{step.region}</span>
+            </div>
+            <div className="h-8 w-[1px] bg-white/10 self-center" />
+            <div className="flex flex-col">
+              <span className="text-[10px] uppercase tracking-widest text-cream/30 mb-1 font-bold">Process</span>
+              <span className="text-xs md:text-sm text-cream/80 font-medium">{step.process}</span>
+            </div>
+            <div className="h-8 w-[1px] bg-white/10 self-center" />
+            <div className="flex flex-col">
+              <span className="text-[10px] uppercase tracking-widest text-cream/30 mb-1 font-bold">Impact</span>
+              <span className="text-xs md:text-sm text-caramel font-medium">{step.impact}</span>
             </div>
           </div>
-        )}
-      </div>
-    </motion.div>
+        </div>
+      </motion.div>
+    </div>
   );
 }

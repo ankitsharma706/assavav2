@@ -5,7 +5,7 @@ import { ShowcaseCard } from './CoffeeComponents';
 import { Canvas } from '@react-three/fiber';
 import { BeanCluster } from './ThreeScene';
 
-const Collection = ({ onAddToCart }: { onAddToCart: (item: any) => void }) => {
+const Collection = ({ onAddToCart, onToggleWishlist, wishlist }: { onAddToCart: (item: any) => void, onToggleWishlist: (item: any) => void, wishlist: any[] }) => {
   return (
     <section id="collection" className="section-padding bg-coffee-dark relative overflow-hidden">
       {/* Background 3D Beans */}
@@ -36,7 +36,13 @@ const Collection = ({ onAddToCart }: { onAddToCart: (item: any) => void }) => {
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-12 xl:gap-16">
           {PRODUCTS.map((product, i) => (
-            <ShowcaseCard key={product.id} item={product} onAddToCart={onAddToCart} />
+            <ShowcaseCard 
+              key={product.id} 
+              item={product} 
+              onAddToCart={onAddToCart} 
+              onToggleWishlist={onToggleWishlist}
+              isWishlisted={wishlist.some(i => i.id === product.id)}
+            />
           ))}
         </div>
       </div>

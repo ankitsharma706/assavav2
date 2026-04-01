@@ -4,7 +4,7 @@ import { Navbar } from '../components/CoffeeComponents';
 import Footer from '../components/Footer';
 import Events from '../components/Events';
 
-const EventsPage = ({ cartCount, onOpenCart, onOpenCategories }: any) => {
+const EventsPage = ({ cartCount, wishlistCount, onOpenCart, onOpenCategories }: any) => {
   return (
     <motion.main
       initial={{ opacity: 0 }}
@@ -12,7 +12,7 @@ const EventsPage = ({ cartCount, onOpenCart, onOpenCategories }: any) => {
       transition={{ duration: 1 }}
       className="relative min-h-screen bg-coffee-dark flex flex-col pt-32"
     >
-      <Navbar onOpenCart={onOpenCart} onOpenCategories={onOpenCategories} cartCount={cartCount} />
+      <Navbar onOpenCart={onOpenCart} onOpenCategories={onOpenCategories} cartCount={cartCount} wishlistCount={wishlistCount} />
       <div className="flex-grow">
         <Events />
       </div>

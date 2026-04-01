@@ -6,16 +6,18 @@ import { PRODUCTS } from '../constants';
 import { motion } from 'framer-motion';
 import { Trash2, Plus, Minus, ArrowRight, ShoppingBag } from 'lucide-react';
 
-const Cart = ({ cartCount, onOpenCart, onOpenCategories }: { cartCount: number, onOpenCart: () => void, onOpenCategories: () => void }) => {
-  // Mock cart items
-  const cartItems = [
-    { ...PRODUCTS[0], quantity: 1 },
-    { ...PRODUCTS[1], quantity: 2 }
-  ];
-
-  const subtotal = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
-  const shipping = 15.00;
-  const total = subtotal + shipping;
+const Cart = ({ cartCount, wishlistCount, cart, onUpdateQuantity, onRemove, cartTotal, onOpenCart, onOpenCategories }: { 
+  cartCount: number, 
+  wishlistCount: number, 
+  cart: any[], 
+  onUpdateQuantity: (id: string, delta: number) => void, 
+  onRemove: (id: string) => void, 
+  cartTotal: number, 
+  onOpenCart: () => void, 
+  onOpenCategories: () => void 
+}) => {
+  const shipping = cartTotal > 150 ? 0 : 15.00;
+  const total = cartTotal + shipping;
 
   return (
     <motion.main
@@ -29,6 +31,7 @@ const Cart = ({ cartCount, onOpenCart, onOpenCategories }: { cartCount: number, 
         onOpenCart={onOpenCart} 
         onOpenCategories={onOpenCategories} 
         cartCount={cartCount}
+        wishlistCount={wishlistCount}
       />
       
       <section className="section-padding pt-32">
@@ -40,7 +43,7 @@ const Cart = ({ cartCount, onOpenCart, onOpenCategories }: { cartCount: number, 
           
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-20">
             <div className="lg:col-span-2 space-y-8">
-              {cartItems.map((item, i) => (
+              {cart.length > 0 ? cart.map((item, i) => (
                 <motion.div
                   key={item.id}
                   initial={{ opacity: 0, y: 20 }}
@@ -63,59 +66,82 @@ const Cart = ({ cartCount, onOpenCart, onOpenCategories }: { cartCount: number, 
                   <div className="flex-1 space-y-4">
                     <div className="flex items-center justify-between">
                       <h3 className="text-2xl font-bold tracking-tighter uppercase group-hover:text-cream transition-colors">{item.name}</h3>
-                      <span className="text-cream font-bold">Rs{item.price.toFixed(2)}</span>
+                      <span className="text-cream font-bold">Rs{(item.price * (item.quantity || 1)).toFixed(2)}</span>
                     </div>
                     <p className="text-cream/40 text-sm font-light leading-relaxed line-clamp-1">{item.description}</p>
                     
                     <div className="flex items-center justify-between pt-4 border-t border-white/5">
                       <div className="flex items-center gap-6 glass rounded-full px-4 py-2 border-white/5">
-                        <button className="text-cream/40 hover:text-cream transition-colors"><Minus className="w-4 h-4" /></button>
-                        <span className="text-sm font-bold text-cream/80">{item.quantity}</span>
-                        <button className="text-cream/40 hover:text-cream transition-colors"><Plus className="w-4 h-4" /></button>
+                        <button 
+                          onClick={() => onUpdateQuantity(item.id, -1)}
+                          className="text-cream/40 hover:text-cream transition-all duration-300 transform active:scale-125"
+                        >
+                          <Minus className="w-4 h-4" />
+                        </button>
+                        <span className="text-sm font-bold text-cream/80 min-w-[1.5rem] text-center">{item.quantity || 1}</span>
+                        <button 
+                          onClick={() => onUpdateQuantity(item.id, 1)}
+                          className="text-cream/40 hover:text-cream transition-all duration-300 transform active:scale-125"
+                        >
+                          <Plus className="w-4 h-4" />
+                        </button>
                       </div>
-                      <button className="text-cream/20 hover:text-red-500 transition-colors flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em]">
-                        <Trash2 className="w-4 h-4" /> Remove
+                      <button 
+                        onClick={() => onRemove(item.id)}
+                        className="text-cream/20 hover:text-red-500 transition-colors flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] group/remove"
+                      >
+                        <Trash2 className="w-4 h-4 group-hover/remove:animate-bounce" /> Remove
                       </button>
                     </div>
                   </div>
                 </motion.div>
-              ))}
+              )) : (
+                <div className="glass rounded-[40px] p-20 text-center space-y-8">
+                  <ShoppingBag className="w-20 h-20 text-cream/10 mx-auto" />
+                  <h3 className="text-3xl font-bold uppercase tracking-tighter">The ritual is empty</h3>
+                  <Link to="/shop">
+                    <button className="px-10 py-4 glass rounded-full text-[10px] font-bold uppercase tracking-widest hover:glow-border transition-all">Begin Discovery</button>
+                  </Link>
+                </div>
+              )}
             </div>
             
-            <div className="space-y-8">
-              <div className="glass rounded-[40px] p-10 space-y-10 sticky top-32 border-white/5">
-                <h3 className="text-2xl font-bold tracking-tighter uppercase">Summary</h3>
-                
-                <div className="space-y-6 text-sm font-light text-cream/60">
-                  <div className="flex justify-between items-center">
-                    <span>Subtotal</span>
-                    <span className="text-cream/80 font-bold">${subtotal.toFixed(2)}</span>
+            {cart.length > 0 && (
+              <div className="space-y-8">
+                <div className="glass rounded-[40px] p-10 space-y-10 sticky top-32 border-white/5">
+                  <h3 className="text-2xl font-bold tracking-tighter uppercase">Summary</h3>
+                  
+                  <div className="space-y-6 text-sm font-light text-cream/60">
+                    <div className="flex justify-between items-center">
+                      <span>Subtotal</span>
+                      <span className="text-cream/80 font-bold">Rs{cartTotal.toFixed(2)}</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span>Shipping</span>
+                      <span className="text-cream/80 font-bold">{shipping === 0 ? 'FREE' : `Rs${shipping.toFixed(2)}`}</span>
+                    </div>
+                    <div className="pt-6 border-t border-white/5 flex justify-between items-center text-xl font-bold text-cream">
+                      <span>Total</span>
+                      <span className="text-cream">Rs{total.toFixed(2)}</span>
+                    </div>
                   </div>
-                  <div className="flex justify-between items-center">
-                    <span>Shipping</span>
-                    <span className="text-cream/80 font-bold">${shipping.toFixed(2)}</span>
-                  </div>
-                  <div className="pt-6 border-t border-white/5 flex justify-between items-center text-xl font-bold text-cream">
-                    <span>Total</span>
-                    <span className="text-cream">${total.toFixed(2)}</span>
-                  </div>
+                  
+                  <Link to="/payment" className="block">
+                    <button className="w-full group relative px-12 py-5 rounded-full overflow-hidden glass border-white/10 hover:glow-border transition-all duration-500 flex items-center justify-center gap-4">
+                      <div className="absolute inset-0 bg-caramel/10 translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
+                      <ShoppingBag className="w-5 h-5 text-cream group-hover:text-cream transition-colors" />
+                      <span className="relative z-10 text-[10px] font-bold uppercase tracking-[0.4em] text-cream group-hover:text-cream transition-colors">
+                        Proceed to Ritual
+                      </span>
+                    </button>
+                  </Link>
+                  
+                  <p className="text-[10px] text-center text-cream/20 uppercase tracking-[0.2em] font-bold">
+                    Free shipping on orders over Rs1500
+                  </p>
                 </div>
-                
-                <Link to="/payment" className="block">
-                  <button className="w-full group relative px-12 py-5 rounded-full overflow-hidden glass border-white/10 hover:glow-border transition-all duration-500 flex items-center justify-center gap-4">
-                    <div className="absolute inset-0 bg-caramel/10 translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
-                    <ShoppingBag className="w-5 h-5 text-cream group-hover:text-cream transition-colors" />
-                    <span className="relative z-10 text-[10px] font-bold uppercase tracking-[0.4em] text-cream group-hover:text-cream transition-colors">
-                      Proceed to Ritual
-                    </span>
-                  </button>
-                </Link>
-                
-                <p className="text-[10px] text-center text-cream/20 uppercase tracking-[0.2em] font-bold">
-                  Free shipping on orders over $150
-                </p>
               </div>
-            </div>
+            )}
           </div>
         </div>
       </section>

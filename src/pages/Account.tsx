@@ -4,8 +4,10 @@ import Footer from '../components/Footer';
 import { motion, AnimatePresence } from 'framer-motion';
 import { User, MapPin, HelpCircle, ChevronDown, LogOut, Package, Settings, Heart, CheckCircle2, ShoppingBag } from 'lucide-react';
 
-const Account = ({ cartCount, onOpenCart, onOpenCategories }: { cartCount: number, onOpenCart: () => void, onOpenCategories: () => void }) => {
-  const [activeTab, setActiveTab] = useState('Settings');
+import { CoffeeCard } from '../components/CoffeeComponents';
+
+const Account = ({ cartCount, wishlistCount, wishlist, onToggleWishlist, onOpenCart, onOpenCategories }: { cartCount: number, wishlistCount: number, wishlist: any[], onToggleWishlist: (item: any) => void, onOpenCart: () => void, onOpenCategories: () => void }) => {
+  const [activeTab, setActiveTab] = useState('Wishlist');
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [isSaved, setIsSaved] = useState(false);
 
@@ -48,6 +50,7 @@ const Account = ({ cartCount, onOpenCart, onOpenCategories }: { cartCount: numbe
         onOpenCart={onOpenCart} 
         onOpenCategories={onOpenCategories} 
         cartCount={cartCount}
+        wishlistCount={wishlistCount}
       />
       
       <section className="section-padding pt-32">
@@ -203,11 +206,35 @@ const Account = ({ cartCount, onOpenCart, onOpenCategories }: { cartCount: numbe
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -20 }}
-                    className="glass rounded-[60px] p-12 space-y-8 border-white/5 relative overflow-hidden flex flex-col items-center justify-center min-h-[400px]"
+                    className="space-y-12"
                   >
-                    <Heart className="w-16 h-16 text-cream/20 mb-4" />
-                    <h3 className="text-2xl font-bold tracking-tighter uppercase text-cream/60">Your wishlist is empty</h3>
-                    <p className="text-sm font-light text-cream/40">Save your favorite blends for later.</p>
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-4 text-cream">
+                        <Heart className="w-6 h-6 text-caramel fill-caramel" />
+                        <h3 className="text-2xl font-bold tracking-tighter uppercase">Saved Rituals</h3>
+                      </div>
+                      <span className="text-[10px] text-cream/40 uppercase tracking-[0.3em] font-bold">{wishlist.length} Items</span>
+                    </div>
+
+                    {wishlist.length === 0 ? (
+                      <div className="glass rounded-[40px] p-20 flex flex-col items-center justify-center min-h-[300px] border-white/5 bg-white/2">
+                        <Heart className="w-16 h-16 text-cream/10 mb-6" />
+                        <h3 className="text-xl font-bold tracking-tighter uppercase text-cream/40 px-10 text-center">Your wishlist is empty</h3>
+                        <p className="text-[10px] text-cream/20 uppercase tracking-[0.4em] font-bold mt-2">Save your favorite blends for later.</p>
+                      </div>
+                    ) : (
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        {wishlist.map((item) => (
+                          <CoffeeCard 
+                            key={item.id} 
+                            {...item} 
+                            title={item.name || item.title}
+                            onToggleWishlist={onToggleWishlist}
+                            isWishlisted={true}
+                          />
+                        ))}
+                      </div>
+                    )}
                   </motion.div>
                 )}
               </AnimatePresence>

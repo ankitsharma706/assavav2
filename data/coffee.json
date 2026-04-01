@@ -1,0 +1,78 @@
+{
+  "products": [
+    {
+      "id": "single-origin-ghats",
+      "name": "Eastern Ghats Reserve",
+      "price": 549,
+      "oldPrice": 650,
+      "description": "A high-altitude specialty roast from the misty slopes of the Eastern Ghats. Notes of dark chocolate, citrus, and a lingering floral finish.",
+      "image": "https://img.freepik.com/premium-photo/aromatic-coffee-beans-burlap-sack_23-2148259204.jpg",
+      "category": "single-origin",
+      "details": ["100% Arabica", "Lightly Roasted", "Directly Sourced"],
+      "label": "Bestseller",
+      "rating": 5,
+      "reviews": 128,
+      "profile": {
+        "origin": "Araku Valley",
+        "roast": "Light",
+        "type": "Single Origin",
+        "body": "Medium",
+        "acidity": "Bright"
+      },
+      "flavorNotes": ["Dark Chocolate", "Wild Berry", "Jasmine"],
+      "brewingMethods": ["V60", "Chemex", "AeroPress"]
+    },
+    {
+      "id": "single-origin-coorg",
+      "name": "Monsooned Malabar",
+      "price": 499,
+      "description": "The legendary Coorg ritual. Exposed to the moisture-laden winds of the monsoon, resulting in a unique, earthy richness.",
+      "image": "https://img.freepik.com/premium-photo/roasted-coffee-beans-vintage-wooden-table_23-2148259218.jpg",
+      "category": "single-origin",
+      "details": ["Monsooned Process", "Medium Roast", "Single Estate"],
+      "label": "Traditional",
+      "rating": 4,
+      "reviews": 85,
+      "profile": {
+        "origin": "Coorg Highlands",
+        "roast": "Medium",
+        "type": "Single Origin",
+        "body": "Heavy",
+        "acidity": "Low"
+      },
+      "flavorNotes": ["Earth", "Spice", "Walnut"]
+    },
+    {
+      "id": "rare-find-gesha",
+      "name": "Experimental Gesha",
+      "price": 1299,
+      "description": "A vanishingly rare 96-hour anaerobic fermented micro-lot. A sensory disruption that defies expectation.",
+      "image": "https://img.freepik.com/premium-photo/coffee-beans-scattered-around-cup-table_1048944-11422780.jpg",
+      "category": "rare-finds",
+      "details": ["Experimental Lot", "Gesha Varietal", "Rare Find"],
+      "label": "Limited",
+      "rating": 5,
+      "reviews": 12,
+      "profile": {
+        "origin": "Hidden Valley",
+        "roast": "Light",
+        "type": "Micro-lot",
+        "body": "Light & Tea-like",
+        "acidity": "Vibrant"
+      },
+      "flavorNotes": ["Peach", "Bergamot", "Honeysuckle"]
+    },
+    {
+      "id": "brewing-v60",
+      "name": "Hario V60 Ritual Kit",
+      "price": 2499,
+      "description": "The definitive tool for clarity. Includes ceramic dripper, glass server, and specialty filters.",
+      "image": "https://img.freepik.com/premium-photo/coffee-brewing-equipment-with-v60-dripper_251139-444.jpg",
+      "category": "brewing-gear",
+      "details": ["Ceramic Quality", "Precision Flow", "Total Control"],
+      "label": "Professional",
+      "rating": 5,
+      "reviews": 45
+    }
+  ]
+}
