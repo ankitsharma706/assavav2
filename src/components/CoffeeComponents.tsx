@@ -43,15 +43,12 @@ export function Navbar({ onOpenCart, onOpenCategories, cartCount, wishlistCount,
   };
 
   const navLinks: Array<{ name: string; path?: string; href?: string; onClick?: () => void }> = [
-    // { name: 'Experience', path: '/' },
-    // { name: 'Collections', href: '#collection' },
     { name: 'Shop', path: '/shopping' },
     { name: 'Category', path: '/category' },
     { name: 'Events', path: '/events' },
     { name: 'Story', path: '/story' },
     { name: 'About', path: '/about' },
-    // { name: 'Reviews', path: '/reviews' },
-    // { name: 'Social', path: '/social' },
+    { name: 'Contact', path: '/contact' },
     { name: 'Account', path: '/account' },
   ];
 
@@ -131,7 +128,8 @@ export function Navbar({ onOpenCart, onOpenCategories, cartCount, wishlistCount,
             </Link>
             <button 
               onClick={() => setIsMobileMenuOpen(true)}
-              className="md:hidden p-2 hover:bg-cream/10 rounded-full transition-colors"
+              aria-label="Open mobile navigation menu"
+              className="lg:hidden p-2 hover:bg-cream/10 rounded-full transition-colors"
             >
               <Menu className="w-6 h-6" />
             </button>

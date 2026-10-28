@@ -1,0 +1,1276 @@
+[
+  {
+    "id": "TC001",
+    "title": "Home loads hero and featured collections",
+    "description": "Verifies the home page renders primary brand hero content and featured product sections.",
+    "category": "Home Page Navigation",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the hero section with brand visuals is displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify featured product collection sections are displayed"
+      }
+    ]
+  },
+  {
+    "id": "TC002",
+    "title": "Home navigation to Shop shows product listing",
+    "description": "Verifies primary navigation from Home to Shop and that the shop grid loads.",
+    "category": "Home Page Navigation",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Click the navigation link to go to the shop"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the shop product grid is displayed"
+      }
+    ]
+  },
+  {
+    "id": "TC003",
+    "title": "Home slide-out cart opens and shows empty state when no items",
+    "description": "Verifies the slide-out cart panel opens from the navbar and shows an empty cart state when there are no items.",
+    "category": "Home Page Navigation",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Click the cart icon to open the cart panel"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify an empty cart state is displayed"
+      }
+    ]
+  },
+  {
+    "id": "TC004",
+    "title": "Shop loads product grid",
+    "description": "Verifies the shop page loads and displays a browsable grid of products.",
+    "category": "Product Shopping",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /shop"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the shop product grid is displayed"
+      }
+    ]
+  },
+  {
+    "id": "TC005",
+    "title": "Filter by category leads to a filtered listing view",
+    "description": "Verifies category filtering from the shop results in a filtered product listing view.",
+    "category": "Product Shopping",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /shop"
+      },
+      {
+        "type": "action",
+        "description": "Click a category to filter products"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify a filtered product listing is displayed"
+      }
+    ]
+  },
+  {
+    "id": "TC006",
+    "title": "Open product details, view carousel, add to cart, and see cart updated",
+    "description": "Verifies the end-to-end flow from shop to product details, viewing images, adding to cart, and seeing the cart reflect the added item.",
+    "category": "Product Shopping",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /shop"
+      },
+      {
+        "type": "action",
+        "description": "Click on a product card to view its details"
+      },
+      {
+        "type": "action",
+        "description": "Interact with the product images carousel to view another image"
+      },
+      {
+        "type": "action",
+        "description": "Add the product to the cart"
+      },
+      {
+        "type": "action",
+        "description": "Click the cart icon to open the cart panel"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the cart shows at least one item"
+      }
+    ]
+  },
+  {
+    "id": "TC007",
+    "title": "Toggle wishlist state from product detail",
+    "description": "Verifies the wishlist heart icon can be toggled on a product detail page.",
+    "category": "Product Shopping",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /shop"
+      },
+      {
+        "type": "action",
+        "description": "Click on a product card to view its details"
+      },
+      {
+        "type": "action",
+        "description": "Click the wishlist heart icon to toggle wishlist on"
+      },
+      {
+        "type": "action",
+        "description": "Click the wishlist heart icon to toggle wishlist off"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the wishlist indicator reflects the item is not wishlisted"
+      }
+    ]
+  },
+  {
+    "id": "TC008",
+    "title": "Shop search or filter with no matches shows empty results state",
+    "description": "Verifies that applying filters or search resulting in no matches shows an empty results state.",
+    "category": "Product Shopping",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /shop"
+      },
+      {
+        "type": "action",
+        "description": "Fill text into the search field that is unlikely to match any product"
+      },
+      {
+        "type": "action",
+        "description": "Press Enter"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify an empty results state is displayed"
+      }
+    ]
+  },
+  {
+    "id": "TC009",
+    "title": "Cart page shows items and quantity controls update totals",
+    "description": "Verifies cart items display with quantity controls and the total updates when quantity changes, then proceeds to checkout.",
+    "category": "Shopping Cart Management",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /shop"
+      },
+      {
+        "type": "action",
+        "description": "Click on a product card to view its details"
+      },
+      {
+        "type": "action",
+        "description": "Add the product to the cart"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to /cart"
+      },
+      {
+        "type": "action",
+        "description": "Click the increase quantity control for the cart item"
+      },
+      {
+        "type": "action",
+        "description": "Click Proceed to Checkout"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the checkout/payment form is displayed"
+      }
+    ]
+  },
+  {
+    "id": "TC010",
+    "title": "Remove items until cart is empty and checkout is blocked",
+    "description": "Verifies removing items from the cart leads to an empty cart state and prevents proceeding to checkout.",
+    "category": "Shopping Cart Management",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /shop"
+      },
+      {
+        "type": "action",
+        "description": "Click on a product card to view its details"
+      },
+      {
+        "type": "action",
+        "description": "Add the product to the cart"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to /cart"
+      },
+      {
+        "type": "action",
+        "description": "Remove the item from the cart"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify an empty cart message is displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the checkout action is disabled or unavailable"
+      }
+    ]
+  },
+  {
+    "id": "TC011",
+    "title": "Complete checkout from payment form to thank you confirmation",
+    "description": "Verifies a user can enter shipping and payment details and submit the order to reach the on-site confirmation page.",
+    "category": "Checkout and Payment",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /payment"
+      },
+      {
+        "type": "action",
+        "description": "Fill John into the first name field"
+      },
+      {
+        "type": "action",
+        "description": "Fill Doe into the last name field"
+      },
+      {
+        "type": "action",
+        "description": "Fill john.doe@example.com into the email address field"
+      },
+      {
+        "type": "action",
+        "description": "Fill a valid shipping address into the shipping address fields"
+      },
+      {
+        "type": "action",
+        "description": "Fill a valid card number into the card number field"
+      },
+      {
+        "type": "action",
+        "description": "Fill a valid expiry date into the expiry date field"
+      },
+      {
+        "type": "action",
+        "description": "Fill a valid CVV into the CVV field"
+      },
+      {
+        "type": "action",
+        "description": "Submit the payment form"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the user lands on the thank you page"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify an order confirmation is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC012",
+    "title": "Payment page loads and displays checkout form",
+    "description": "Verifies the payment page primary checkout content is available to start an order.",
+    "category": "Checkout and Payment",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /payment"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify shipping details inputs are displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify payment details inputs are displayed"
+      }
+    ]
+  },
+  {
+    "id": "TC013",
+    "title": "Prevent submission when required fields are missing",
+    "description": "Verifies validation errors appear and the user is not taken to confirmation when required fields are incomplete.",
+    "category": "Checkout and Payment",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /payment"
+      },
+      {
+        "type": "action",
+        "description": "Fill John into the first name field"
+      },
+      {
+        "type": "action",
+        "description": "Fill Doe into the last name field"
+      },
+      {
+        "type": "action",
+        "description": "Submit the payment form"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify form validation errors are visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the user remains on the payment page"
+      }
+    ]
+  },
+  {
+    "id": "TC014",
+    "title": "Email validation blocks invalid email format",
+    "description": "Verifies entering an invalid email shows a validation error and prevents order submission.",
+    "category": "Checkout and Payment",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /payment"
+      },
+      {
+        "type": "action",
+        "description": "Fill John into the first name field"
+      },
+      {
+        "type": "action",
+        "description": "Fill Doe into the last name field"
+      },
+      {
+        "type": "action",
+        "description": "Fill invalid-email into the email address field"
+      },
+      {
+        "type": "action",
+        "description": "Fill a valid shipping address into the shipping address fields"
+      },
+      {
+        "type": "action",
+        "description": "Fill a valid card number into the card number field"
+      },
+      {
+        "type": "action",
+        "description": "Fill a valid expiry date into the expiry date field"
+      },
+      {
+        "type": "action",
+        "description": "Fill a valid CVV into the CVV field"
+      },
+      {
+        "type": "action",
+        "description": "Submit the payment form"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify an email validation error is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the user remains on the payment page"
+      }
+    ]
+  },
+  {
+    "id": "TC015",
+    "title": "Card number validation blocks invalid card number",
+    "description": "Verifies an invalid card number triggers validation and prevents navigation to confirmation.",
+    "category": "Checkout and Payment",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /payment"
+      },
+      {
+        "type": "action",
+        "description": "Fill John into the first name field"
+      },
+      {
+        "type": "action",
+        "description": "Fill Doe into the last name field"
+      },
+      {
+        "type": "action",
+        "description": "Fill john.doe@example.com into the email address field"
+      },
+      {
+        "type": "action",
+        "description": "Fill a valid shipping address into the shipping address fields"
+      },
+      {
+        "type": "action",
+        "description": "Fill 1234 into the card number field"
+      },
+      {
+        "type": "action",
+        "description": "Fill a valid expiry date into the expiry date field"
+      },
+      {
+        "type": "action",
+        "description": "Fill a valid CVV into the CVV field"
+      },
+      {
+        "type": "action",
+        "description": "Submit the payment form"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify a payment card validation error is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the user remains on the payment page"
+      }
+    ]
+  },
+  {
+    "id": "TC016",
+    "title": "Thank you page loads directly and shows confirmation content",
+    "description": "Verifies the order confirmation page can render its primary confirmation content.",
+    "category": "Checkout and Payment",
+    "priority": "Low",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /thankyou"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify an order confirmation is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify a post-purchase next-step action is available"
+      }
+    ]
+  },
+  {
+    "id": "TC017",
+    "title": "Account page loads and shows profile section",
+    "description": "Verifies the account overview displays the primary profile content.",
+    "category": "User Account and Wishlist",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /account"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the account profile section is displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify account navigation tabs are displayed"
+      }
+    ]
+  },
+  {
+    "id": "TC018",
+    "title": "Open wishlist tab and remove an item (when available)",
+    "description": "Verifies a user can remove an item from the wishlist and the list updates accordingly.",
+    "category": "User Account and Wishlist",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /account"
+      },
+      {
+        "type": "action",
+        "description": "Open the wishlist tab"
+      },
+      {
+        "type": "action",
+        "description": "If the wishlist is empty, add a product to the wishlist from the shop and return to the wishlist tab"
+      },
+      {
+        "type": "action",
+        "description": "Remove an item from the wishlist"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the removed item is no longer displayed in the wishlist"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the wishlist count or list updates accordingly"
+      }
+    ]
+  },
+  {
+    "id": "TC019",
+    "title": "Wishlist empty state after clearing browser storage",
+    "description": "Verifies the wishlist shows an empty state when no items are saved.",
+    "category": "User Account and Wishlist",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /account"
+      },
+      {
+        "type": "action",
+        "description": "Clear the site data using the app’s clear/reset control if available"
+      },
+      {
+        "type": "action",
+        "description": "Open the wishlist tab"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify an empty wishlist state is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC020",
+    "title": "Navigate to order history from account",
+    "description": "Verifies the user can reach order history from the account page navigation.",
+    "category": "User Account and Wishlist",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /account"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to the order history tab"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify past orders are displayed or an empty state is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC021",
+    "title": "Search page loads and shows search input and results area",
+    "description": "Verifies the product search page primary content is available for searching.",
+    "category": "Product Search",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /search"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify a search input is displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify a search results area is displayed"
+      }
+    ]
+  },
+  {
+    "id": "TC022",
+    "title": "Search returns filtered results and opens a product detail",
+    "description": "Verifies searching by keyword filters results and selecting a result shows product details.",
+    "category": "Product Search",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /search"
+      },
+      {
+        "type": "action",
+        "description": "Fill espresso into the search input field"
+      },
+      {
+        "type": "action",
+        "description": "Wait for the results to update"
+      },
+      {
+        "type": "action",
+        "description": "Select a product from the search results"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify product details are displayed"
+      }
+    ]
+  },
+  {
+    "id": "TC023",
+    "title": "Search with no matches shows empty state",
+    "description": "Verifies a query with no matching products shows a no-results state.",
+    "category": "Product Search",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /search"
+      },
+      {
+        "type": "action",
+        "description": "Fill zzznonexistentproductzzz into the search input field"
+      },
+      {
+        "type": "action",
+        "description": "Wait for the results to update"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify a no results state is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC024",
+    "title": "Clear search query restores broader results or default state",
+    "description": "Verifies clearing the search input returns the UI to a non-filtered state.",
+    "category": "Product Search",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /search"
+      },
+      {
+        "type": "action",
+        "description": "Fill espresso into the search input field"
+      },
+      {
+        "type": "action",
+        "description": "Wait for the results to update"
+      },
+      {
+        "type": "action",
+        "description": "Clear the search input field"
+      },
+      {
+        "type": "action",
+        "description": "Wait for the results to update"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify multiple products are displayed or a default search state is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC025",
+    "title": "Events listing page loads and shows upcoming events",
+    "description": "Verifies the Events listing page renders a list of upcoming events users can browse.",
+    "category": "Events Listing and Detail",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /events"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify a list of upcoming events is displayed"
+      }
+    ]
+  },
+  {
+    "id": "TC026",
+    "title": "Book an event from listing through detail and see confirmation",
+    "description": "Verifies a user can open an event detail, complete the booking form, submit, and see a booking confirmation.",
+    "category": "Events Listing and Detail",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /events"
+      },
+      {
+        "type": "action",
+        "description": "Click on an event card to view event detail"
+      },
+      {
+        "type": "action",
+        "description": "Click the booking action to open the booking form"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the name field with Event Booker"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with event.booker@example.com"
+      },
+      {
+        "type": "action",
+        "description": "Select a valid number of attendees"
+      },
+      {
+        "type": "action",
+        "description": "Submit the booking form"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify a local booking confirmation is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC027",
+    "title": "Event booking validation prevents submission with missing required fields",
+    "description": "Verifies booking form required-field validation blocks submission and shows validation errors.",
+    "category": "Events Listing and Detail",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /events"
+      },
+      {
+        "type": "action",
+        "description": "Click on an event card to view event detail"
+      },
+      {
+        "type": "action",
+        "description": "Click the booking action to open the booking form"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the name field with Event Booker"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with event.booker@example.com"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the attendees field with empty value"
+      },
+      {
+        "type": "action",
+        "description": "Submit the booking form"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify a validation error is visible and booking is not confirmed"
+      }
+    ]
+  },
+  {
+    "id": "TC028",
+    "title": "Event detail shows key information after selecting an event",
+    "description": "Verifies event detail view displays essential event information after navigating from listing.",
+    "category": "Events Listing and Detail",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /events"
+      },
+      {
+        "type": "action",
+        "description": "Click on an event card to view event detail"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the event description, date, and location are displayed"
+      }
+    ]
+  },
+  {
+    "id": "TC029",
+    "title": "Booking form opens from event detail",
+    "description": "Verifies the booking form can be opened from an event detail view.",
+    "category": "Events Listing and Detail",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /events"
+      },
+      {
+        "type": "action",
+        "description": "Click on an event card to view event detail"
+      },
+      {
+        "type": "action",
+        "description": "Click the booking action to open the booking form"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the booking form fields for name, email, and attendees are displayed"
+      }
+    ]
+  },
+  {
+    "id": "TC030",
+    "title": "Contact page loads and displays contact form",
+    "description": "Verifies the Contact page renders the contact form with required fields.",
+    "category": "Contact Form",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /contact"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the contact form fields for name, email, and message are displayed"
+      }
+    ]
+  },
+  {
+    "id": "TC031",
+    "title": "Submit contact form successfully and see confirmation",
+    "description": "Verifies a user can complete the contact form and receive an on-page success confirmation.",
+    "category": "Contact Form",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /contact"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the name field with Contact Tester"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with contact.tester@example.com"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the message field with This is a test message for the contact form."
+      },
+      {
+        "type": "action",
+        "description": "Submit the contact form"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify a success confirmation message is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC032",
+    "title": "Contact form validation prevents submission when required fields are empty",
+    "description": "Verifies required-field validation blocks contact form submission and shows validation errors.",
+    "category": "Contact Form",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /contact"
+      },
+      {
+        "type": "action",
+        "description": "Submit the contact form"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify validation errors are visible and submission is prevented"
+      }
+    ]
+  },
+  {
+    "id": "TC033",
+    "title": "About page allows scrolling through brand story sections",
+    "description": "Verifies the About page loads and users can scroll to additional brand story content.",
+    "category": "About and Brand Story",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /about"
+      },
+      {
+        "type": "action",
+        "description": "Scroll down the page"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify additional brand story sections are displayed further down the page"
+      }
+    ]
+  },
+  {
+    "id": "TC034",
+    "title": "Navigate from About to the Story experience and see story content",
+    "description": "Verifies users can reach the Story experience from About and the story content is present.",
+    "category": "About and Brand Story",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /about"
+      },
+      {
+        "type": "action",
+        "description": "Click the link to view the coffee story experience"
+      },
+      {
+        "type": "action",
+        "description": "Scroll down the story page"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the coffee story content progresses as the user scrolls"
+      }
+    ]
+  },
+  {
+    "id": "TC035",
+    "title": "Reviews page loads and shows review cards",
+    "description": "Ensures the reviews page renders a list of review cards with rating and comment content.",
+    "category": "Reviews Page",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /reviews"
+      },
+      {
+        "type": "action",
+        "description": "Wait for the reviews content to load"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify customer review cards are displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify each displayed review card shows a rating and a written comment"
+      }
+    ]
+  },
+  {
+    "id": "TC036",
+    "title": "Scroll through the reviews list",
+    "description": "Verifies the user can scroll the reviews list to see additional reviews.",
+    "category": "Reviews Page",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /reviews"
+      },
+      {
+        "type": "action",
+        "description": "Wait for the reviews content to load"
+      },
+      {
+        "type": "action",
+        "description": "Scroll down the page"
+      },
+      {
+        "type": "action",
+        "description": "Scroll further down the page"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify additional review cards are visible after scrolling"
+      }
+    ]
+  },
+  {
+    "id": "TC037",
+    "title": "Reviews empty state is shown when no reviews exist",
+    "description": "Verifies an empty-state UI is shown when the reviews list is empty.",
+    "category": "Reviews Page",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /reviews"
+      },
+      {
+        "type": "action",
+        "description": "Wait for the reviews content to load"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify an empty state message is visible indicating no reviews are available"
+      }
+    ]
+  },
+  {
+    "id": "TC038",
+    "title": "Reviews page remains usable when scrolling to the bottom",
+    "description": "Verifies the reviews page continues to render content without breaking after significant scrolling.",
+    "category": "Reviews Page",
+    "priority": "Low",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /reviews"
+      },
+      {
+        "type": "action",
+        "description": "Wait for the reviews content to load"
+      },
+      {
+        "type": "action",
+        "description": "Scroll to the bottom of the page"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the page remains responsive and review content is still displayed"
+      }
+    ]
+  },
+  {
+    "id": "TC039",
+    "title": "Social gallery page loads and shows photo card grid",
+    "description": "Ensures the social gallery renders a grid of Instagram-style photo cards.",
+    "category": "Social / Instagram Gallery",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /social"
+      },
+      {
+        "type": "action",
+        "description": "Wait for the gallery content to load"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify a grid of social photo cards is displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify multiple photo thumbnails are visible"
+      }
+    ]
+  },
+  {
+    "id": "TC040",
+    "title": "Open a social photo for larger view when supported",
+    "description": "Verifies clicking a photo opens a larger view overlay/modal or detail view when implemented.",
+    "category": "Social / Instagram Gallery",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /social"
+      },
+      {
+        "type": "action",
+        "description": "Wait for the gallery content to load"
+      },
+      {
+        "type": "action",
+        "description": "Click a photo card in the gallery"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify a larger photo view is displayed"
+      }
+    ]
+  },
+  {
+    "id": "TC041",
+    "title": "Close the larger photo view and return to the gallery",
+    "description": "Verifies the user can dismiss the larger photo view and continue browsing the gallery.",
+    "category": "Social / Instagram Gallery",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /social"
+      },
+      {
+        "type": "action",
+        "description": "Wait for the gallery content to load"
+      },
+      {
+        "type": "action",
+        "description": "Click a photo card in the gallery"
+      },
+      {
+        "type": "action",
+        "description": "Press Escape"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the gallery grid is visible and the larger photo view is no longer displayed"
+      }
+    ]
+  },
+  {
+    "id": "TC042",
+    "title": "Social gallery shows fallback visuals for missing images",
+    "description": "Verifies the UI provides a placeholder or fallback visual when an image cannot be displayed.",
+    "category": "Social / Instagram Gallery",
+    "priority": "Low",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /social"
+      },
+      {
+        "type": "action",
+        "description": "Wait for the gallery content to load"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify photo cards render visible placeholders or fallback visuals for any images that do not display"
+      }
+    ]
+  },
+  {
+    "id": "TC043",
+    "title": "Terms page loads with table of contents and sections",
+    "description": "Ensures the terms page renders primary legal content with a table of contents for navigation.",
+    "category": "Terms and Conditions",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /terms"
+      },
+      {
+        "type": "action",
+        "description": "Wait for the terms content to load"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify terms sections are displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify a table of contents navigation area is displayed"
+      }
+    ]
+  },
+  {
+    "id": "TC044",
+    "title": "Use table of contents to jump to a specific terms section",
+    "description": "Verifies clicking a table of contents item scrolls/jumps the page to the corresponding section.",
+    "category": "Terms and Conditions",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /terms"
+      },
+      {
+        "type": "action",
+        "description": "Wait for the terms content to load"
+      },
+      {
+        "type": "action",
+        "description": "Click a table of contents link for a specific section"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the page view jumps to the corresponding terms section"
+      }
+    ]
+  },
+  {
+    "id": "TC045",
+    "title": "Scroll through terms sections to read content",
+    "description": "Verifies the terms content is scrollable and continues to render across sections.",
+    "category": "Terms and Conditions",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /terms"
+      },
+      {
+        "type": "action",
+        "description": "Wait for the terms content to load"
+      },
+      {
+        "type": "action",
+        "description": "Scroll down the page"
+      },
+      {
+        "type": "action",
+        "description": "Scroll further down the page"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify additional terms sections are visible after scrolling"
+      }
+    ]
+  },
+  {
+    "id": "TC046",
+    "title": "Table of contents handles missing anchors gracefully",
+    "description": "Verifies clicking a table of contents item that does not have a matching section does not break the page and results in a safe fallback position.",
+    "category": "Terms and Conditions",
+    "priority": "Low",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /terms"
+      },
+      {
+        "type": "action",
+        "description": "Wait for the terms content to load"
+      },
+      {
+        "type": "action",
+        "description": "Click a table of contents link that does not navigate to a visible corresponding section"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the page remains usable and does not navigate to a broken or blank state"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the view remains at the top or the nearest available section"
+      }
+    ]
+  }
+]

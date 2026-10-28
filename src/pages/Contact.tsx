@@ -1,7 +1,10 @@
-import React, { useState, useRef, Suspense } from 'react';
+import React, { useState, useRef, useEffect, Suspense } from 'react';
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
 import { Mail, Phone, MapPin, Instagram, ArrowRight, CheckCircle2, ChevronDown, Send } from 'lucide-react';
 import { Navbar, Footer, ScrollIndicator } from '../components/CoffeeComponents';
+import { applySEO } from '../lib/seo';
+import Breadcrumb from '../components/Breadcrumb';
+import AdUnit from '../components/AdSense/AdUnit';
 
 // --- Types ---
 type ContactProps = {
@@ -65,6 +68,14 @@ const GlassInput = ({ label, type = "text", placeholder, options, isTextArea }: 
 
 const Contact: React.FC<ContactProps> = ({ cartCount, onOpenCart, onOpenCategories, wishlistCount = 0 }) => {
   const [formStatus, setFormStatus] = useState<'idle' | 'submitting' | 'success'>('idle');
+
+  useEffect(() => {
+    applySEO({
+      title: 'Contact Concierge & Roastery',
+      description: 'Connect with Assava Coffee roasters, customer support, and sensory lab in Bhubaneswar, Odisha. Inquiries, tastings, and support.',
+      canonical: '/contact',
+    });
+  }, []);
   
   // Parallax for hero
   const heroRef = useRef<HTMLElement>(null);
@@ -185,7 +196,7 @@ const Contact: React.FC<ContactProps> = ({ cartCount, onOpenCart, onOpenCategori
             </p>
             
             <div className="mt-16 space-y-8">
-              <div className="group flex items-start gap-6 cursor-pointer">
+              <a href="mailto:hello@assavacoffee.com" className="group flex items-start gap-6 cursor-pointer">
                 <div className="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center border border-white/10 group-hover:border-caramel group-hover:bg-white/10 transition-all duration-500 shadow-sm">
                   <Mail className="w-5 h-5 text-caramel" />
                 </div>
@@ -193,8 +204,8 @@ const Contact: React.FC<ContactProps> = ({ cartCount, onOpenCart, onOpenCategori
                   <span className="block text-[8px] uppercase tracking-widest text-caramel/50 font-bold mb-1">Electronic Mail</span>
                   <span className="text-lg font-serif text-cream border-b border-transparent group-hover:border-caramel transition-all">hello@assavacoffee.com</span>
                 </div>
-              </div>
-              <div className="group flex items-start gap-6 cursor-pointer">
+              </a>
+              <a href="tel:+919000800012" className="group flex items-start gap-6 cursor-pointer">
                 <div className="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center border border-white/10 group-hover:border-caramel group-hover:bg-white/10 transition-all duration-500 shadow-sm">
                   <Phone className="w-5 h-5 text-caramel" />
                 </div>
@@ -202,7 +213,7 @@ const Contact: React.FC<ContactProps> = ({ cartCount, onOpenCart, onOpenCategori
                   <span className="block text-[8px] uppercase tracking-widest text-caramel/50 font-bold mb-1">Voice Communication</span>
                   <span className="text-lg font-serif text-cream border-b border-transparent group-hover:border-caramel transition-all">+91 9000 8000 12</span>
                 </div>
-              </div>
+              </a>
             </div>
           </motion.div>
 

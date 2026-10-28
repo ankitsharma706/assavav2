@@ -1,8 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
+import { Link } from 'react-router-dom';
 import { ChevronRight, ArrowUp, Mail, ShieldCheck, FileText, Scale, ShoppingBag, CreditCard, Truck, RefreshCcw, Landmark, Calendar, UserCheck, AlertCircle, Lock, Edit3 } from 'lucide-react';
 import { Navbar, Footer, ScrollIndicator } from '../components/CoffeeComponents';
 import { cn } from '../lib/utils';
+import { applySEO } from '../lib/seo';
+import Breadcrumb from '../components/Breadcrumb';
+import AdUnit from '../components/AdSense/AdUnit';
 
 // --- Types ---
 type TermsProps = {
@@ -31,6 +35,14 @@ const SECTIONS = [
 const TermsPage: React.FC<TermsProps> = ({ cartCount, onOpenCart, onOpenCategories, wishlistCount = 0 }) => {
   const [activeSection, setActiveSection] = useState('introduction');
   const sectionRefs = useRef<{ [key: string]: HTMLElement | null }>({});
+
+  useEffect(() => {
+    applySEO({
+      title: 'Terms and Conditions | Legal Framework',
+      description: 'Terms and Conditions and legal framework for Assava Specialty Coffee orders, roasting rituals, customer rights, and website use.',
+      canonical: '/terms-of-service',
+    });
+  }, []);
 
   // Scroll Spy Logic
   useEffect(() => {
@@ -76,6 +88,7 @@ const TermsPage: React.FC<TermsProps> = ({ cartCount, onOpenCart, onOpenCategori
       {/* --- HERO SECTION --- */}
       <section className="relative pt-48 pb-32 px-6 border-b border-white/5 overflow-hidden">
         <div className="max-w-7xl mx-auto text-center relative z-10">
+          <Breadcrumb items={[{ name: 'Terms & Conditions', path: '/terms-of-service' }]} className="justify-center mb-6" />
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -264,6 +277,8 @@ const TermsPage: React.FC<TermsProps> = ({ cartCount, onOpenCart, onOpenCategori
             </div>
           </section>
 
+          <AdUnit slotId="terms-mid-content" format="horizontal" minHeight={120} />
+
           {/* 8. Events & Experiences */}
           <section id="events" ref={(el) => { sectionRefs.current['events'] = el; }} className="scroll-mt-32">
             <div className="flex items-center gap-4 mb-10">
@@ -321,7 +336,11 @@ const TermsPage: React.FC<TermsProps> = ({ cartCount, onOpenCart, onOpenCategori
             </div>
             <div className="prose prose-invert max-w-none text-lg text-cream/70 font-serif italic leading-[1.8]">
               <p>
-                Your privacy is integrated into our platform's DNA. Please review our full <strong>Privacy Policy</strong> to understand how we protect and manage your data with zero compromise.
+                Your privacy is integrated into our platform's DNA. Please review our full{' '}
+                <Link to="/privacy-policy" className="text-caramel underline font-bold hover:text-white transition-colors">
+                  Privacy Policy
+                </Link>{' '}
+                to understand how we protect and manage your data with zero compromise.
               </p>
             </div>
           </section>

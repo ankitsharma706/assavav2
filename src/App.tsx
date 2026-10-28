@@ -16,6 +16,10 @@ import InstagramPage from './pages/InstagramPage';
 import Contact from './pages/Contact';
 import TermsPage from './pages/TermsPage';
 import CategoryDetail from './pages/CategoryDetail';
+import PrivacyPolicy from './pages/PrivacyPolicy';
+import FAQPage from './pages/FAQPage';
+import NotFound from './pages/NotFound';
+import AdSenseGuard from './components/AdSense/AdSenseGuard';
 import { ShoppingPage, CategoryPage, ThankYouPage, OrderHistoryPage, TrackingPage, SearchPage, ScrollStory, CartPanel, CategoryModal, RitualToast } from './components/CoffeeComponents';
 import Lenis from '@studio-freight/lenis';
 
@@ -117,45 +121,55 @@ function App() {
   return (
     <Router>
       <ScrollToTop />
-      <CartPanel 
-        isOpen={isCartOpen} 
-        onClose={() => setIsCartOpen(false)} 
-        items={cart}
-        onRemove={handleRemoveFromCart}
-        onUpdateQty={handleUpdateQuantity}
-      />
-      <CategoryModal 
-        isOpen={isCategoriesOpen} 
-        onClose={() => setIsCategoriesOpen(false)} 
-      />
-      <RitualToast 
-        item={latestAddedItem} 
-        isVisible={showToast} 
-      />
-      <Routes>
-        <Route path="/" element={<Home cartCount={cartCount} wishlistCount={wishlist.length} onAddToCart={handleAddToCart} onToggleWishlist={handleToggleWishlist} wishlist={wishlist} onOpenCart={() => setIsCartOpen(true)} onOpenCategories={() => setIsCategoriesOpen(true)} />} />
-        <Route path="/home" element={<Home cartCount={cartCount} wishlistCount={wishlist.length} onAddToCart={handleAddToCart} onToggleWishlist={handleToggleWishlist} wishlist={wishlist} onOpenCart={() => setIsCartOpen(true)} onOpenCategories={() => setIsCategoriesOpen(true)} />} />
-        <Route path="/shop" element={<Shop cartCount={cartCount} wishlistCount={wishlist.length} onAddToCart={handleAddToCart} onToggleWishlist={handleToggleWishlist} wishlist={wishlist} onOpenCart={() => setIsCartOpen(true)} onOpenCategories={() => setIsCategoriesOpen(true)} />} />
-        <Route path="/shopping" element={<Shop cartCount={cartCount} wishlistCount={wishlist.length} onAddToCart={handleAddToCart} onToggleWishlist={handleToggleWishlist} wishlist={wishlist} onOpenCart={() => setIsCartOpen(true)} onOpenCategories={() => setIsCategoriesOpen(true)} />} />
-        <Route path="/category" element={<CategoryPage cartCount={cartCount} wishlistCount={wishlist.length} onOpenCart={() => setIsCartOpen(true)} onOpenCategories={() => setIsCategoriesOpen(true)} />} />
-        <Route path="/category/:id" element={<CategoryDetail cartCount={cartCount} wishlistCount={wishlist.length} onOpenCart={() => setIsCartOpen(true)} onOpenCategories={() => setIsCategoriesOpen(true)} />} />
-        <Route path="/coffeeDetail/:id" element={<ProductDetail cartCount={cartCount} wishlistCount={wishlist.length} onAddToCart={handleAddToCart} onToggleWishlist={handleToggleWishlist} wishlist={wishlist} onOpenCart={() => setIsCartOpen(true)} onOpenCategories={() => setIsCategoriesOpen(true)} />} />
-        <Route path="/cart" element={<Cart cartCount={cartCount} cart={cart} onUpdateQuantity={handleUpdateQuantity} onRemove={handleRemoveFromCart} cartTotal={cartTotal} wishlistCount={wishlist.length} onOpenCart={() => setIsCartOpen(true)} onOpenCategories={() => setIsCategoriesOpen(true)} />} />
-        <Route path="/payment" element={<Payment cartCount={cartCount} cart={cart} cartTotal={cartTotal} wishlistCount={wishlist.length} onOpenCart={() => setIsCartOpen(true)} onOpenCategories={() => setIsCategoriesOpen(true)} />} />
-        <Route path="/account" element={<Account cartCount={cartCount} wishlistCount={wishlist.length} wishlist={wishlist} onToggleWishlist={handleToggleWishlist} onOpenCart={() => setIsCartOpen(true)} onOpenCategories={() => setIsCategoriesOpen(true)} />} />
-        <Route path="/orderHistory" element={<OrderHistoryPage cartCount={cartCount} wishlistCount={wishlist.length} onOpenCart={() => setIsCartOpen(true)} onOpenCategories={() => setIsCategoriesOpen(true)} />} />
-        <Route path="/tracking" element={<TrackingPage cartCount={cartCount} wishlistCount={wishlist.length} onOpenCart={() => setIsCartOpen(true)} onOpenCategories={() => setIsCategoriesOpen(true)} />} />
-        <Route path="/thankyou" element={<ThankYouPage cartCount={cartCount} wishlistCount={wishlist.length} onOpenCart={() => setIsCartOpen(true)} onOpenCategories={() => setIsCategoriesOpen(true)} />} />
-        <Route path="/search" element={<SearchPage cartCount={cartCount} wishlistCount={wishlist.length} onAddToCart={handleAddToCart} onToggleWishlist={handleToggleWishlist} wishlist={wishlist} onOpenCart={() => setIsCartOpen(true)} onOpenCategories={() => setIsCategoriesOpen(true)} />} />
-        <Route path="/story" element={<ScrollStory cartCount={cartCount} wishlistCount={wishlist.length} onOpenCart={() => setIsCartOpen(true)} onOpenCategories={() => setIsCategoriesOpen(true)} />} />
-        <Route path="/about" element={<About cartCount={cartCount} wishlistCount={wishlist.length} onOpenCart={() => setIsCartOpen(true)} onOpenCategories={() => setIsCategoriesOpen(true)} />} />
-        <Route path="/reviews" element={<ReviewsPage cartCount={cartCount} wishlistCount={wishlist.length} onOpenCart={() => setIsCartOpen(true)} onOpenCategories={() => setIsCategoriesOpen(true)} />} />
-        <Route path="/events" element={<EventsListing cartCount={cartCount} wishlistCount={wishlist.length} onOpenCart={() => setIsCartOpen(true)} onOpenCategories={() => setIsCategoriesOpen(true)} />} />
-        <Route path="/events/:id" element={<EventRouter cartCount={cartCount} wishlistCount={wishlist.length} onOpenCart={() => setIsCartOpen(true)} onOpenCategories={() => setIsCategoriesOpen(true)} />} />
-        <Route path="/social" element={<InstagramPage cartCount={cartCount} wishlistCount={wishlist.length} onOpenCart={() => setIsCartOpen(true)} onOpenCategories={() => setIsCategoriesOpen(true)} />} />
-        <Route path="/contact" element={<Contact cartCount={cartCount} wishlistCount={wishlist.length} onOpenCart={() => setIsCartOpen(true)} onOpenCategories={() => setIsCategoriesOpen(true)} />} />
-        <Route path="/terms" element={<TermsPage cartCount={cartCount} wishlistCount={wishlist.length} onOpenCart={() => setIsCartOpen(true)} onOpenCategories={() => setIsCategoriesOpen(true)} />} />
-      </Routes>
+      <AdSenseGuard>
+        <CartPanel 
+          isOpen={isCartOpen} 
+          onClose={() => setIsCartOpen(false)} 
+          items={cart}
+          onRemove={handleRemoveFromCart}
+          onUpdateQty={handleUpdateQuantity}
+        />
+        <CategoryModal 
+          isOpen={isCategoriesOpen} 
+          onClose={() => setIsCategoriesOpen(false)} 
+        />
+        <RitualToast 
+          item={latestAddedItem} 
+          isVisible={showToast} 
+        />
+        <Routes>
+          <Route path="/" element={<Home cartCount={cartCount} wishlistCount={wishlist.length} onAddToCart={handleAddToCart} onToggleWishlist={handleToggleWishlist} wishlist={wishlist} onOpenCart={() => setIsCartOpen(true)} onOpenCategories={() => setIsCategoriesOpen(true)} />} />
+          <Route path="/home" element={<Home cartCount={cartCount} wishlistCount={wishlist.length} onAddToCart={handleAddToCart} onToggleWishlist={handleToggleWishlist} wishlist={wishlist} onOpenCart={() => setIsCartOpen(true)} onOpenCategories={() => setIsCategoriesOpen(true)} />} />
+          <Route path="/shop" element={<Shop cartCount={cartCount} wishlistCount={wishlist.length} onAddToCart={handleAddToCart} onToggleWishlist={handleToggleWishlist} wishlist={wishlist} onOpenCart={() => setIsCartOpen(true)} onOpenCategories={() => setIsCategoriesOpen(true)} />} />
+          <Route path="/shopping" element={<Shop cartCount={cartCount} wishlistCount={wishlist.length} onAddToCart={handleAddToCart} onToggleWishlist={handleToggleWishlist} wishlist={wishlist} onOpenCart={() => setIsCartOpen(true)} onOpenCategories={() => setIsCategoriesOpen(true)} />} />
+          <Route path="/category" element={<CategoryPage cartCount={cartCount} wishlistCount={wishlist.length} onOpenCart={() => setIsCartOpen(true)} onOpenCategories={() => setIsCategoriesOpen(true)} />} />
+          <Route path="/category/:id" element={<CategoryDetail cartCount={cartCount} wishlistCount={wishlist.length} onOpenCart={() => setIsCartOpen(true)} onOpenCategories={() => setIsCategoriesOpen(true)} />} />
+          <Route path="/coffeeDetail/:id" element={<ProductDetail cartCount={cartCount} wishlistCount={wishlist.length} onAddToCart={handleAddToCart} onToggleWishlist={handleToggleWishlist} wishlist={wishlist} onOpenCart={() => setIsCartOpen(true)} onOpenCategories={() => setIsCategoriesOpen(true)} />} />
+          <Route path="/cart" element={<Cart cartCount={cartCount} cart={cart} onUpdateQuantity={handleUpdateQuantity} onRemove={handleRemoveFromCart} cartTotal={cartTotal} wishlistCount={wishlist.length} onOpenCart={() => setIsCartOpen(true)} onOpenCategories={() => setIsCategoriesOpen(true)} />} />
+          <Route path="/payment" element={<Payment cartCount={cartCount} cart={cart} cartTotal={cartTotal} wishlistCount={wishlist.length} onOpenCart={() => setIsCartOpen(true)} onOpenCategories={() => setIsCategoriesOpen(true)} />} />
+          <Route path="/account" element={<Account cartCount={cartCount} wishlistCount={wishlist.length} wishlist={wishlist} onToggleWishlist={handleToggleWishlist} onOpenCart={() => setIsCartOpen(true)} onOpenCategories={() => setIsCategoriesOpen(true)} />} />
+          <Route path="/orderHistory" element={<OrderHistoryPage cartCount={cartCount} wishlistCount={wishlist.length} onOpenCart={() => setIsCartOpen(true)} onOpenCategories={() => setIsCategoriesOpen(true)} />} />
+          <Route path="/tracking" element={<TrackingPage cartCount={cartCount} wishlistCount={wishlist.length} onOpenCart={() => setIsCartOpen(true)} onOpenCategories={() => setIsCategoriesOpen(true)} />} />
+          <Route path="/thankyou" element={<ThankYouPage cartCount={cartCount} wishlistCount={wishlist.length} onOpenCart={() => setIsCartOpen(true)} onOpenCategories={() => setIsCategoriesOpen(true)} />} />
+          <Route path="/search" element={<SearchPage cartCount={cartCount} wishlistCount={wishlist.length} onAddToCart={handleAddToCart} onToggleWishlist={handleToggleWishlist} wishlist={wishlist} onOpenCart={() => setIsCartOpen(true)} onOpenCategories={() => setIsCategoriesOpen(true)} />} />
+          <Route path="/story" element={<ScrollStory cartCount={cartCount} wishlistCount={wishlist.length} onOpenCart={() => setIsCartOpen(true)} onOpenCategories={() => setIsCategoriesOpen(true)} />} />
+          <Route path="/about" element={<About cartCount={cartCount} wishlistCount={wishlist.length} onOpenCart={() => setIsCartOpen(true)} onOpenCategories={() => setIsCategoriesOpen(true)} />} />
+          <Route path="/reviews" element={<ReviewsPage cartCount={cartCount} wishlistCount={wishlist.length} onOpenCart={() => setIsCartOpen(true)} onOpenCategories={() => setIsCategoriesOpen(true)} />} />
+          <Route path="/events" element={<EventsListing cartCount={cartCount} wishlistCount={wishlist.length} onOpenCart={() => setIsCartOpen(true)} onOpenCategories={() => setIsCategoriesOpen(true)} />} />
+          <Route path="/events/:id" element={<EventRouter cartCount={cartCount} wishlistCount={wishlist.length} onOpenCart={() => setIsCartOpen(true)} onOpenCategories={() => setIsCategoriesOpen(true)} />} />
+          <Route path="/social" element={<InstagramPage cartCount={cartCount} wishlistCount={wishlist.length} onOpenCart={() => setIsCartOpen(true)} onOpenCategories={() => setIsCategoriesOpen(true)} />} />
+          <Route path="/contact" element={<Contact cartCount={cartCount} wishlistCount={wishlist.length} onOpenCart={() => setIsCartOpen(true)} onOpenCategories={() => setIsCategoriesOpen(true)} />} />
+          <Route path="/terms" element={<TermsPage cartCount={cartCount} wishlistCount={wishlist.length} onOpenCart={() => setIsCartOpen(true)} onOpenCategories={() => setIsCategoriesOpen(true)} />} />
+          <Route path="/terms-of-service" element={<TermsPage cartCount={cartCount} wishlistCount={wishlist.length} onOpenCart={() => setIsCartOpen(true)} onOpenCategories={() => setIsCategoriesOpen(true)} />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicy cartCount={cartCount} wishlistCount={wishlist.length} onOpenCart={() => setIsCartOpen(true)} onOpenCategories={() => setIsCategoriesOpen(true)} />} />
+          <Route path="/privacy" element={<PrivacyPolicy cartCount={cartCount} wishlistCount={wishlist.length} onOpenCart={() => setIsCartOpen(true)} onOpenCategories={() => setIsCategoriesOpen(true)} />} />
+          <Route path="/faq" element={<FAQPage cartCount={cartCount} wishlistCount={wishlist.length} onOpenCart={() => setIsCartOpen(true)} onOpenCategories={() => setIsCategoriesOpen(true)} />} />
+          <Route path="/shipping" element={<FAQPage cartCount={cartCount} wishlistCount={wishlist.length} onOpenCart={() => setIsCartOpen(true)} onOpenCategories={() => setIsCategoriesOpen(true)} />} />
+          <Route path="/returns" element={<FAQPage cartCount={cartCount} wishlistCount={wishlist.length} onOpenCart={() => setIsCartOpen(true)} onOpenCategories={() => setIsCategoriesOpen(true)} />} />
+          {/* Strict 404 Catch-All Route with Ad Suppression & Noindex */}
+          <Route path="*" element={<NotFound cartCount={cartCount} wishlistCount={wishlist.length} onOpenCart={() => setIsCartOpen(true)} onOpenCategories={() => setIsCategoriesOpen(true)} />} />
+        </Routes>
+      </AdSenseGuard>
     </Router>
   );
 }
