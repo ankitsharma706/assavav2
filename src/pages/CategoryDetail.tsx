@@ -21,6 +21,9 @@ import { CATEGORY_DATA } from '../data/categoryData';
 import productsData from '../../data/coffee.json';
 import { cn } from '../lib/utils';
 import { Product } from '../types';
+import { applySEO } from '../lib/seo';
+import Breadcrumb from '../components/Breadcrumb';
+import AdUnit from '../components/AdSense/AdUnit';
 
 // --- Shared Components for Category Detail ---
 
@@ -109,7 +112,15 @@ export default function CategoryDetail({ cartCount, wishlistCount = 0, onOpenCar
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, [id]);
+    if (data) {
+      applySEO({
+        title: `${data.name} | Terroir Collection`,
+        description: data.intro || data.tagline,
+        canonical: `/category/${data.id}`,
+        ogImage: data.heroImage,
+      });
+    }
+  }, [id, data]);
   
   const filteredProducts = useMemo(() => {
     const products = (productsData as any).products.filter((p: any) => p.category === id);
@@ -278,6 +289,10 @@ export default function CategoryDetail({ cartCount, wishlistCount = 0, onOpenCar
                 <p className="text-white/20 italic font-serif">Awaiting the next seasonal harvest ritual cycles.</p>
              </div>
            )}
+        </div>
+
+        <div className="max-w-7xl mx-auto px-6 py-8">
+          <AdUnit slotId="category-detail-mid" format="horizontal" minHeight={120} />
         </div>
       </section>
 
