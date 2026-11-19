@@ -305,7 +305,7 @@ export function Hero() {
         {/* Cinematic 3D Engine (Minimalist recalibrated) */}
         <div className="hero-beans-container absolute inset-0 z-0">
           <Suspense fallback={null}>
-            <Canvas 
+            <Canvas aria-hidden="true"
               shadows
               gl={{ 
                 antialias: true, 
@@ -586,7 +586,7 @@ export function AccountDashboard() {
     <div className="min-h-screen bg-coffee-dark pt-32 pb-20 px-6 relative overflow-hidden">
       {/* Background Effects */}
       <div className="fixed inset-0 pointer-events-none z-0">
-        <Canvas gl={{ antialias: false, alpha: true, powerPreference: "low-power" }} camera={{ position: [0, 0, 5] }} dpr={[1, 1.5]}>
+        <Canvas aria-hidden="true" gl={{ antialias: false, alpha: true, powerPreference: "low-power" }} camera={{ position: [0, 0, 5] }} dpr={[1, 1.5]}>
           <CoffeeDust />
           <LiquidBlob />
         </Canvas>
@@ -861,7 +861,7 @@ export function SearchPage({ onOpenCart, onOpenCategories, cartCount, wishlistCo
       <Navbar onOpenCart={onOpenCart} onOpenCategories={onOpenCategories} cartCount={cartCount} wishlistCount={wishlistCount} />
       {/* Background Effects */}
       <div className="fixed inset-0 pointer-events-none z-0">
-        <Canvas gl={{ antialias: false, alpha: true, powerPreference: "low-power" }} camera={{ position: [0, 0, 5] }} dpr={[1, 1.5]}>
+        <Canvas aria-hidden="true" gl={{ antialias: false, alpha: true, powerPreference: "low-power" }} camera={{ position: [0, 0, 5] }} dpr={[1, 1.5]}>
           <CoffeeDust />
           <LiquidBlob />
         </Canvas>
@@ -1122,7 +1122,7 @@ export function ShoppingPage({ onAddToCart, onToggleWishlist, wishlist }: { onAd
     <div className="min-h-screen bg-coffee-dark pt-40 pb-32 px-6 relative">
       {/* Background Grain & Particles */}
       <div className="fixed inset-0 pointer-events-none z-0 opacity-30">
-        <Canvas gl={{ alpha: true }} camera={{ position: [0, 0, 5] }}>
+        <Canvas aria-hidden="true" gl={{ alpha: true }} camera={{ position: [0, 0, 5] }}>
           <CoffeeDust count={100} />
         </Canvas>
       </div>
@@ -1320,7 +1320,7 @@ export function CoffeeDetailPage({ onAddToCart, onToggleWishlist, wishlist }: { 
     <div className="min-h-screen bg-coffee-dark pt-32 pb-20 px-6 relative overflow-x-hidden">
       {/* Background Effects */}
       <div className="fixed inset-0 pointer-events-none z-0">
-        <Canvas gl={{ antialias: false, alpha: true, powerPreference: "low-power" }} camera={{ position: [0, 0, 5] }} dpr={[1, 1.5]}>
+        <Canvas aria-hidden="true" gl={{ antialias: false, alpha: true, powerPreference: "low-power" }} camera={{ position: [0, 0, 5] }} dpr={[1, 1.5]}>
           <CoffeeDust />
           <LiquidBlob />
         </Canvas>
@@ -1593,7 +1593,7 @@ export function ThankYouPage({ onOpenCart, onOpenCategories, cartCount, wishlist
       <Navbar onOpenCart={onOpenCart} onOpenCategories={onOpenCategories} cartCount={cartCount} wishlistCount={wishlistCount} />
       {/* Background Effects */}
       <div className="fixed inset-0 pointer-events-none z-0">
-        <Canvas gl={{ antialias: false, alpha: true, powerPreference: "low-power" }} camera={{ position: [0, 0, 5] }} dpr={[1, 1.5]}>
+        <Canvas aria-hidden="true" gl={{ antialias: false, alpha: true, powerPreference: "low-power" }} camera={{ position: [0, 0, 5] }} dpr={[1, 1.5]}>
           <CoffeeDust />
           <LiquidBlob />
         </Canvas>
@@ -1605,7 +1605,7 @@ export function ThankYouPage({ onOpenCart, onOpenCategories, cartCount, wishlist
         className="max-w-2xl relative z-10 glass p-16 rounded-[60px] border border-white/10 shadow-2xl backdrop-blur-3xl"
       >
         <div className="relative w-48 h-48 mx-auto mb-12">
-          <Canvas gl={{ antialias: true, alpha: true }} camera={{ position: [0, 0, 5] }} dpr={[1, 2]}>
+          <Canvas aria-hidden="true" gl={{ antialias: true, alpha: true }} camera={{ position: [0, 0, 5] }} dpr={[1, 2]}>
             <Suspense fallback={null}>
               <ambientLight intensity={0.5} />
               <pointLight position={[10, 10, 10]} intensity={1} color="#FFD700" />
@@ -1658,7 +1658,7 @@ export function OrderHistoryPage({ onOpenCart, onOpenCategories, cartCount, wish
       <Navbar onOpenCart={onOpenCart} onOpenCategories={onOpenCategories} cartCount={cartCount} wishlistCount={wishlistCount} />
       {/* Background Effects */}
       <div className="fixed inset-0 pointer-events-none z-0">
-        <Canvas gl={{ antialias: false, alpha: true, powerPreference: "low-power" }} camera={{ position: [0, 0, 5] }} dpr={[1, 1.5]}>
+        <Canvas aria-hidden="true" gl={{ antialias: false, alpha: true, powerPreference: "low-power" }} camera={{ position: [0, 0, 5] }} dpr={[1, 1.5]}>
           <CoffeeDust />
           <LiquidBlob />
         </Canvas>
@@ -1726,7 +1726,7 @@ export function TrackingPage({ onOpenCart, onOpenCategories, cartCount, wishlist
       <Navbar onOpenCart={onOpenCart} onOpenCategories={onOpenCategories} cartCount={cartCount} wishlistCount={wishlistCount} />
       {/* Background Effects */}
       <div className="fixed inset-0 pointer-events-none z-0">
-        <Canvas gl={{ antialias: false, alpha: true, powerPreference: "low-power" }} camera={{ position: [0, 0, 5] }} dpr={[1, 1.5]}>
+        <Canvas aria-hidden="true" gl={{ antialias: false, alpha: true, powerPreference: "low-power" }} camera={{ position: [0, 0, 5] }} dpr={[1, 1.5]}>
           <CoffeeDust />
           <LiquidBlob />
         </Canvas>
@@ -1992,7 +1992,7 @@ export function CategoryPage({ onOpenCart, onOpenCategories, cartCount, wishlist
 
       {/* Global Background Scene */}
       <div className="fixed inset-0 pointer-events-none z-0">
-        <Canvas gl={{ antialias: false, alpha: true }} camera={{ position: [0, 0, 5] }} dpr={[1, 1.5]}>
+        <Canvas aria-hidden="true" gl={{ antialias: false, alpha: true }} camera={{ position: [0, 0, 5] }} dpr={[1, 1.5]}>
           <CoffeeDust count={200} />
           <LiquidBlob />
         </Canvas>

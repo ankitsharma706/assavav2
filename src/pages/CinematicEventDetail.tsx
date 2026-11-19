@@ -38,7 +38,7 @@ const CoffeeBean = ({ position }: { position: [number, number, number] }) => {
 
 const ThreeScene = () => (
   <div className="fixed inset-0 z-0 pointer-events-none opacity-30">
-    <Canvas>
+    <Canvas aria-hidden="true">
       <PerspectiveCamera makeDefault position={[0, 0, 10]} />
       <ambientLight intensity={0.5} />
       <pointLight position={[10, 10, 10]} intensity={1} color="#C68E5D" />
@@ -287,7 +287,7 @@ const CinematicEventDetail = ({ cartCount, wishlistCount = 0, onOpenCart, onOpen
       {/* ─── CTA (CINEMATIC END) ───────────────────────────── */}
       <section className="relative h-screen flex items-center justify-center overflow-hidden z-10 bg-coffee-dark">
          <div className="absolute inset-0 z-0 opacity-20">
-            <Canvas>
+            <Canvas aria-hidden="true">
                <Sparkles count={200} scale={20} size={2} speed={0.5} color="#C68E5D" />
             </Canvas>
          </div>
