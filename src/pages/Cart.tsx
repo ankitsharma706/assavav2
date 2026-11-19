@@ -16,7 +16,7 @@ const Cart = ({ cartCount, wishlistCount, cart, onUpdateQuantity, onRemove, cart
   onOpenCart: () => void, 
   onOpenCategories: () => void 
 }) => {
-  const shipping = cartTotal > 150 ? 0 : 15.00;
+  const shipping: number = 0;
   const total = cartTotal + shipping;
 
   return (
@@ -141,7 +141,7 @@ const Cart = ({ cartCount, wishlistCount, cart, onUpdateQuantity, onRemove, cart
                   </Link>
                   
                   <p className="text-[10px] text-center text-cream/20 uppercase tracking-[0.2em] font-bold">
-                    Free shipping on orders over Rs1500
+                    Free shipping on every order
                   </p>
                 </div>
               </div>

@@ -38,7 +38,7 @@ const Payment = ({ cartCount, wishlistCount, cart, cartTotal, onOpenCart, onOpen
   onOpenCategories: () => void 
 }) => {
   const navigate = useNavigate();
-  const shipping = cartTotal > 150 ? 0 : 15.00;
+  const shipping: number = 0;
   const total = cartTotal + shipping;
   const [isProcessing, setIsProcessing] = React.useState(false);
 

@@ -46,7 +46,7 @@ const FAQ_DATA: FAQCategory[] = [
     items: [
       {
         question: 'What are your shipping destinations and estimated transit times?',
-        answer: 'We ship domestically across India via expedited courier partners (typically 2-4 business days to metropolitan hubs, and 4-6 days to regional areas). International priority shipping is available upon checkout.',
+        answer: 'We ship across India. Orders are handled within 1-2 days and typically take 3-5 days in transit.',
       },
       {
         question: 'How do I track my order in real-time?',
@@ -54,7 +54,7 @@ const FAQ_DATA: FAQCategory[] = [
       },
       {
         question: 'Is free shipping available?',
-        answer: 'Complimentary expedited shipping is automatically applied to all domestic orders over ₹1,500 ($25 USD).',
+        answer: 'Shipping is free on every order delivered within India.',
       },
     ],
   },
@@ -64,11 +64,11 @@ const FAQ_DATA: FAQCategory[] = [
     items: [
       {
         question: 'What is the ASSAVA Freshness Guarantee and return policy?',
-        answer: 'Because freshly roasted coffee is a perishable artisanal food product, we cannot accept returns on opened coffee bags. However, if your order arrives damaged, defective, or in error, notify us within 48 hours at hello@assavacoffee.com with photographic evidence and we will immediately issue a replacement roast or 100% refund.',
+        answer: 'Product returns are not accepted. For questions about an order, contact hello@assavacoffee.com.',
       },
       {
         question: 'Can brewing gear and hardware be returned?',
-        answer: 'Unused brewing gear in original unopened packaging may be returned within 14 days of delivery. Return shipping is borne by the patron unless the instrument arrived with a verified manufacturing defect.',
+        answer: 'Brewing gear and hardware are not eligible for return.',
       },
     ],
   },

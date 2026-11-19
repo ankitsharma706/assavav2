@@ -40,7 +40,7 @@ export default async function handler(req: ApiRequest, res: ApiResponse) {
     subtotal += product.price * entry.quantity!;
   }
 
-  const amount = Math.round((subtotal + (subtotal > 150 ? 0 : 15)) * 100);
+  const amount = Math.round(subtotal * 100);
   if (!Number.isSafeInteger(amount) || amount <= 0) return res.status(400).json({ error: 'Invalid order amount' });
 
   const auth = btoa(`${keyId}:${secret}`);

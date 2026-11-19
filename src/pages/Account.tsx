@@ -23,7 +23,7 @@ const Account = ({ cartCount, wishlistCount, wishlist, onToggleWishlist, onOpenC
   const faqs = [
     { q: "How do you source your beans?", a: "We source our beans through direct trade with small-scale volcanic farmers in Ethiopia, Colombia, and Indonesia." },
     { q: "What is your roasting philosophy?", a: "We believe in precision. Each batch is roasted to highlight the unique cinematic profile of the origin." },
-    { q: "Do you offer international shipping?", a: "Yes, we ship our cinematic coffee experiences to over 50 countries worldwide." }
+    { q: "Do you offer international shipping?", a: "Currently, we ship within India only." }
   ];
 
   const handleUpdate = () => {
