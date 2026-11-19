@@ -88,7 +88,7 @@ try {
       .replace(/<meta name="robots"[^>]*\/>/, '')
       .replace(/<meta property="og:[^"]+"[^>]*\/>/g, '')
       .replace(/<meta name="twitter:[^"]+"[^>]*\/>/g, '')
-      .replace('</head>', `    <meta name="google-adsense-account" content="${escapeAttribute(publisherId)}" />\n  </head>`)
+      .replace('</head>', `    <meta name="google-adsense-account" content="${escapeAttribute(publisherId)}" />\n    <script async src="https://fundingchoicesmessages.google/i/${escapeAttribute(publisherId)}?ers=1"></script>\n    <script>(function(){function signalGooglefcPresent(){if(!window.frames.googlefcPresent){if(document.body){var iframe=document.createElement('iframe');iframe.style='width:0;height:0;border:none;z-index:-1000;left:-1000px;top:-1000px;';iframe.style.display='none';iframe.name='googlefcPresent';document.body.appendChild(iframe);}else{setTimeout(signalGooglefcPresent,0);}}}signalGooglefcPresent();})();</script>\n  </head>`)
       .replace('</head>', `    ${metadataTags(config, pathname)}\n  </head>`)
       .replace(/<!--app-html:start-->[\s\S]*?<!--app-html:end-->/, `<!--app-html:start-->${markup}<!--app-html:end-->`);
     const filePath = pathname === '/'
