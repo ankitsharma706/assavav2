@@ -2,7 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { INSTAGRAM_IMAGES } from '../constants';
 import { Instagram as InstagramIcon } from 'lucide-react';
-import { TiltWrapper } from './CoffeeComponents';
+import TiltWrapper from './TiltWrapper';
 
 const Instagram = () => {
   return (

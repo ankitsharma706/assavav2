@@ -1,12 +1,10 @@
 import React, { Suspense, useEffect, useRef } from 'react';
-import { Navbar, Hero } from '../components/CoffeeComponents';
+import { Navbar, Hero } from '../components/SiteChrome';
 import Collection from '../components/Collection';
 import Events from '../components/Events';
 import Instagram from '../components/Instagram';
 import Reviews from '../components/Reviews';
 import Footer from '../components/Footer';
-import { Canvas } from '@react-three/fiber';
-import { BeanCluster } from '../components/ThreeScene';
 import Lenis from '@studio-freight/lenis';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';

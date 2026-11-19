@@ -69,7 +69,7 @@ const Account = ({ cartCount, wishlistCount, wishlist, onToggleWishlist, onOpenC
                     <User className="w-12 h-12 text-cream group-hover:scale-110 transition-transform" />
                   </div>
                   <div className="text-center">
-                    <h3 className="text-xl font-bold tracking-tighter uppercase">Elena Vance</h3>
+                    <h3 className="text-xl font-bold tracking-tighter uppercase">Your Account</h3>
                     <p className="text-[10px] text-cream/60 uppercase tracking-[0.2em] font-bold">Member since 2024</p>
                   </div>
                 </div>
@@ -116,7 +116,7 @@ const Account = ({ cartCount, wishlistCount, wishlist, onToggleWishlist, onOpenC
                           type="text" 
                           value={formData.fullName}
                           onChange={(e) => setFormData({...formData, fullName: e.target.value})}
-                          placeholder="Elena Vance" 
+                          placeholder="Full name"
                           className="w-full glass rounded-[30px] px-8 py-5 border-white/10 focus:border-cream/50 outline-none text-cream/80 placeholder:text-cream/10" 
                         />
                       </div>
@@ -126,7 +126,7 @@ const Account = ({ cartCount, wishlistCount, wishlist, onToggleWishlist, onOpenC
                           type="text"
                           value={formData.phone}
                           onChange={(e) => setFormData({...formData, phone: e.target.value})}
-                          placeholder="+1 (555) 000-0000" 
+                          placeholder="Phone number"
                           className="w-full glass rounded-[30px] px-8 py-5 border-white/10 focus:border-cream/50 outline-none text-cream/80 placeholder:text-cream/10" 
                         />
                       </div>
@@ -136,7 +136,7 @@ const Account = ({ cartCount, wishlistCount, wishlist, onToggleWishlist, onOpenC
                           type="text" 
                           value={formData.address}
                           onChange={(e) => setFormData({...formData, address: e.target.value})}
-                          placeholder="123 Ritual Lane, Apt 4B" 
+                          placeholder="Street address"
                           className="w-full glass rounded-[30px] px-8 py-5 border-white/10 focus:border-cream/50 outline-none text-cream/80 placeholder:text-cream/10" 
                         />
                       </div>
@@ -146,7 +146,7 @@ const Account = ({ cartCount, wishlistCount, wishlist, onToggleWishlist, onOpenC
                           type="text" 
                           value={formData.city}
                           onChange={(e) => setFormData({...formData, city: e.target.value})}
-                          placeholder="Brooklyn" 
+                          placeholder="City"
                           className="w-full glass rounded-[30px] px-8 py-5 border-white/10 focus:border-cream/50 outline-none text-cream/80 placeholder:text-cream/10" 
                         />
                       </div>
@@ -157,7 +157,7 @@ const Account = ({ cartCount, wishlistCount, wishlist, onToggleWishlist, onOpenC
                             type="text" 
                             value={formData.state}
                             onChange={(e) => setFormData({...formData, state: e.target.value})}
-                            placeholder="NY" 
+                            placeholder="State or region"
                             className="w-full glass rounded-[30px] px-8 py-5 border-white/10 focus:border-cream/50 outline-none text-cream/80 placeholder:text-cream/10" 
                           />
                         </div>
@@ -167,7 +167,7 @@ const Account = ({ cartCount, wishlistCount, wishlist, onToggleWishlist, onOpenC
                             type="text" 
                             value={formData.zip}
                             onChange={(e) => setFormData({...formData, zip: e.target.value})}
-                            placeholder="11201" 
+                            placeholder="Postal code"
                             className="w-full glass rounded-[30px] px-8 py-5 border-white/10 focus:border-cream/50 outline-none text-cream/80 placeholder:text-cream/10" 
                           />
                         </div>

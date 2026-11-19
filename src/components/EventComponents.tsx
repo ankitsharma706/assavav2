@@ -187,7 +187,7 @@ export const EventTicketTypes: React.FC<{
 export const EventSpeakerCard: React.FC<{ name: string; role: string; image: string }> = ({ name, role, image }) => (
   <div className="flex items-center gap-6 p-8 rounded-[40px] glass border border-white/5 hover:border-caramel/30 transition-all">
     <div className="w-20 h-20 rounded-full overflow-hidden border-2 border-caramel/20 p-2">
-       <img src={image} className="w-full h-full object-cover rounded-full" />
+       <img src={image} alt={name} className="w-full h-full object-cover rounded-full" />
     </div>
     <div>
        <h4 className="text-xl font-bold text-white uppercase tracking-tight">{name}</h4>
@@ -238,7 +238,7 @@ export const EventGallery: React.FC<{ images: string[]; handle: string }> = ({ i
            whileHover={{ scale: 0.98 }}
            className={cn("relative aspect-square overflow-hidden rounded-[32px] glass", i % 3 === 0 ? "lg:col-span-1" : "")}
          >
-            <img src={img} className="w-full h-full object-cover opacity-60 hover:opacity-100 transition-opacity duration-700" />
+            <img src={img} alt="" aria-hidden="true" className="w-full h-full object-cover opacity-60 hover:opacity-100 transition-opacity duration-700" />
             <div className="absolute inset-0 bg-caramel/10 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center"><ChevronRight className="text-white w-8 h-8" /></div>
          </motion.div>
        ))}

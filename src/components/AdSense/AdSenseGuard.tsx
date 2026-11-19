@@ -6,8 +6,10 @@
 
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
+import { CONSENT_EVENT, hasAdvertisingConsent } from '../../lib/consent';
+import { ADSENSE_CLIENT_ID } from '../../lib/adsense';
 
-export const ADSENSE_CLIENT_ID = 'ca-pub-4318712038607459';
+export { ADSENSE_CLIENT_ID } from '../../lib/adsense';
 
 // Explicitly approved content routes with genuine publisher editorial content
 const APPROVED_CONTENT_PATTERNS = [
@@ -59,13 +61,17 @@ export function isContentRoute(pathname: string): boolean {
 
 export const AdSenseGuard: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { pathname } = useLocation();
-  const [canServeAds, setCanServeAds] = useState(false);
+  const [consented, setConsented] = useState(false);
 
   useEffect(() => {
-    const isEligible = isContentRoute(pathname);
-    setCanServeAds(isEligible);
+    const refreshConsent = () => setConsented(hasAdvertisingConsent());
+    refreshConsent();
+    window.addEventListener(CONSENT_EVENT, refreshConsent);
+    return () => window.removeEventListener(CONSENT_EVENT, refreshConsent);
+  }, []);
 
-    if (isEligible) {
+  useEffect(() => {
+    if (isContentRoute(pathname) && consented && /^ca-pub-\d+$/.test(ADSENSE_CLIENT_ID)) {
       // Load AdSense script safely if not already present
       const scriptId = 'adsbygoogle-sdk';
       if (!document.getElementById(scriptId)) {
@@ -77,7 +83,7 @@ export const AdSenseGuard: React.FC<{ children: React.ReactNode }> = ({ children
         document.head.appendChild(script);
       }
     }
-  }, [pathname]);
+  }, [pathname, consented]);
 
   return <>{children}</>;
 };

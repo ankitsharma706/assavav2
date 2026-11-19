@@ -11,6 +11,7 @@ import JsonLd from '../components/JsonLd';
 import { generateProductSchema } from '../lib/schema';
 import Breadcrumb from '../components/Breadcrumb';
 import AdUnit from '../components/AdSense/AdUnit';
+import NotFound from './NotFound';
 
 const ProductDetail = ({
   cartCount,
@@ -30,7 +31,7 @@ const ProductDetail = ({
   onAddToCart: (item: any) => void;
 }) => {
   const { id } = useParams();
-  const product = PRODUCTS.find((p) => p.id === id) || PRODUCTS[0];
+  const product = PRODUCTS.find((p) => p.id === id);
 
   useEffect(() => {
     if (product) {
@@ -43,6 +44,10 @@ const ProductDetail = ({
       });
     }
   }, [product]);
+
+  if (!product) {
+    return <NotFound cartCount={cartCount} wishlistCount={wishlistCount} onOpenCart={onOpenCart} onOpenCategories={onOpenCategories} />;
+  }
 
   return (
     <motion.main
@@ -72,7 +77,7 @@ const ProductDetail = ({
       {/* Global Immersive Background */}
       <div className="fixed inset-0 pointer-events-none z-0 opacity-10">
         <Suspense fallback={null}>
-          <Canvas gl={{ alpha: true }} camera={{ position: [0, 0, 15] }}>
+          <Canvas aria-hidden="true" gl={{ alpha: true }} camera={{ position: [0, 0, 15] }}>
             <BeanCluster />
           </Canvas>
         </Suspense>

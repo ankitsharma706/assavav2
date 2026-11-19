@@ -5,13 +5,34 @@ import Footer from '../components/Footer';
 import { motion } from 'framer-motion';
 import { ArrowLeft, CreditCard, ShieldCheck, Lock } from 'lucide-react';
 import { cn } from '../lib/utils';
+import type { CartItem } from '../types';
 
-const RAZORPAY_KEY_ID = import.meta.env.VITE_RAZORPAY_KEY_ID; // Precision Token Sync
+interface RazorpayOrder {
+  orderId: string;
+  amount: number;
+  currency: 'INR';
+  keyId: string;
+}
+
+interface RazorpayPaymentResult {
+  razorpay_order_id: string;
+  razorpay_payment_id: string;
+  razorpay_signature: string;
+}
+
+declare global {
+  interface Window {
+    Razorpay?: new (options: Record<string, unknown>) => {
+      on(event: string, callback: (response: { error?: { description?: string } }) => void): void;
+      open(): void;
+    };
+  }
+}
 
 const Payment = ({ cartCount, wishlistCount, cart, cartTotal, onOpenCart, onOpenCategories }: { 
   cartCount: number, 
   wishlistCount: number, 
-  cart: any[], 
+  cart: CartItem[],
   cartTotal: number, 
   onOpenCart: () => void, 
   onOpenCategories: () => void 
@@ -21,46 +42,63 @@ const Payment = ({ cartCount, wishlistCount, cart, cartTotal, onOpenCart, onOpen
   const total = cartTotal + shipping;
   const [isProcessing, setIsProcessing] = React.useState(false);
 
-  const handleRazorpayPayment = () => {
-    if (!RAZORPAY_KEY_ID || RAZORPAY_KEY_ID === "rzp_test_placeholder") {
-      alert("Razorpay Key ID is not configured. Please check your environment ritual.");
+  const [paymentError, setPaymentError] = React.useState('');
+
+  const handleRazorpayPayment = async () => {
+    if (!window.Razorpay) {
+      setPaymentError('Secure payment is unavailable. Please try again later.');
       return;
     }
-    if ((window as any).Razorpay) {
-      setIsProcessing(true);
-      
+    setIsProcessing(true);
+    setPaymentError('');
+    try {
+      const orderResponse = await fetch('/api/payment/order', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ items: cart.map(({ id, quantity }) => ({ id, quantity })) }),
+      });
+      if (!orderResponse.ok) throw new Error('Unable to prepare a secure order.');
+      const order = await orderResponse.json() as RazorpayOrder;
       const options = {
-        key: RAZORPAY_KEY_ID,
-        amount: Math.round(total * 100), // Amount in paise
-        currency: "INR",
+        key: order.keyId,
+        order_id: order.orderId,
+        amount: order.amount,
+        currency: order.currency,
         name: "ASSAVA",
         description: "Luxury Coffee Ritual",
         image: "/logo.png",
-        handler: function (response: any) {
-          setIsProcessing(false);
-          // console.log("Payment Successful!", response);
-          navigate('/thankyou');
-        },
-        prefill: {
-          name: "Ankit Kumar",
-          email: "ankitkumar999090@gmail.com",
-          contact: "9999999999"
+        handler: async (response: RazorpayPaymentResult) => {
+          try {
+            const verification = await fetch('/api/payment/verify', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                orderId: response.razorpay_order_id,
+                paymentId: response.razorpay_payment_id,
+                signature: response.razorpay_signature,
+              }),
+            });
+            if (!verification.ok) throw new Error('Payment could not be verified.');
+            navigate('/thankyou');
+          } catch (error) {
+            setPaymentError(error instanceof Error ? error.message : 'Payment verification failed.');
+          } finally {
+            setIsProcessing(false);
+          }
         },
         theme: {
           color: "#C68E5D" // Assava Caramel
         }
       };
-
-      const rzp = new (window as any).Razorpay(options);
-      
+      const rzp = new window.Razorpay(options);
       rzp.on('payment.failed', function (response: any) {
         setIsProcessing(false);
-        alert(response.error.description);
+        setPaymentError(response.error?.description || 'Payment failed. Please try again.');
       });
-
       rzp.open();
-    } else {
-      alert("Razorpay script not loaded. Please try again.");
+    } catch (error) {
+      setIsProcessing(false);
+      setPaymentError(error instanceof Error ? error.message : 'Unable to start secure payment.');
     }
   };
 
@@ -104,6 +142,7 @@ const Payment = ({ cartCount, wishlistCount, cart, cartTotal, onOpenCart, onOpen
             </div>
             
             <div className="pt-12 border-t border-white/5 space-y-8 relative z-10">
+              {paymentError && <p role="alert" className="text-sm text-red-300">{paymentError}</p>}
               <div className="flex items-center justify-between text-xl font-bold text-cream">
                 <span className="uppercase tracking-tighter">Total Ritual Value</span>
                 <span className="text-cream">Rs{total.toFixed(2)}</span>

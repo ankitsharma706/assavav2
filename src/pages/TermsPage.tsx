@@ -6,7 +6,6 @@ import { Navbar, Footer, ScrollIndicator } from '../components/CoffeeComponents'
 import { cn } from '../lib/utils';
 import { applySEO } from '../lib/seo';
 import Breadcrumb from '../components/Breadcrumb';
-import AdUnit from '../components/AdSense/AdUnit';
 
 // --- Types ---
 type TermsProps = {
@@ -277,7 +276,6 @@ const TermsPage: React.FC<TermsProps> = ({ cartCount, onOpenCart, onOpenCategori
             </div>
           </section>
 
-          <AdUnit slotId="terms-mid-content" format="horizontal" minHeight={120} />
 
           {/* 8. Events & Experiences */}
           <section id="events" ref={(el) => { sectionRefs.current['events'] = el; }} className="scroll-mt-32">

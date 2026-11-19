@@ -24,6 +24,7 @@ import { Product } from '../types';
 import { applySEO } from '../lib/seo';
 import Breadcrumb from '../components/Breadcrumb';
 import AdUnit from '../components/AdSense/AdUnit';
+import NotFound from './NotFound';
 
 // --- Shared Components for Category Detail ---
 
@@ -103,7 +104,7 @@ const EditorialProductCard = ({ product, index }: { product: Product, index: num
 
 // --- Main Category Detail Page ---
 
-export default function CategoryDetail({ cartCount, wishlistCount = 0, onOpenCart, onOpenCategories }: any) {
+export default function CategoryDetail({ cartCount, wishlistCount = 0, onOpenCart, onOpenCategories }: { cartCount: number; wishlistCount?: number; onOpenCart: () => void; onOpenCategories: () => void }) {
   const { id } = useParams<{ id: string }>();
   const containerRef = useRef<HTMLDivElement>(null!);
   const data = CATEGORY_DATA[id || ''];
@@ -134,7 +135,7 @@ export default function CategoryDetail({ cartCount, wishlistCount = 0, onOpenCar
   const heroScale = useTransform(scrollYProgress, [0, 0.15], [1, 1.1]);
   const heroY = useTransform(scrollYProgress, [0, 0.15], [0, 50]);
 
-  if (!data) return <div className="min-h-screen bg-coffee-dark" />;
+  if (!data) return <NotFound cartCount={cartCount} wishlistCount={wishlistCount} onOpenCart={onOpenCart} onOpenCategories={onOpenCategories} />;
 
   return (
     <div ref={containerRef} className="relative bg-[#0f0a07] text-cream min-h-screen selection:bg-caramel selection:text-coffee-dark overflow-x-hidden">

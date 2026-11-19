@@ -1,60 +1,38 @@
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
+import fs from 'node:fs';
+import path from 'node:path';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const projectRoot = path.resolve(__dirname, '..');
-
-const BASE_URL = 'https://maxcnfront.vercel.app';
-const TODAY = new Date().toISOString().split('T')[0];
-
+const projectRoot = process.cwd();
+const outputDir = path.join(projectRoot, 'dist');
+const baseUrl = (process.env.VITE_SITE_URL || 'https://maxcnfront.vercel.app').replace(/\/+$/, '');
+const adsenseConfig = JSON.parse(fs.readFileSync(path.join(projectRoot, 'src/lib/adsense-config.json'), 'utf8'));
+const publisherId = process.env.VITE_ADSENSE_CLIENT_ID || adsenseConfig.publisherId;
+const today = new Date().toISOString().slice(0, 10);
 const staticRoutes = [
-  { path: '/', changefreq: 'daily', priority: '1.0' },
-  { path: '/shop', changefreq: 'daily', priority: '0.9' },
-  { path: '/category', changefreq: 'weekly', priority: '0.8' },
-  { path: '/story', changefreq: 'weekly', priority: '0.8' },
-  { path: '/about', changefreq: 'monthly', priority: '0.8' },
-  { path: '/reviews', changefreq: 'weekly', priority: '0.7' },
-  { path: '/events', changefreq: 'weekly', priority: '0.8' },
-  { path: '/contact', changefreq: 'monthly', priority: '0.8' },
-  { path: '/privacy-policy', changefreq: 'monthly', priority: '0.6' },
-  { path: '/terms-of-service', changefreq: 'monthly', priority: '0.6' },
-  { path: '/faq', changefreq: 'monthly', priority: '0.7' },
+  '/', '/shop', '/category', '/story', '/about', '/reviews', '/events',
+  '/contact', '/privacy-policy', '/terms', '/faq', '/shipping', '/returns',
 ];
 
-const categorySlugs = [
-  'single-origin',
-  'rare-finds',
-  'brewing-gear',
-  'house-blends',
-  'coffee-spaces',
-];
+const readSlugs = (file, pattern) => {
+  const contents = fs.readFileSync(path.join(projectRoot, file), 'utf8');
+  return [...contents.matchAll(pattern)].map((match) => match[1]);
+};
 
-const productIds = ['1', '2', '3', '4', '5', '6'];
-const eventSlugs = ['kora-kulture'];
+const categories = readSlugs('src/data/categoryData.ts', /id:\s*'([^']+)'/g);
+const products = readSlugs('src/constants.ts', /^ {4}id:\s*'([^']+)'/gm);
+const events = readSlugs('src/data/events.ts', /^ {4}id:\s*'([^']+)'/gm);
+const routes = [...new Set([
+  ...staticRoutes,
+  ...categories.map((slug) => `/category/${slug}`),
+  ...products.map((id) => `/coffeeDetail/${id}`),
+  ...events.map((slug) => `/events/${slug}`),
+])];
 
-let xml = `<?xml version="1.0" encoding="UTF-8"?>\n`;
-xml += `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n`;
-
-for (const route of staticRoutes) {
-  xml += `  <url>\n    <loc>${BASE_URL}${route.path}</loc>\n    <lastmod>${TODAY}</lastmod>\n    <changefreq>${route.changefreq}</changefreq>\n    <priority>${route.priority}</priority>\n  </url>\n`;
-}
-
-for (const cat of categorySlugs) {
-  xml += `  <url>\n    <loc>${BASE_URL}/category/${cat}</loc>\n    <lastmod>${TODAY}</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>\n`;
-}
-
-for (const pid of productIds) {
-  xml += `  <url>\n    <loc>${BASE_URL}/coffeeDetail/${pid}</loc>\n    <lastmod>${TODAY}</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>\n`;
-}
-
-for (const ev of eventSlugs) {
-  xml += `  <url>\n    <loc>${BASE_URL}/events/${ev}</loc>\n    <lastmod>${TODAY}</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.7</priority>\n  </url>\n`;
-}
-
-xml += `</urlset>\n`;
-
-const outputPath = path.join(projectRoot, 'public', 'sitemap.xml');
-fs.writeFileSync(outputPath, xml, 'utf-8');
-console.log(`[Sitemap] Successfully generated dynamic sitemap at ${outputPath}`);
+const urls = routes.map((route) => `  <url>
+    <loc>${baseUrl}${route}</loc>
+    <lastmod>${today}</lastmod>
+  </url>`).join('\n');
+fs.writeFileSync(path.join(outputDir, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls}\n</urlset>\n`);
+fs.writeFileSync(path.join(outputDir, 'robots.txt'), `User-agent: *\nAllow: /\nDisallow: /cart\nDisallow: /payment\nDisallow: /account\nDisallow: /orderHistory\nDisallow: /tracking\nDisallow: /thankyou\nDisallow: /search\n\nSitemap: ${baseUrl}/sitemap.xml\n`);
+if (!/^ca-pub-\d+$/.test(publisherId)) throw new Error('VITE_ADSENSE_CLIENT_ID must be a valid AdSense publisher ID');
+fs.writeFileSync(path.join(outputDir, 'ads.txt'), `google.com, pub-${publisherId.slice('ca-pub-'.length)}, DIRECT, f08c47fec0942fa0\n`);
+console.log(`[SEO] Generated sitemap and robots.txt for ${routes.length} canonical routes`);

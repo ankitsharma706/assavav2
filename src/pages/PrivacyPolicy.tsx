@@ -18,7 +18,7 @@ import Breadcrumb from '../components/Breadcrumb';
 import { applySEO } from '../lib/seo';
 import JsonLd from '../components/JsonLd';
 import { generateOrganizationSchema } from '../lib/schema';
-import AdUnit from '../components/AdSense/AdUnit';
+import { setAdvertisingConsent } from '../lib/consent';
 
 type PrivacyProps = {
   cartCount: number;
@@ -277,7 +277,11 @@ export const PrivacyPolicy: React.FC<PrivacyProps> = ({
           </section>
 
           {/* Contextual Ad Placement between legal blocks */}
-          <AdUnit slotId="privacy-policy-mid" format="horizontal" minHeight={120} />
+          <div className="my-8">
+            <button type="button" onClick={() => setAdvertisingConsent(null)} className="text-sm text-[#C68E5D] underline">
+              Change advertising cookie preferences
+            </button>
+          </div>
 
           {/* Section 4 */}
           <section

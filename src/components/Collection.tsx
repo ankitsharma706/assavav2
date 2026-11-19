@@ -1,20 +1,11 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { PRODUCTS } from '../constants';
-import { ShowcaseCard } from './CoffeeComponents';
-import { Canvas } from '@react-three/fiber';
-import { BeanCluster } from './ThreeScene';
+import ShowcaseCard from './ShowcaseCard';
 
 const Collection = ({ onAddToCart, onToggleWishlist, wishlist }: { onAddToCart: (item: any) => void, onToggleWishlist: (item: any) => void, wishlist: any[] }) => {
   return (
     <section id="collection" className="section-padding bg-coffee-dark relative overflow-hidden">
-      {/* Background 3D Beans */}
-      <div className="absolute inset-0 pointer-events-none z-0 opacity-20">
-        <Canvas gl={{ alpha: true }} camera={{ position: [0, 0, 10] }}>
-          <BeanCluster />
-        </Canvas>
-      </div>
-
       <div className="max-w-7xl mx-auto relative z-10">
         <div className="mb-24">
           <motion.span 

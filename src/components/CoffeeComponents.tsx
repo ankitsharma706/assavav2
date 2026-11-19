@@ -406,7 +406,7 @@ export function CategoryModal({ isOpen, onClose }: { isOpen: boolean, onClose: (
             <div className="absolute -top-40 -left-40 w-96 h-96 bg-caramel/10 rounded-full blur-[120px] pointer-events-none" />
             <div className="absolute -bottom-40 -right-40 w-96 h-96 bg-cream/5 rounded-full blur-[120px] pointer-events-none" />
 
-            <button onClick={onClose} className="absolute top-8 right-8 p-3 hover:bg-white/10 rounded-full transition-all group z-20">
+            <button type="button" aria-label="Close category menu" onClick={onClose} className="absolute top-8 right-8 p-3 hover:bg-white/10 rounded-full transition-all group z-20">
               <X className="w-8 h-8 group-hover:rotate-90 transition-transform duration-500" />
             </button>
 
@@ -485,7 +485,7 @@ export function CartPanel({ isOpen, onClose, items, onRemove, onUpdateQty }: {
                 <span className="text-caramel font-mono text-[10px] uppercase tracking-[0.5em] mb-2 block font-bold">Your Ritual</span>
                 <h2 className="text-4xl font-bold tracking-tighter uppercase">Cart</h2>
               </div>
-              <button onClick={onClose} className="p-3 hover:bg-white/10 rounded-full transition-all group">
+              <button type="button" aria-label="Close cart" onClick={onClose} className="p-3 hover:bg-white/10 rounded-full transition-all group">
                 <X className="w-8 h-8 group-hover:rotate-90 transition-transform duration-500" />
               </button>
             </div>
@@ -517,6 +517,7 @@ export function CartPanel({ isOpen, onClose, items, onRemove, onUpdateQty }: {
                         <div className="flex items-center gap-3 glass px-3 py-1.5 rounded-full border-white/5">
                           <button 
                             onClick={() => onUpdateQty(item.id, -1)}
+                            aria-label={`Decrease ${item.name} quantity`}
                             className="w-6 h-6 rounded-full flex items-center justify-center text-xs hover:text-cream transition-all"
                           >
                             -
@@ -524,6 +525,7 @@ export function CartPanel({ isOpen, onClose, items, onRemove, onUpdateQty }: {
                           <span className="text-xs font-bold w-4 text-center">{item.quantity || 1}</span>
                           <button 
                             onClick={() => onUpdateQty(item.id, 1)}
+                            aria-label={`Increase ${item.name} quantity`}
                             className="w-6 h-6 rounded-full flex items-center justify-center text-xs hover:text-cream transition-all"
                           >
                             +
@@ -533,6 +535,7 @@ export function CartPanel({ isOpen, onClose, items, onRemove, onUpdateQty }: {
                     </div>
                     <button 
                       onClick={() => onRemove(item.id)}
+                      aria-label={`Remove ${item.name} from cart`}
                       className="absolute top-0 right-0 p-2 text-cream/10 hover:text-destructive transition-colors"
                     >
                       <X className="w-4 h-4" />
@@ -632,21 +635,21 @@ export function AccountDashboard() {
                 <div className="space-y-12">
                   <div className="flex items-center gap-8">
                     <div className="w-32 h-32 rounded-full glass border-2 border-caramel p-1 relative group">
-                      <img src="https://picsum.photos/seed/user/200/200" alt="avatar" loading="lazy" className="w-full h-full rounded-full object-cover" referrerPolicy="no-referrer" />
+                      <div aria-hidden="true" className="flex h-full w-full items-center justify-center rounded-full bg-caramel/20 text-3xl font-bold text-caramel">A</div>
                       <div className="absolute inset-0 bg-coffee-dark/60 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
                         <Settings className="w-6 h-6 text-cream" />
                       </div>
                     </div>
                     <div>
-                      <h2 className="text-4xl font-bold tracking-tighter uppercase mb-2">Ankit Kumar</h2>
-                      <p className="text-cream font-mono text-sm">ankitkumar999090@gmail.com</p>
+                      <h2 className="text-4xl font-bold tracking-tighter uppercase mb-2">Account profile</h2>
+                      <p className="text-cream font-mono text-sm">No account is connected</p>
                     </div>
                   </div>
                   
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
                     <div className="space-y-3">
                       <label className="text-[10px] uppercase tracking-widest text-cream/60 font-bold">Full Name</label>
-                      <div className="glass px-8 py-5 rounded-2xl text-cream/80 border border-white/5">Ankit Kumar</div>
+                      <div className="glass px-8 py-5 rounded-2xl text-cream/80 border border-white/5">Not provided</div>
                     </div>
                     <div className="space-y-3">
                       <label className="text-[10px] uppercase tracking-widest text-cream/60 font-bold">Member Since</label>
@@ -817,7 +820,7 @@ export function CoffeeCard({ title, location, rating, image, price, oldPrice, ta
           <div className="flex -space-x-3">
             {[1, 2, 3].map(i => (
               <div key={i} className="w-10 h-10 rounded-full border-2 border-coffee-dark overflow-hidden glass">
-                <img src={`https://picsum.photos/seed/user${i}/100/100`} alt="user" loading="lazy" referrerPolicy="no-referrer" />
+                <span aria-hidden="true" className="flex h-full w-full items-center justify-center bg-caramel/20 text-xs font-bold text-caramel">{i}</span>
               </div>
             ))}
             <div className="w-10 h-10 rounded-full border-2 border-coffee-dark bg-espresso flex items-center justify-center text-[10px] font-bold text-cream/40">
@@ -1490,7 +1493,7 @@ export function CoffeeDetailPage({ onAddToCart, onToggleWishlist, wishlist }: { 
         {item.story && (
           <section className="relative h-[80vh] flex items-center justify-center rounded-[80px] overflow-hidden glass border border-white/10">
             <div className="absolute inset-0">
-               <img src={item.images?.[2] || item.image} className="w-full h-full object-cover opacity-20 scale-110" />
+               <img src={item.images?.[2] || item.image} alt="" aria-hidden="true" className="w-full h-full object-cover opacity-20 scale-110" />
                <div className="absolute inset-0 bg-gradient-to-b from-coffee-dark via-transparent to-coffee-dark" />
             </div>
             <div className="relative z-10 max-w-4xl mx-auto text-center space-y-12 px-6">
@@ -1544,7 +1547,7 @@ export function CoffeeDetailPage({ onAddToCart, onToggleWishlist, wishlist }: { 
               <div key={i} className="glass p-10 rounded-[48px] border border-white/5 space-y-8 bg-white/2 hover:glow-border transition-all duration-700">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-4">
-                    <div className="w-14 h-14 rounded-full overflow-hidden glass border border-white/10"><img src={'userImage' in r ? (r as any).userImage : '/default-user.jpg'} alt={r.userName} className="w-full h-full object-cover" /></div>
+                    <div aria-hidden="true" className="flex h-14 w-14 items-center justify-center rounded-full glass border border-white/10 font-bold text-caramel">{r.userName.slice(0, 1)}</div>
                     <div><h4 className="text-lg font-bold text-cream">{r.userName}</h4><span className="text-[9px] text-cream/30 uppercase tracking-widest">{r.date || 'April 2026'}</span></div>
                   </div>
                   <div className="flex gap-0.5 text-caramel">{[...Array(5)].map((_, idx) => <Star key={idx} className={cn("w-3 h-3 text-caramel fill-caramel", idx < r.rating ? "fill-current" : "opacity-10")} />)}</div>

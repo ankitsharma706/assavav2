@@ -17,7 +17,7 @@ interface AdUnitProps {
 }
 
 export const AdUnit: React.FC<AdUnitProps> = ({
-  slotId = 'default-slot',
+  slotId,
   format = 'auto',
   responsive = true,
   className = '',
@@ -28,9 +28,10 @@ export const AdUnit: React.FC<AdUnitProps> = ({
   const isPushed = useRef(false);
 
   const eligible = isContentRoute(pathname);
+  const validSlot = /^\d+$/.test(slotId || '');
 
   useEffect(() => {
-    if (!eligible) return;
+    if (!eligible || !validSlot) return;
 
     if (!isPushed.current && adRef.current) {
       try {
@@ -40,10 +41,10 @@ export const AdUnit: React.FC<AdUnitProps> = ({
         // Suppress benign AdSense push errors (e.g. ad blockers)
       }
     }
-  }, [eligible, pathname]);
+  }, [eligible, pathname, validSlot]);
 
   // Strictly eliminate ads on non-content routes (policy compliance)
-  if (!eligible) {
+  if (!eligible || !validSlot) {
     return null;
   }
 
@@ -58,7 +59,7 @@ export const AdUnit: React.FC<AdUnitProps> = ({
             Advertisement
           </span>
           <span className="text-[8px] uppercase tracking-widest text-[#F5F5DC]/20">
-            AdSense Verified
+            Advertisement
           </span>
         </div>
 

@@ -65,11 +65,6 @@ export function generateWebSiteSchema() {
     '@type': 'WebSite',
     name: 'ASSAVA Luxury Coffee Experience',
     url: SITE_DEFAULTS.baseUrl,
-    potentialAction: {
-      '@type': 'SearchAction',
-      target: `${SITE_DEFAULTS.baseUrl}/search?q={search_term_string}`,
-      'query-input': 'required name=search_term_string',
-    },
   };
 }
 
@@ -120,17 +115,17 @@ export function generateProductSchema(product: ProductSchemaInput) {
     offers: {
       '@type': 'Offer',
       url: `${SITE_DEFAULTS.baseUrl}/coffeeDetail/${product.id}`,
-      priceCurrency: product.currency || 'USD',
+      priceCurrency: product.currency || 'INR',
       price: product.price.toFixed(2),
       availability: `https://schema.org/${product.availability || 'InStock'}`,
       itemCondition: 'https://schema.org/NewCondition',
     },
-    ...(product.rating
+    ...(product.rating && product.reviewCount
       ? {
           aggregateRating: {
             '@type': 'AggregateRating',
             ratingValue: product.rating.toString(),
-            reviewCount: (product.reviewCount || 32).toString(),
+            reviewCount: product.reviewCount.toString(),
             bestRating: '5',
             worstRating: '1',
           },

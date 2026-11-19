@@ -4,7 +4,6 @@ import { Mail, Phone, MapPin, Instagram, ArrowRight, CheckCircle2, ChevronDown, 
 import { Navbar, Footer, ScrollIndicator } from '../components/CoffeeComponents';
 import { applySEO } from '../lib/seo';
 import Breadcrumb from '../components/Breadcrumb';
-import AdUnit from '../components/AdSense/AdUnit';
 
 // --- Types ---
 type ContactProps = {
@@ -31,33 +30,50 @@ const SectionLabel = ({ children, className = "" }: { children: React.ReactNode,
   </span>
 );
 
-const GlassInput = ({ label, type = "text", placeholder, options, isTextArea }: { 
-  label: string, 
-  type?: string, 
-  placeholder?: string, 
-  options?: string[],
-  isTextArea?: boolean
+const GlassInput = ({ id, name, label, type = "text", placeholder, options, isTextArea, value, onChange, required, autoComplete }: {
+  id: string;
+  name: string;
+  label: string;
+  type?: string;
+  placeholder?: string;
+  options?: string[];
+  isTextArea?: boolean;
+  value: string;
+  onChange: (value: string) => void;
+  required?: boolean;
+  autoComplete?: string;
 }) => (
   <div className="relative group mb-8">
-    <label className="block text-[10px] uppercase font-bold tracking-widest text-caramel/60 mb-2 group-focus-within:text-caramel transition-colors">
+    <label htmlFor={id} className="block text-[10px] uppercase font-bold tracking-widest text-caramel/60 mb-2 group-focus-within:text-caramel transition-colors">
       {label}
     </label>
     {options ? (
       <div className="relative">
-        <select className="w-full bg-white/5 border border-white/10 rounded-xl px-6 py-5 text-sm outline-none focus:border-caramel/40 transition-all appearance-none text-cream font-serif">
-          <option value="" disabled selected className="bg-coffee-dark">{placeholder}</option>
+        <select id={id} name={name} value={value} onChange={(event) => onChange(event.target.value)} required={required} className="w-full bg-white/5 border border-white/10 rounded-xl px-6 py-5 text-sm outline-none focus:border-caramel/40 transition-all appearance-none text-cream font-serif">
+          <option value="" disabled className="bg-coffee-dark">{placeholder}</option>
           {options.map(o => <option key={o} value={o} className="bg-coffee-dark">{o}</option>)}
         </select>
         <ChevronDown className="absolute right-6 top-1/2 -translate-y-1/2 w-4 h-4 text-cream/40 pointer-events-none" />
       </div>
     ) : isTextArea ? (
       <textarea 
+        id={id}
+        name={name}
+        value={value}
+        onChange={(event) => onChange(event.target.value)}
+        required={required}
         placeholder={placeholder}
         className="w-full bg-white/5 border border-white/10 rounded-xl px-6 py-5 text-sm outline-none focus:border-caramel/40 hover:border-white/20 transition-all text-cream placeholder-cream/30 font-serif min-h-[150px] resize-none"
       />
     ) : (
       <input 
+        id={id}
+        name={name}
         type={type}
+        value={value}
+        onChange={(event) => onChange(event.target.value)}
+        required={required}
+        autoComplete={autoComplete}
         placeholder={placeholder}
         className="w-full bg-white/5 border border-white/10 rounded-xl px-6 py-5 text-sm outline-none focus:border-caramel/40 hover:border-white/20 transition-all text-cream placeholder-cream/30 font-serif"
       />
@@ -67,7 +83,9 @@ const GlassInput = ({ label, type = "text", placeholder, options, isTextArea }: 
 );
 
 const Contact: React.FC<ContactProps> = ({ cartCount, onOpenCart, onOpenCategories, wishlistCount = 0 }) => {
-  const [formStatus, setFormStatus] = useState<'idle' | 'submitting' | 'success'>('idle');
+  const [formStatus, setFormStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
+  const [formError, setFormError] = useState('');
+  const [formData, setFormData] = useState({ name: '', email: '', phone: '', inquiryType: '', message: '' });
 
   useEffect(() => {
     applySEO({
@@ -86,10 +104,23 @@ const Contact: React.FC<ContactProps> = ({ cartCount, onOpenCart, onOpenCategori
   const heroY = useTransform(heroScroll, [0, 1], ['0%', '20%']);
   const heroScale = useTransform(heroScroll, [0, 1], [1, 1.05]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setFormStatus('submitting');
-    setTimeout(() => setFormStatus('success'), 2000);
+    setFormError('');
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+      const result = await response.json() as { error?: string };
+      if (!response.ok) throw new Error(result.error || 'Unable to send your message.');
+      setFormStatus('success');
+    } catch (error) {
+      setFormStatus('error');
+      setFormError(error instanceof Error ? error.message : 'Unable to send your message.');
+    }
   };
 
   return (
@@ -236,7 +267,7 @@ const Contact: React.FC<ContactProps> = ({ cartCount, onOpenCart, onOpenCategori
                 <h3 className="text-3xl font-serif text-white mb-4 italic">Message Received</h3>
                 <p className="text-cream/50 font-serif italic">We'll get back to you with the same warmth we brew our coffee. Usually within 24 hours.</p>
                 <button 
-                  onClick={() => setFormStatus('idle')}
+                    onClick={() => { setFormStatus('idle'); setFormData({ name: '', email: '', phone: '', inquiryType: '', message: '' }); }}
                   className="mt-10 text-[10px] uppercase tracking-widest font-bold text-caramel border-b border-caramel/30 pb-2 hover:text-white transition-colors"
                 >
                   Send another message
@@ -245,18 +276,24 @@ const Contact: React.FC<ContactProps> = ({ cartCount, onOpenCart, onOpenCategori
             ) : (
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                  <GlassInput label="Full Name" placeholder="E.g. Arjun Mehta" />
-                  <GlassInput label="Email Address" type="email" placeholder="arjun@ritual.com" />
+                  <GlassInput id="contact-name" name="name" label="Full Name" placeholder="Your name" value={formData.name} onChange={(name) => setFormData({ ...formData, name })} required autoComplete="name" />
+                  <GlassInput id="contact-email" name="email" label="Email Address" type="email" placeholder="you@example.com" value={formData.email} onChange={(email) => setFormData({ ...formData, email })} required autoComplete="email" />
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                  <GlassInput label="Phone Number (Optional)" type="tel" placeholder="+91 ..." />
+                  <GlassInput id="contact-phone" name="phone" label="Phone Number (Optional)" type="tel" placeholder="Phone number" value={formData.phone} onChange={(phone) => setFormData({ ...formData, phone })} autoComplete="tel" />
                   <GlassInput 
+                    id="contact-inquiry-type"
+                    name="inquiryType"
                     label="Inquiry Type" 
                     placeholder="General Inquiry" 
-                    options={["General Inquiry", "Collaboration", "Events", "Bulk Orders", "Partnerships"]} 
+                    options={["General Inquiry", "Collaboration", "Events", "Bulk Orders", "Partnerships"]}
+                    value={formData.inquiryType}
+                    onChange={(inquiryType) => setFormData({ ...formData, inquiryType })}
+                    required
                   />
                 </div>
-                <GlassInput label="Your Message" isTextArea placeholder="How can we help you start your journey?" />
+                <GlassInput id="contact-message" name="message" label="Your Message" isTextArea placeholder="How can we help?" value={formData.message} onChange={(message) => setFormData({ ...formData, message })} required />
+                {formStatus === 'error' && <p role="alert" className="text-sm text-red-300">{formError}</p>}
                 
                 <motion.button
                   whileHover={{ scale: 1.02 }}
@@ -367,6 +404,7 @@ const Contact: React.FC<ContactProps> = ({ cartCount, onOpenCart, onOpenCategori
         </div>
         <iframe 
           src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3742.66879!2d85.8545719!3d20.2800272!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a19a1d63ba5aa71%3A0xfc8fe5924f0b81ac!2zQXNzYXZhIENvZmZlZSBSb2FzdGVycw!5e0!3m2!1sen!2sin!4v1700000000000" 
+          title="Assava Coffee Roasters location map"
           width="100%" 
           height="100%" 
           style={{ border: 0 }} 

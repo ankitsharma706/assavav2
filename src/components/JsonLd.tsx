@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { sanitizeJsonLd } from '../lib/schema';
 
 interface JsonLdProps {
@@ -7,25 +7,7 @@ interface JsonLdProps {
 }
 
 export const JsonLd: React.FC<JsonLdProps> = ({ id = 'json-ld-schema', data }) => {
-  useEffect(() => {
-    const existing = document.getElementById(id);
-    if (existing) {
-      existing.remove();
-    }
-
-    const script = document.createElement('script');
-    script.id = id;
-    script.type = 'application/ld+json';
-    script.text = sanitizeJsonLd(data);
-    document.head.appendChild(script);
-
-    return () => {
-      const el = document.getElementById(id);
-      if (el) el.remove();
-    };
-  }, [id, data]);
-
-  return null;
+  return <script id={id} type="application/ld+json" dangerouslySetInnerHTML={{ __html: sanitizeJsonLd(data) }} />;
 };
 
 export default JsonLd;
