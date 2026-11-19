@@ -21,6 +21,10 @@ import { CATEGORY_DATA } from '../data/categoryData';
 import productsData from '../../data/coffee.json';
 import { cn } from '../lib/utils';
 import { Product } from '../types';
+import { applySEO } from '../lib/seo';
+import Breadcrumb from '../components/Breadcrumb';
+import AdUnit from '../components/AdSense/AdUnit';
+import NotFound from './NotFound';
 
 // --- Shared Components for Category Detail ---
 
@@ -100,7 +104,7 @@ const EditorialProductCard = ({ product, index }: { product: Product, index: num
 
 // --- Main Category Detail Page ---
 
-export default function CategoryDetail({ cartCount, wishlistCount = 0, onOpenCart, onOpenCategories }: any) {
+export default function CategoryDetail({ cartCount, wishlistCount = 0, onOpenCart, onOpenCategories }: { cartCount: number; wishlistCount?: number; onOpenCart: () => void; onOpenCategories: () => void }) {
   const { id } = useParams<{ id: string }>();
   const containerRef = useRef<HTMLDivElement>(null!);
   const data = CATEGORY_DATA[id || ''];
@@ -109,7 +113,15 @@ export default function CategoryDetail({ cartCount, wishlistCount = 0, onOpenCar
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, [id]);
+    if (data) {
+      applySEO({
+        title: `${data.name} | Terroir Collection`,
+        description: data.intro || data.tagline,
+        canonical: `/category/${data.id}`,
+        ogImage: data.heroImage,
+      });
+    }
+  }, [id, data]);
   
   const filteredProducts = useMemo(() => {
     const products = (productsData as any).products.filter((p: any) => p.category === id);
@@ -123,7 +135,7 @@ export default function CategoryDetail({ cartCount, wishlistCount = 0, onOpenCar
   const heroScale = useTransform(scrollYProgress, [0, 0.15], [1, 1.1]);
   const heroY = useTransform(scrollYProgress, [0, 0.15], [0, 50]);
 
-  if (!data) return <div className="min-h-screen bg-coffee-dark" />;
+  if (!data) return <NotFound cartCount={cartCount} wishlistCount={wishlistCount} onOpenCart={onOpenCart} onOpenCategories={onOpenCategories} />;
 
   return (
     <div ref={containerRef} className="relative bg-[#0f0a07] text-cream min-h-screen selection:bg-caramel selection:text-coffee-dark overflow-x-hidden">
@@ -256,7 +268,7 @@ export default function CategoryDetail({ cartCount, wishlistCount = 0, onOpenCar
                       </button>
                     ))}
                  </div>
-                 <button className="w-14 h-14 rounded-full bg-caramel text-coffee-dark flex items-center justify-center hover:bg-white transition-colors group shadow-lg shadow-caramel/20">
+                 <button type="button" aria-label="Clear product filters" onClick={() => setActiveFilter('All')} className="w-14 h-14 rounded-full bg-caramel text-coffee-dark flex items-center justify-center hover:bg-white transition-colors group shadow-lg shadow-caramel/20">
                     <Filter className="w-5 h-5 group-hover:rotate-180 transition-transform duration-500" />
                  </button>
               </div>
@@ -278,6 +290,10 @@ export default function CategoryDetail({ cartCount, wishlistCount = 0, onOpenCar
                 <p className="text-white/20 italic font-serif">Awaiting the next seasonal harvest ritual cycles.</p>
              </div>
            )}
+        </div>
+
+        <div className="max-w-7xl mx-auto px-6 py-8">
+          <AdUnit slotId="category-detail-mid" format="horizontal" minHeight={120} />
         </div>
       </section>
 

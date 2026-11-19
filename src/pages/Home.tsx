@@ -1,15 +1,17 @@
 import React, { Suspense, useEffect, useRef } from 'react';
-import { Navbar, Hero } from '../components/CoffeeComponents';
+import { Navbar, Hero } from '../components/SiteChrome';
 import Collection from '../components/Collection';
 import Events from '../components/Events';
 import Instagram from '../components/Instagram';
 import Reviews from '../components/Reviews';
 import Footer from '../components/Footer';
-import { Canvas } from '@react-three/fiber';
-import { BeanCluster } from '../components/ThreeScene';
 import Lenis from '@studio-freight/lenis';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { applySEO } from '../lib/seo';
+import JsonLd from '../components/JsonLd';
+import { generateOrganizationSchema, generateWebSiteSchema } from '../lib/schema';
+import AdUnit from '../components/AdSense/AdUnit';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -28,6 +30,14 @@ import {
 
 const Home = ({ cartCount, wishlistCount, wishlist, onToggleWishlist, onOpenCart, onOpenCategories, onAddToCart }: { cartCount: number, wishlistCount: number, wishlist: any[], onToggleWishlist: (item: any) => void, onOpenCart: () => void, onOpenCategories: () => void, onAddToCart: (item: any) => void }) => {
   const lenisRef = useRef<Lenis | null>(null);
+
+  useEffect(() => {
+    applySEO({
+      title: 'Assava | Luxury Specialty Coffee & Rare Micro-Lots',
+      description: 'Experience Assava: ultra-specialty Indian & global single-origin coffees, precision roasting, artisanal harvest narratives, and ritual brewing equipment.',
+      canonical: '/',
+    });
+  }, []);
 
   useEffect(() => {
     // 1. Correct Lenis + GSAP sync (Fixing jitter/double RAF)
@@ -109,6 +119,8 @@ const Home = ({ cartCount, wishlistCount, wishlist, onToggleWishlist, onOpenCart
 
   return (
     <main className="relative bg-black text-white selection:bg-caramel selection:text-black">
+      <JsonLd id="home-org-schema" data={generateOrganizationSchema()} />
+      <JsonLd id="home-website-schema" data={generateWebSiteSchema()} />
       <div className="grain pointer-events-none opacity-[0.03] fixed inset-0 z-[100]" />
       
       <div className="relative z-10 overflow-x-hidden">
@@ -127,6 +139,10 @@ const Home = ({ cartCount, wishlistCount, wishlist, onToggleWishlist, onOpenCart
         
         <Collection onAddToCart={onAddToCart} onToggleWishlist={onToggleWishlist} wishlist={wishlist} />
         
+        <div className="max-w-7xl mx-auto px-6">
+          <AdUnit slotId="home-feed-mid" format="horizontal" minHeight={120} />
+        </div>
+
         <CinematicVideoSection />
         <FlavorJourneySection />
         <CommunityCultureSection />

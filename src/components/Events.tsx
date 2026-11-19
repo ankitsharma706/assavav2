@@ -2,7 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { EVENTS } from '../constants';
 import { Calendar, ArrowRight } from 'lucide-react';
-import { TiltWrapper } from './CoffeeComponents';
+import TiltWrapper from './TiltWrapper';
 
 const Events = () => {
   return (

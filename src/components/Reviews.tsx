@@ -2,7 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { REVIEWS } from '../constants';
 import { Star, Quote } from 'lucide-react';
-import { TiltWrapper } from './CoffeeComponents';
+import TiltWrapper from './TiltWrapper';
 
 const Reviews = () => {
   return (

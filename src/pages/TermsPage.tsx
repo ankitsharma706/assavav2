@@ -1,8 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
+import { Link } from 'react-router-dom';
 import { ChevronRight, ArrowUp, Mail, ShieldCheck, FileText, Scale, ShoppingBag, CreditCard, Truck, RefreshCcw, Landmark, Calendar, UserCheck, AlertCircle, Lock, Edit3 } from 'lucide-react';
 import { Navbar, Footer, ScrollIndicator } from '../components/CoffeeComponents';
 import { cn } from '../lib/utils';
+import { applySEO } from '../lib/seo';
+import Breadcrumb from '../components/Breadcrumb';
 
 // --- Types ---
 type TermsProps = {
@@ -31,6 +34,14 @@ const SECTIONS = [
 const TermsPage: React.FC<TermsProps> = ({ cartCount, onOpenCart, onOpenCategories, wishlistCount = 0 }) => {
   const [activeSection, setActiveSection] = useState('introduction');
   const sectionRefs = useRef<{ [key: string]: HTMLElement | null }>({});
+
+  useEffect(() => {
+    applySEO({
+      title: 'Terms and Conditions | Legal Framework',
+      description: 'Terms and Conditions and legal framework for Assava Specialty Coffee orders, roasting rituals, customer rights, and website use.',
+      canonical: '/terms-of-service',
+    });
+  }, []);
 
   // Scroll Spy Logic
   useEffect(() => {
@@ -76,6 +87,7 @@ const TermsPage: React.FC<TermsProps> = ({ cartCount, onOpenCart, onOpenCategori
       {/* --- HERO SECTION --- */}
       <section className="relative pt-48 pb-32 px-6 border-b border-white/5 overflow-hidden">
         <div className="max-w-7xl mx-auto text-center relative z-10">
+          <Breadcrumb items={[{ name: 'Terms & Conditions', path: '/terms-of-service' }]} className="justify-center mb-6" />
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -220,10 +232,11 @@ const TermsPage: React.FC<TermsProps> = ({ cartCount, onOpenCart, onOpenCategori
             </div>
             <div className="prose prose-invert max-w-none text-lg text-cream/70 font-serif italic leading-[1.8]">
               <p className="mb-6">
-                Freshness Priority: We ship within 24-48 hours of roasting to ensure you receive the peak profile of the bean.
+                Shipping is free on every order delivered within India.
               </p>
               <ul className="list-disc pl-6 space-y-4 marker:text-caramel">
-                <li>Timelines: Expect delivery within 3-7 business days depending on your location.</li>
+                <li>Handling: Orders are handled within 1-2 days.</li>
+                <li>Transit: Delivery typically takes 3-5 days within India; actual timing may vary by destination and carrier.</li>
                 <li>Delays: While we partner with premium carriers, we are not responsible for delays caused by atmospheric conditions or regional logistical hurdles.</li>
                 <li>Tracking: Every order includes a cinematic tracking link sent via email.</li>
               </ul>
@@ -240,11 +253,10 @@ const TermsPage: React.FC<TermsProps> = ({ cartCount, onOpenCart, onOpenCategori
             </div>
             <div className="prose prose-invert max-w-none text-lg text-cream/70 font-serif italic leading-[1.8]">
               <p className="mb-6">
-                Perishable Policy: Due to the fresh-roasted and perishable nature of coffee beans, we do not accept returns on coffee once opened.
+                Returns: Product returns are not accepted.
               </p>
               <ul className="list-disc pl-6 space-y-4 marker:text-caramel">
                 <li>Damaged Goods: If your package arrives compromised, contact us within 24 hours for a full replacement.</li>
-                <li>Equipment: Non-perishable hardware (drippers, kettles) can be returned within 14 days if in original, unused packaging.</li>
               </ul>
             </div>
           </section>
@@ -263,6 +275,7 @@ const TermsPage: React.FC<TermsProps> = ({ cartCount, onOpenCart, onOpenCategori
               </p>
             </div>
           </section>
+
 
           {/* 8. Events & Experiences */}
           <section id="events" ref={(el) => { sectionRefs.current['events'] = el; }} className="scroll-mt-32">
@@ -321,7 +334,11 @@ const TermsPage: React.FC<TermsProps> = ({ cartCount, onOpenCart, onOpenCategori
             </div>
             <div className="prose prose-invert max-w-none text-lg text-cream/70 font-serif italic leading-[1.8]">
               <p>
-                Your privacy is integrated into our platform's DNA. Please review our full <strong>Privacy Policy</strong> to understand how we protect and manage your data with zero compromise.
+                Your privacy is integrated into our platform's DNA. Please review our full{' '}
+                <Link to="/privacy-policy" className="text-caramel underline font-bold hover:text-white transition-colors">
+                  Privacy Policy
+                </Link>{' '}
+                to understand how we protect and manage your data with zero compromise.
               </p>
             </div>
           </section>

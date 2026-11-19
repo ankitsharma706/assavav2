@@ -18,7 +18,7 @@ const Shop = ({ cartCount, wishlistCount, wishlist, onToggleWishlist, onOpenCart
       {/* Global Immersive Background */}
       <div className="fixed inset-0 pointer-events-none z-0 opacity-10">
         <Suspense fallback={null}>
-          <Canvas gl={{ alpha: true }} camera={{ position: [0, 0, 15] }}>
+          <Canvas aria-hidden="true" gl={{ alpha: true }} camera={{ position: [0, 0, 15] }}>
             <BeanCluster />
           </Canvas>
         </Suspense>

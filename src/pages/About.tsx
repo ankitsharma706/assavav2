@@ -4,6 +4,9 @@ import { Link } from 'react-router-dom';
 import { Navbar } from '../components/CoffeeComponents';
 import Footer from '../components/Footer';
 import ScrollIndicator from '../components/ScrollIndicator';
+import { applySEO } from '../lib/seo';
+import Breadcrumb from '../components/Breadcrumb';
+import AdUnit from '../components/AdSense/AdUnit';
 
 // ─── Types ───────────────────────────────────────────────────
 type AboutProps = {
@@ -96,6 +99,13 @@ function AnimatedNumber({ target, suffix = '' }: { target: number; suffix?: stri
 
 // ─── Main Component ───────────────────────────────────────────
 const About: React.FC<AboutProps> = ({ cartCount, wishlistCount = 0, onOpenCart, onOpenCategories }) => {
+  useEffect(() => {
+    applySEO({
+      title: 'Our Heritage & Roastery Philosophy',
+      description: 'Discover the story behind Assava Specialty Coffee: high-altitude terroirs, regenerative farming partnerships, and our pursuit of extraordinary roast chemistry.',
+      canonical: '/about',
+    });
+  }, []);
 
   // Parallax for hero
   const heroRef = useRef<HTMLElement>(null);
@@ -453,6 +463,10 @@ const About: React.FC<AboutProps> = ({ cartCount, wishlistCount = 0, onOpenCart,
       </section>
 
       <Divider />
+
+      <div className="max-w-7xl mx-auto px-6">
+        <AdUnit slotId="about-mid-editorial" format="horizontal" minHeight={120} />
+      </div>
 
       {/* SECTION 7 — THE ROAST */}
       <section className="max-w-7xl mx-auto px-6 py-28 md:py-40">

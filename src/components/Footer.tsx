@@ -35,17 +35,18 @@ const Footer = () => {
       links: [
         { name: "Contact", path: "/contact" },
         { name: "FAQ", path: "/faq" },
-        { name: "Shipping", path: "/shipping" },
-        { name: "Returns", path: "/returns" },
-        { name: "Terms & Conditions", path: "/terms" }
+        { name: "Shipping & Delivery", path: "/shipping" },
+        { name: "Returns & Guarantee", path: "/returns" },
+        { name: "Privacy Policy", path: "/privacy-policy" },
+        { name: "Terms of Service", path: "/terms-of-service" }
       ]
     },
     {
       title: "Connection",
       links: [
-        { name: "Instagram", path: "https://instagram.com", external: true },
-        { name: "LinkedIn", path: "https://linkedin.com", external: true },
-        { name: "Twitter", path: "https://twitter.com", external: true }
+        { name: "Instagram", path: "https://instagram.com/assavacoffee", external: true },
+        { name: "LinkedIn", path: "https://linkedin.com/company/assavacoffee", external: true },
+        { name: "Twitter", path: "https://twitter.com/assavacoffee", external: true }
       ]
     }
   ];
@@ -65,7 +66,7 @@ const Footer = () => {
           <div className="lg:col-span-4 space-y-12">
             <Link to="/" className="flex items-center gap-4 group">
                <div className="w-16 h-16 rounded-full border border-[#C68E5D]/20 flex items-center justify-center p-2 bg-[#140D08] group-hover:border-[#C68E5D] transition-colors overflow-hidden shadow-2xl">
-                  <img src="/logo.png" className="w-full h-full object-cover p-2" alt="Assava" />
+                  <img src="/logo.png" className="w-full h-full object-cover p-2" alt="Assava Logo" />
                </div>
                <span className="text-4xl font-serif font-black text-[#C68E5D] italic tracking-tighter uppercase">ASSAVA</span>
             </Link>
@@ -73,12 +74,19 @@ const Footer = () => {
                "Crafting coffee experiences beyond the ordinary. A devotion to the outliers and the ritualists of the world."
             </p>
             <div className="flex gap-4">
-               {[Instagram, Linkedin, Twitter].map((Icon, i) => (
+               {[
+                 { Icon: Instagram, href: "https://instagram.com/assavacoffee", name: "Instagram" },
+                 { Icon: Linkedin, href: "https://linkedin.com/company/assavacoffee", name: "LinkedIn" },
+                 { Icon: Twitter, href: "https://twitter.com/assavacoffee", name: "Twitter" }
+               ].map(({ Icon, href, name }, i) => (
                  <motion.a
                    key={i}
-                   href="#"
+                   href={href}
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   aria-label={name}
                    whileHover={{ y: -5, backgroundColor: '#3B2A1E', borderColor: '#C68E5D' }}
-                   className="w-12 h-12 rounded-full border border-[#C68E5D]/10 bg-[#140D08] flex items-center justify-center text-[#A67C52] transition-all"
+                   className="w-12 h-12 rounded-full border border-[#C68E5D]/10 bg-[#140D08] flex items-center justify-center text-[#A67C52] transition-all hover:text-[#C68E5D]"
                  >
                    <Icon size={18} />
                  </motion.a>
@@ -99,14 +107,14 @@ const Footer = () => {
                               href={link.path}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="text-xs uppercase font-black tracking-widest text-[#F5F5DC]/30 hover:text-[#C68E5D] hover:pl-2 transition-all group flex items-center gap-2"
+                              className="text-xs uppercase font-black tracking-widest text-[#F5F5DC]/40 hover:text-[#C68E5D] hover:pl-2 transition-all group flex items-center gap-2"
                             >
                                {link.name} <ChevronRight className="w-3 h-3 text-[#C68E5D] opacity-0 group-hover:opacity-100 transition-opacity" />
                             </a>
                           ) : (
                             <Link 
                               to={link.path}
-                              className="text-xs uppercase font-black tracking-widest text-[#F5F5DC]/30 hover:text-[#C68E5D] hover:pl-2 transition-all group flex items-center gap-2"
+                              className="text-xs uppercase font-black tracking-widest text-[#F5F5DC]/40 hover:text-[#C68E5D] hover:pl-2 transition-all group flex items-center gap-2"
                             >
                                {link.name} <ChevronRight className="w-3 h-3 text-[#C68E5D] opacity-0 group-hover:opacity-100 transition-opacity" />
                             </Link>
@@ -131,26 +139,39 @@ const Footer = () => {
                   placeholder="Enter your devotion email"
                   className="w-full bg-[#140D08] border border-[#C68E5D]/10 rounded-full px-8 py-5 text-sm italic font-serif text-[#F5F5DC] focus:outline-none focus:border-[#C68E5D] focus:bg-[#1A120B] transition-all outline-none pr-20"
                 />
-                <button className="absolute right-2 top-2 bottom-2 w-16 bg-[#C68E5D] hover:bg-[#3B2A1E] rounded-full flex items-center justify-center text-[#1A120B] hover:text-[#F5F5DC] shadow-lg shadow-[#C68E5D]/10 transition-all hover:scale-105 active:scale-95">
+                <button 
+                  aria-label="Submit newsletter registration"
+                  className="absolute right-2 top-2 bottom-2 w-16 bg-[#C68E5D] hover:bg-[#3B2A1E] rounded-full flex items-center justify-center text-[#1A120B] hover:text-[#F5F5DC] shadow-lg shadow-[#C68E5D]/10 transition-all hover:scale-105 active:scale-95"
+                >
                    <Send className="w-4 h-4" />
                 </button>
              </div>
              
-             <span className="block text-[8px] uppercase tracking-widest text-[#A67C52]/20 font-black">Designed for those who seek more than coffee.</span>
+             <span className="block text-[8px] uppercase tracking-widest text-[#A67C52]/30 font-black">Designed for those who seek more than coffee.</span>
           </div>
 
         </div>
 
         {/* Bottom Bar */}
         <div className="pt-20 border-t border-[#C68E5D]/5 flex flex-col md:flex-row justify-between items-center gap-8">
-           <div className="flex items-center gap-8 text-[10px] uppercase tracking-widest font-black text-[#A67C52]/30">
-              <span>© {currentYear} ASSAVA. ALL RIGHTS RESERVED.</span>
+           <div className="flex items-center gap-8 text-[10px] uppercase tracking-widest font-black text-[#A67C52]/40">
+              <span>© {currentYear} ASSAVA SPECIALTY COFFEE. ALL RIGHTS RESERVED.</span>
               <span className="hidden md:block w-[1px] h-4 bg-[#C68E5D]/10" />
               <span className="hidden md:block">Bhubaneswar, Odisha</span>
            </div>
-           <div className="flex items-center gap-12">
-              <span className="text-[10px] uppercase tracking-widest font-black text-[#A67C52]/30 hover:text-[#C68E5D] cursor-pointer transition-colors">Privacy Ritual</span>
-              <span className="text-[10px] uppercase tracking-widest font-black text-[#A67C52]/30 hover:text-[#C68E5D] cursor-pointer transition-colors">Terms of Devotion</span>
+           <div className="flex items-center gap-8">
+              <Link 
+                to="/privacy-policy" 
+                className="text-[10px] uppercase tracking-widest font-black text-[#A67C52]/50 hover:text-[#C68E5D] transition-colors"
+              >
+                Privacy Policy
+              </Link>
+              <Link 
+                to="/terms-of-service" 
+                className="text-[10px] uppercase tracking-widest font-black text-[#A67C52]/50 hover:text-[#C68E5D] transition-colors"
+              >
+                Terms of Service
+              </Link>
            </div>
         </div>
       </div>

@@ -16,7 +16,7 @@ const Cart = ({ cartCount, wishlistCount, cart, onUpdateQuantity, onRemove, cart
   onOpenCart: () => void, 
   onOpenCategories: () => void 
 }) => {
-  const shipping = cartTotal > 150 ? 0 : 15.00;
+  const shipping: number = 0;
   const total = cartTotal + shipping;
 
   return (
@@ -73,6 +73,8 @@ const Cart = ({ cartCount, wishlistCount, cart, onUpdateQuantity, onRemove, cart
                     <div className="flex items-center justify-between pt-4 border-t border-white/5">
                       <div className="flex items-center gap-6 glass rounded-full px-4 py-2 border-white/5">
                         <button 
+                          type="button"
+                          aria-label={`Decrease ${item.name} quantity`}
                           onClick={() => onUpdateQuantity(item.id, -1)}
                           className="text-cream/40 hover:text-cream transition-all duration-300 transform active:scale-125"
                         >
@@ -80,6 +82,8 @@ const Cart = ({ cartCount, wishlistCount, cart, onUpdateQuantity, onRemove, cart
                         </button>
                         <span className="text-sm font-bold text-cream/80 min-w-[1.5rem] text-center">{item.quantity || 1}</span>
                         <button 
+                          type="button"
+                          aria-label={`Increase ${item.name} quantity`}
                           onClick={() => onUpdateQuantity(item.id, 1)}
                           className="text-cream/40 hover:text-cream transition-all duration-300 transform active:scale-125"
                         >
@@ -137,7 +141,7 @@ const Cart = ({ cartCount, wishlistCount, cart, onUpdateQuantity, onRemove, cart
                   </Link>
                   
                   <p className="text-[10px] text-center text-cream/20 uppercase tracking-[0.2em] font-bold">
-                    Free shipping on orders over Rs1500
+                    Free shipping on every order
                   </p>
                 </div>
               </div>

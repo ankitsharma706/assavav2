@@ -587,8 +587,6 @@ export const OriginExperienceSection = () => {
 export const CinematicVideoSection = () => {
   const container = useRef(null);
   const videoRef = useRef<HTMLVideoElement>(null);
-  const audioRef = useRef<HTMLAudioElement>(null);
-
   useGSAP(() => {
     gsap.fromTo(videoRef.current, 
       { scale: 1.5, opacity: 0 },
@@ -613,31 +611,18 @@ export const CinematicVideoSection = () => {
        }
     });
 
-    ScrollTrigger.create({
-       trigger: container.current,
-       start: 'top center',
-       onEnter: () => {
-          if (audioRef.current) {
-             gsap.to(audioRef.current, { volume: 0.3, duration: 2 });
-             audioRef.current.play().catch(() => {});
-          }
-       },
-       onLeave: () => {
-          if (audioRef.current) gsap.to(audioRef.current, { volume: 0, duration: 2 });
-       }
-    });
   }, { scope: container });
 
   return (
     <section ref={container} className="relative h-[100vh] flex items-center justify-center overflow-hidden z-10 bg-[#050505]">
        <video 
          ref={videoRef}
-         loop muted playsInline autoPlay
+         loop muted playsInline preload="none" controls
          className="absolute inset-0 w-full h-full object-cover"
        >
          <source src="https://player.vimeo.com/external/434045526.sd.mp4?s=c27ee34529fe992389d0cba96e838" type="video/mp4" />
        </video>
-       <audio ref={audioRef} src="https://cdn.pixabay.com/audio/2022/10/14/audio_3231362e4f.mp3" loop />
+       <audio src="https://cdn.pixabay.com/audio/2022/10/14/audio_3231362e4f.mp3" preload="none" controls aria-label="Coffee ambience audio" className="absolute bottom-4 right-4 z-20 w-64" />
 
        <div className="absolute inset-0 bg-[#1A120B]/60" />
        

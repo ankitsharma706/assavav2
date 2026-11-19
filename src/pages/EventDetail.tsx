@@ -88,7 +88,7 @@ const EventDetail: React.FC<EventDetailProps> = ({ cartCount, wishlistCount = 0,
             >
               {h.image && (
                 <div className="absolute inset-0 opacity-10 group-hover:opacity-20 transition-opacity">
-                   <img src={h.image} className="w-full h-full object-cover" />
+                   <img src={h.image} alt="" aria-hidden="true" className="w-full h-full object-cover" />
                 </div>
               )}
               <div className="relative z-10">

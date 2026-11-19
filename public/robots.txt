@@ -1,0 +1,15 @@
+# robots.txt for Assava Specialty Coffee (https://maxcnfront.vercel.app)
+
+# All compliant crawlers, including AdSense crawlers
+User-agent: *
+Allow: /
+Disallow: /cart
+Disallow: /payment
+Disallow: /account
+Disallow: /orderHistory
+Disallow: /tracking
+Disallow: /thankyou
+Disallow: /search
+
+# Sitemap Index
+Sitemap: https://maxcnfront.vercel.app/sitemap.xml

@@ -43,7 +43,7 @@ export function BeanCluster() {
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
 
-  const beansCount = 150; // High-density surrounding ritual
+  const beansCount = 48;
   const beans = useMemo(() => {
     const b = [];
     for (let i = 0; i < beansCount; i++) {
