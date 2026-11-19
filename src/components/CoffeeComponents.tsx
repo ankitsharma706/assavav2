@@ -154,6 +154,8 @@ export function Navbar({ onOpenCart, onOpenCategories, cartCount, wishlistCount,
               <span className="text-3xl font-bold tracking-tighter text-white uppercase font-serif italic">ASSAVA</span>
               </Link>
               <button 
+                type="button"
+                aria-label="Close mobile navigation menu"
                 onClick={() => setIsMobileMenuOpen(false)}
                 className="p-3 hover:bg-cream/10 rounded-full transition-colors"
               >
@@ -772,6 +774,9 @@ export function CoffeeCard({ title, location, rating, image, price, oldPrice, ta
 
           <div className="absolute top-6 right-6 flex items-center gap-2">
             <button 
+              type="button"
+              aria-label={`${isWishlisted ? 'Remove' : 'Add'} ${title} ${isWishlisted ? 'from' : 'to'} wishlist`}
+              aria-pressed={Boolean(isWishlisted)}
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
@@ -985,6 +990,9 @@ export function ShowcaseCard({ item, onAddToCart, onToggleWishlist, isWishlisted
         <div className="relative aspect-[3/4] overflow-hidden rounded-[50px] bg-coffee-dark border border-white/5 transition-all duration-700 group-hover:glow-border group-hover:-translate-y-6 shadow-[0_30px_60px_rgba(0,0,0,0.5)] group-hover:shadow-[0_50px_100px_rgba(0,0,0,0.8)]">
           {/* Wishlist Button */}
           <button 
+            type="button"
+            aria-label={`${isWishlisted ? 'Remove' : 'Add'} ${item.name} ${isWishlisted ? 'from' : 'to'} wishlist`}
+            aria-pressed={Boolean(isWishlisted)}
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
@@ -1362,12 +1370,16 @@ export function CoffeeDetailPage({ onAddToCart, onToggleWishlist, wishlist }: { 
               {images.length > 1 && (
                 <div className="absolute inset-0 flex items-center justify-between px-6 pointer-events-none">
                   <button 
+                    type="button"
+                    aria-label={`Previous image of ${item.name}`}
                     onClick={(e) => { e.preventDefault(); prevImage(); }}
                     className="pointer-events-auto p-4 rounded-full glass hover:bg-caramel hover:text-coffee-dark transition-all duration-300 -translate-x-20 group-hover:translate-x-0 opacity-0 group-hover:opacity-100"
                   >
                     <ChevronLeft className="w-6 h-6" />
                   </button>
                   <button 
+                    type="button"
+                    aria-label={`Next image of ${item.name}`}
                     onClick={(e) => { e.preventDefault(); nextImage(); }}
                     className="pointer-events-auto p-4 rounded-full glass hover:bg-caramel hover:text-coffee-dark transition-all duration-300 translate-x-20 group-hover:translate-x-0 opacity-0 group-hover:opacity-100"
                   >
@@ -1389,6 +1401,9 @@ export function CoffeeDetailPage({ onAddToCart, onToggleWishlist, wishlist }: { 
                 {images.map((img, idx) => (
                   <button
                     key={idx}
+                    type="button"
+                    aria-label={`View image ${idx + 1} of ${item.name}`}
+                    aria-pressed={activeImage === idx}
                     onClick={() => { setActiveImage(idx); setIsImageLoaded(false); }}
                     className={cn(
                       "w-20 h-20 rounded-2xl overflow-hidden glass transition-all duration-500 border-2",

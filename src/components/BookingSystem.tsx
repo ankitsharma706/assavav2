@@ -9,6 +9,8 @@ import { CoffeeEvent } from '../types';
 const QuantitySelector = ({ value, onChange, max }: { value: number, onChange: (v: number) => void, max: number }) => (
   <div className="flex items-center gap-6 bg-white/5 rounded-2xl p-2 border border-white/5">
     <button 
+      type="button"
+      aria-label="Decrease ticket quantity"
       onClick={() => onChange(Math.max(1, value - 1))}
       className="w-10 h-10 rounded-xl flex items-center justify-center hover:bg-white/10 transition-colors text-cream/50 hover:text-white"
     >
@@ -16,6 +18,8 @@ const QuantitySelector = ({ value, onChange, max }: { value: number, onChange: (
     </button>
     <span className="font-mono text-lg font-bold w-6 text-center tabular-nums">{value}</span>
     <button 
+      type="button"
+      aria-label="Increase ticket quantity"
       onClick={() => onChange(Math.min(max, value + 1))}
       className="w-10 h-10 rounded-xl flex items-center justify-center hover:bg-white/10 transition-colors text-cream/50 hover:text-white"
     >

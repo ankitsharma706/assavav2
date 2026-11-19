@@ -268,7 +268,7 @@ export default function CategoryDetail({ cartCount, wishlistCount = 0, onOpenCar
                       </button>
                     ))}
                  </div>
-                 <button className="w-14 h-14 rounded-full bg-caramel text-coffee-dark flex items-center justify-center hover:bg-white transition-colors group shadow-lg shadow-caramel/20">
+                 <button type="button" aria-label="Clear product filters" onClick={() => setActiveFilter('All')} className="w-14 h-14 rounded-full bg-caramel text-coffee-dark flex items-center justify-center hover:bg-white transition-colors group shadow-lg shadow-caramel/20">
                     <Filter className="w-5 h-5 group-hover:rotate-180 transition-transform duration-500" />
                  </button>
               </div>
