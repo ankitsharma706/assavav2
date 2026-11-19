@@ -3,7 +3,7 @@ import path from 'node:path';
 
 const projectRoot = process.cwd();
 const outputDir = path.join(projectRoot, 'dist');
-const baseUrl = (process.env.VITE_SITE_URL || 'https://maxcnfront.vercel.app').replace(/\/+$/, '');
+const baseUrl = (process.env.VITE_SITE_URL || 'https://assavav.vercel.app').replace(/\/+$/, '');
 const adsenseConfig = JSON.parse(fs.readFileSync(path.join(projectRoot, 'src/lib/adsense-config.json'), 'utf8'));
 const publisherId = process.env.VITE_ADSENSE_CLIENT_ID || adsenseConfig.publisherId;
 const today = new Date().toISOString().slice(0, 10);

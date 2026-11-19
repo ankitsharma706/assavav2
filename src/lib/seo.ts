@@ -21,7 +21,7 @@ export interface SEOConfig {
 
 export const SITE_DEFAULTS = {
   siteName: 'ASSAVA',
-  baseUrl: (import.meta.env.VITE_SITE_URL || 'https://maxcnfront.vercel.app').replace(/\/+$/, ''),
+  baseUrl: (import.meta.env.VITE_SITE_URL || 'https://assavav.vercel.app').replace(/\/+$/, ''),
   defaultTitle: 'Assava | Luxury Specialty Coffee & Rare Micro-Lots',
   defaultDescription: 'Experience Assava: ultra-specialty Indian & global single-origin coffees, precision roasting, artisanal harvest narratives, and ritual brewing equipment.',
   defaultOgImage: 'https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?auto=format&fit=crop&q=85&w=1200',
